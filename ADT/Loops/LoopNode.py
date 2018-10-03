@@ -1,9 +1,7 @@
-from abc import ABC
-
 from ADT.ADTNode import ADTNode
 
 
-class LoopNode(ABC, ADTNode):
+class LoopNode(ADTNode):
 
     def __init__(self, condition, nodeBlock):
         self.condition = condition

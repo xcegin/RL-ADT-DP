@@ -14,7 +14,8 @@ class BinaryArithmeticOperator(ADTNode):
 
     CTDOperatorsEnum = CTDOperators
 
-    def __init__(self, astOperator, leftOperand, rightOperand):
-        self.astOperator = astOperator
-        self.rightOperand = rightOperand
-        self.leftOperand = leftOperand
+    def __init__(self, operation, leftOperand, rightOperand):
+        self.operation = operation
+        from ADT.ResolverUtil import resolveNodeViaType
+        self.rightOperand = resolveNodeViaType(rightOperand["$type"], rightOperand)
+        self.leftOperand = resolveNodeViaType(leftOperand["$type"], leftOperand)

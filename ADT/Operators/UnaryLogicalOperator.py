@@ -10,6 +10,7 @@ class CTDOperatorsUnaryLogical(Enum):
 class UnaryLogicalOperator(ADTNode):
     CTDOperatorsEnum = CTDOperatorsUnaryLogical
 
-    def __init__(self, astOperator, operand):
-        self.astOperator = astOperator
-        self.operand = operand
+    def __init__(self, operation, operand):
+        self.operation = operation
+        from ADT.ResolverUtil import resolveNodeViaType
+        self.operand = resolveNodeViaType(operand["$type"], operand)

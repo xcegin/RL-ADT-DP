@@ -38,5 +38,6 @@ class Enviroment():
                                                             self.rootAdtNode["ReturnType"],
                                                             self.rootAdtNode["Name"], self.rootAdtNode["Arguments"],
                                                             self.rootAdtNode["Body"])
+        print(self.rootTreeAdtNode.CDTName)
 
 env = Enviroment()
