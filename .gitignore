@@ -104,4 +104,8 @@ venv.bak/
 /site
 
 # mypy
+<<<<<<< HEAD
 .mypy_cache/
+=======
+.mypy_cache/
+>>>>>>> 93c406f02e82434de8c511795d87d15fdd6edc96
