@@ -1,5 +1,4 @@
 from ADT.ADTNode import ADTNode
-from ADT.ResolverUtil import resolveType, resolveNodeViaType
 
 
 class SequenceNode(ADTNode):
@@ -9,4 +8,5 @@ class SequenceNode(ADTNode):
     def __init__(self, nodes):
         self.nodes = []
         for node in nodes["$values"]:
+            from ADT.ResolverUtil import resolveNodeViaType
             self.nodes.append(resolveNodeViaType(node["$type"], node))

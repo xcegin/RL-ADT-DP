@@ -11,5 +11,6 @@ class VariableDeclarationStatement(ADTNode):
     def __init__(self, variableTypeModifiers, variableType, variable, initialValue=None):
         self.variableTypeModifiers = variableTypeModifiers
         self.variableType = variableType
-        self.variable = variable
+        from ADT.ResolverUtil import resolveNodeViaType
+        self.variable = resolveNodeViaType(variable["$type"], variable)
         self.initialValue = initialValue

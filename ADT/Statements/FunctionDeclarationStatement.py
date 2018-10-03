@@ -1,6 +1,5 @@
 from ADT.ADTNode import ADTNode
-from ADT.SequenceNode import SequenceNode
-from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
+from ADT.ArgumentResolver import resolveArguments
 
 
 class FunctionDeclarationStatement(ADTNode):
@@ -13,13 +12,6 @@ class FunctionDeclarationStatement(ADTNode):
         self.returnTypeModifiers = returnTypeModifiers
         self.returnType = returnType
         self.name = name
-        self.arguments = self.resolveArguments(arguments)
-        self.body = SequenceNode(body["Nodes"])
-
-    def resolveArguments(self, arguments):
-        args = []
-        for value in arguments["$values"]:
-            variable = VariableDeclarationStatement(value["VariableTypeModifiers"], value["VariableType"],
-                                                    value["Variable"], value["InitialValue"])
-            args.append(variable)
-        return args
+        self.arguments = resolveArguments(arguments)
+        from ADT.ResolverUtil import resolveNodeViaType
+        self.body = resolveNodeViaType(body["$type"], body["Nodes"])

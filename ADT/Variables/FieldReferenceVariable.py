@@ -8,6 +8,7 @@ class FieldReferenceVariable(VariableNode):
 
     def __init__(self, variableName, variable, dereference, field):
         VariableNode.__init__(self, variableName)
-        self.variable = variable
+        from ADT.ResolverUtil import resolveNodeViaType
+        self.variable = resolveNodeViaType(variable["$type"], variable)
         self.dereference = dereference
         self.field = field

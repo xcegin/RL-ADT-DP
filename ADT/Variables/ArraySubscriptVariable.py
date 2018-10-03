@@ -8,5 +8,6 @@ class ArraySubscriptVariable(VariableNode):
     def __init__(self, variableName, array, subscript):
         VariableNode.__init__(self, variableName)
 
-        self.array = array
-        self.subscript = subscript
+        from ADT.ResolverUtil import resolveNodeViaType
+        self.array = resolveNodeViaType(array["$type"], array)
+        self.subscript = resolveNodeViaType(subscript["$type"], subscript)
