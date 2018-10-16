@@ -1,3 +1,5 @@
+import random
+import sys
 from decimal import Decimal
 from math import sin, cos, tan, pi
 
@@ -131,3 +133,25 @@ def resolveMax(type):
         return ""
     elif type == "t_decimal64":
         return ""
+
+
+def randomValue(type):
+    if "t_int" in type or "t_char32_t" in type:
+        return random.randint(-2147483648, 2147483648)
+    elif "t_char" in type:
+        return random.randint(-127, 128)
+    elif "t_int128" in type:
+        return random.randint(-9223372036854775807, 9223372036854775807)
+    elif "t_float" in type or "t_double" in type:
+        return round(random.uniform(sys.float_info.min, sys.float_info.max), 4)
+
+
+def smallestValue(type):
+    if "t_int" in type or "t_char32_t" in type:
+        return 1
+    elif "t_char" in type:
+        return 1
+    elif "t_int128" in type:
+        return 1
+    elif "t_float" in type or "t_double" in type:
+        return 0.0001

@@ -2,9 +2,10 @@ import json
 
 from gym import spaces
 
+import Utils
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
 from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
-import Utils
+from Enviroment.MathOperationsUtil import randomValue
 from Heuristic.HeuristicCalculator import HeuristicCalculator
 from Utils import getTypeOfExpression
 
@@ -22,7 +23,8 @@ class Enviroment():
         self.mcdc = mcdc
         self.logicTable = None
         self.rootAdtNode = None
-        self.arguments = []
+        self.arguments = {}
+        self.argumentValues = {}
         self.rootTreeAdtNode = None
         self.listOfTables = []
         self.listOfTableHeuristics = []
@@ -33,6 +35,7 @@ class Enviroment():
         self.parseLoadedJsonIntoTree()
         self.createListOfMcDcTableRows()
         self.createHeuristicEquationsForRows()
+        self.initializeArgumentValues()
 
         self.action_space = spaces.Discrete(34)
 
@@ -59,7 +62,7 @@ class Enviroment():
         for value in arguments["$values"]:
             variable = VariableDeclarationStatement(value["VariableTypeModifiers"], value["VariableType"],
                                                     value["Variable"], value["InitialValue"])
-            self.arguments.append(variable)
+            self.arguments[variable.variable.variableName.upper()] = variable
 
     def parseLoadedJsonIntoTree(self):
         self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["ReturnTypeModifiers"],
@@ -95,12 +98,16 @@ class Enviroment():
     def createHeuristicEquationsForRows(self):
         for table in self.listOfTables:
             tableRows = []
-            expressions = []
             # Extract values for each column according to one row
             for row in table:
                 rowList = [self.heuristicCalc.calculateHeuristicFerOneFeckinRowM8(row)]
                 tableRows.append(rowList)
             self.listOfTableHeuristics.append(tableRows)
+
+    def initializeArgumentValues(self):
+        for argument in self.arguments:
+            self.argumentValues[self.arguments[argument].variable.variableName.upper()] = \
+                randomValue(self.arguments[argument].variableType)
 
 
 env = Enviroment()

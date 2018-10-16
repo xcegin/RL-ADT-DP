@@ -46,7 +46,7 @@ def resolveNodeViaType(type, node):
         return IfNode(node["Condition"], node["NodeThen"], node["NodeElse"])
     elif type == "LiteralNode":
         return LiteralNode(node["Value"], node["Kind"])
-    elif type == "SequenceNode" or "IAdtNode":
+    elif type == "SequenceNode" or type == "IAdtNode":
         return SequenceNode(node)
     # Statement Nodes
     elif type == "AssignmentStatement":
