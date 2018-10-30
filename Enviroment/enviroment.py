@@ -3,9 +3,11 @@ import json
 from gym import spaces
 
 import Utils
+from ADT.ResolverUtil import resolveNodeViaType
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
-from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
+from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
 from Enviroment.MathOperationsUtil import randomValue
+from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Heuristic.HeuristicCalculator import HeuristicCalculator
 from Utils import getTypeOfExpression
 
@@ -28,6 +30,8 @@ class Enviroment():
         self.rootTreeAdtNode = None
         self.listOfTables = []
         self.listOfTableHeuristics = []
+        self.listOfTableVectors = []
+        self.context = enviromentWalkerContext()
 
         self.getRootADTNode()
         self.extractFunctionParams()
@@ -36,6 +40,7 @@ class Enviroment():
         self.createListOfMcDcTableRows()
         self.createHeuristicEquationsForRows()
         self.initializeArgumentValues()
+        self.createVectorsForRows()
 
         self.action_space = spaces.Discrete(34)
 
@@ -60,13 +65,11 @@ class Enviroment():
     def extractFunctionParams(self):
         arguments = self.rootAdtNode["Arguments"]
         for value in arguments["$values"]:
-            variable = VariableDeclarationStatement(value["VariableTypeModifiers"], value["VariableType"],
-                                                    value["Variable"], value["InitialValue"])
-            self.arguments[variable.variable.variableName.upper()] = variable
+            variableDecl = resolveNodeViaType(value["$type"], value)
+            self.arguments[variableDecl.variable.variableName.upper()] = variableDecl
 
     def parseLoadedJsonIntoTree(self):
-        self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["ReturnTypeModifiers"],
-                                                            self.rootAdtNode["ReturnType"],
+        self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["ReturnType"],
                                                             self.rootAdtNode["Name"], self.rootAdtNode["Arguments"],
                                                             self.rootAdtNode["Body"])
 
@@ -104,10 +107,26 @@ class Enviroment():
                 tableRows.append(rowList)
             self.listOfTableHeuristics.append(tableRows)
 
+    def createVectorsForRows(self):
+        for table in self.listOfTables:
+            tableRows = []
+            # Extract values for each column according to one row
+            for row in table:
+                self.vectorizationVisitor = VectorizationVisitor(enviromentWalkerContext(), self.mergeDictsInRow(row))
+                self.rootTreeAdtNode.accept(self.vectorizationVisitor)
+            #self.listOfTableHeuristics.append(tableRows)
+
     def initializeArgumentValues(self):
         for argument in self.arguments:
             self.argumentValues[self.arguments[argument].variable.variableName.upper()] = \
                 randomValue(self.arguments[argument].variableType)
+
+    def mergeDictsInRow(self, row):
+        finalDict = {}
+        for dictionary in row:
+            finalDict = {**finalDict, **dictionary}
+        return finalDict
+
 
 
 env = Enviroment()

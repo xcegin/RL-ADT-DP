@@ -9,3 +9,6 @@ class LiteralNode(ADTNode):
     def __init__(self, value, kind):
         self.value = value
         self.kind = kind
+
+    def accept(self, visitor):
+        return visitor.visit_literal(self)

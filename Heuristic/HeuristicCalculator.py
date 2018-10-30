@@ -13,8 +13,7 @@ class HeuristicCalculator:
         return finalShait
 
     def resolveOneExpressions(self, token, truthValue):
-        #TODO replace with space when that feckin generator is up to date ffs kill me
-        splitToken = token.split("-")
+        splitToken = token.split(" ")
         if (splitToken[1] == "Equals" and truthValue) or (splitToken[1] == "NotEquals" and not truthValue):
             return "abs(" + splitToken[0] + " - " + splitToken[2] + ")"
         elif (splitToken[1] == "Equals" and not truthValue) or (splitToken[1] == "NotEquals" and truthValue):

@@ -22,7 +22,9 @@ from ADT.Variables.ArraySubscriptVariable import ArraySubscriptVariable
 from ADT.Variables.FieldReferenceVariable import FieldReferenceVariable
 from ADT.Variables.OperatorVariable import OperatorVariable
 from ADT.Variables.SimpleVariable import SimpleVariable
+from ADT.Variables.TypeDefinition import TypeDefinition
 
+variableDeclarations = {}
 
 def resolveType(type):
     startIndex = type.find('[')
@@ -39,8 +41,10 @@ def resolveType(type):
 def resolveNodeViaType(type, node):
     type = resolveType(type)
     if type == "VariableDeclarationStatement":
-        return VariableDeclarationStatement(node["VariableTypeModifiers"], node["VariableType"],
-                                            node["Variable"], node["InitialValue"])
+        variableDeclarationStatement = VariableDeclarationStatement(node["VariableType"],node["InitialValue"])
+        variableDeclarations[node["$id"]] = variableDeclarationStatement
+        variableDeclarationStatement.variable = resolveNodeViaType(node["Variable"]["$type"], node["Variable"])
+        return variableDeclarations[node["$id"]]
     # ADT Nodes
     elif type == "IfNode":
         return IfNode(node["Condition"], node["NodeThen"], node["NodeElse"])
@@ -57,21 +61,28 @@ def resolveNodeViaType(type, node):
         return FunctionCall(node["Name"], node["Arguments"])
     elif type == "FunctionDeclarationStatement":
         return FunctionDeclarationStatement(node["ReturnTypeModifiers"], node["ReturnType"], node["Name"],
-                                            node["Arguments"], node["Body"])
+                                            node["Arguments"])
     elif type == "ReturnStatement":
         return ReturnStatement(node["Value"])
     # Variable Nodes
-    elif type == "VariableDeclarationStatement":
-        return VariableDeclarationStatement(node["VariableTypeModifiers"], node["VariableType"], node["Value"],
-                                            node["InitialValue"])
     elif type == "ArraySubscriptVariable":
-        return ArraySubscriptVariable(node["VariableName"], node["Array"], node["Subscript"])
+        variableDeclaration = tryResolveVariableDeclarationStatement(node)
+        return ArraySubscriptVariable(node["VariableName"], node["Array"], node["Subscript"], variableDeclaration)
     elif type == "FieldReferenceVariable":
-        return FieldReferenceVariable(node["VariableName"], node["Variable"], node["Dereference"], node["Field"])
+        variableDeclaration = tryResolveVariableDeclarationStatement(node)
+        return FieldReferenceVariable(node["VariableName"], node["Variable"], node["Dereference"], node["Field"],
+                                      variableDeclaration)
     elif type == "OperatorVariable":
-        return OperatorVariable(node["VariableName"], node["Operator"])
+        variableDeclaration = tryResolveVariableDeclarationStatement(node)
+        return OperatorVariable(node["VariableName"], node["Operator"], variableDeclaration)
     elif type == "SimpleVariable":
-        return SimpleVariable(node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"])
+        variableDeclaration = tryResolveVariableDeclarationStatement(node)
+        return SimpleVariable(node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"],
+                              variableDeclaration)
+    elif type == "TypeDefinition":
+        return TypeDefinition(node["TypeName"], node["PointerDimension"], node["ArrayDimension"],
+                              node["ArrayDimensionSize"],
+                              node["Modifiers"], node["TypeNode"])
     # Loop Nodes
     elif type == "DoLoop":
         return DoLoop(node["Condition"], node["NodeBlock"])
@@ -98,3 +109,17 @@ def resolveNodeViaType(type, node):
         return UnaryVariableOperator(node["Operation"], node["Operand"])
     else:
         return UnknownNode()
+
+def tryResolveVariableDeclarationStatement(node):
+    if "VariableDeclaration" in node:
+        variableDeclaration = node["VariableDeclaration"]
+        if "$ref" in variableDeclaration:
+            numOfRef = variableDeclaration["$ref"]
+            if numOfRef in variableDeclarations:
+                return variableDeclarations[numOfRef]
+            else:
+                return None
+        else:
+            return None
+    else:
+        return None

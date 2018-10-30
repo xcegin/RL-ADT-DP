@@ -1,22 +1,12 @@
-from enum import Enum
-
-from ADT.ADTNode import ADTNode
+from ADT.Operators.BinaryOperator import BinaryOperator
 
 
-class CTDOperatorsComparison(Enum):
-    Equals = "op_equals"
-    GreaterThanEquals = "op_greaterEqual"
-    GreaterThan = "op_greaterThan"
-    LessThanEquals = "op_lessEqual"
-    LessThan = "op_lessThan"
-    NotEquals = "op_notequals"
-
-
-class ComparisonOperator(ADTNode):
-    CTDOperatorsEnum = CTDOperatorsComparison
+class ComparisonOperator(BinaryOperator):
+    operations = {0: 'LessThan', 1: 'GreaterThan', 2: 'LessThanEquals', 3: 'GreaterThanEquals', 4: 'Equals',
+                  5: 'NotEquals'}
 
     def __init__(self, operation, leftOperand, rightOperand):
-        self.operation = operation
-        from ADT.ResolverUtil import resolveNodeViaType
-        self.rightOperand = resolveNodeViaType(rightOperand["$type"], rightOperand)
-        self.leftOperand = resolveNodeViaType(leftOperand["$type"], leftOperand)
+        super().__init__(operation, leftOperand, rightOperand)
+
+    def resolveOperationToString(self):
+        return self.operations[self.operation]

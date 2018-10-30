@@ -12,3 +12,6 @@ class IfNode(ADTNode):
             self.nodeElse = resolveNodeViaType(condition["$type"], condition)
         else:
             self.nodeElse = None
+
+    def accept(self, visitor):
+        return visitor.visit_ifnode(self)

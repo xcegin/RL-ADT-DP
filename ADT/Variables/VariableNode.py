@@ -3,5 +3,9 @@ from ADT.ADTNode import ADTNode
 
 class VariableNode(ADTNode):
 
-    def __init__(self, variableName=None):
+    def accept(self, visitor):
+        return visitor.visit_variable(self)
+
+    def __init__(self, variableName=None, variableDeclaration = None):
         self.variableName = variableName
+        self.variableDeclaration = variableDeclaration

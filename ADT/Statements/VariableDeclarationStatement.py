@@ -1,16 +1,19 @@
-from ADT.ADTNode import ADTNode
+from ADT.Statements.StatementNode import StatementNode
 
 
-class VariableDeclarationStatement(ADTNode):
+class VariableDeclarationStatement(StatementNode):
 
     CDTName = "c.CASTDeclarationStatement"
     CDTChildFunction = "c.CASTParameterDeclaration"
     CDTChildParameter = "c.CASTSimpleDeclaration"
     CDTChildInitializer = "c.CASTEqualsInitializer"
 
-    def __init__(self, variableTypeModifiers, variableType, variable, initialValue=None):
-        self.variableTypeModifiers = variableTypeModifiers
-        self.variableType = variableType
+    def __init__(self, variableType, initialValue=None):
+        super().__init__()
         from ADT.ResolverUtil import resolveNodeViaType
-        self.variable = resolveNodeViaType(variable["$type"], variable)
+        self.variableType = resolveNodeViaType(variableType["$type"], variableType)
+        self.variable = None
         self.initialValue = initialValue
+
+    def accept(self, visitor):
+        return visitor.visit_variabledeclaration(self)

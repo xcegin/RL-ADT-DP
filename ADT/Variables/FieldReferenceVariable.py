@@ -6,8 +6,8 @@ class FieldReferenceVariable(VariableNode):
     CDTName = "c.CASTFieldReference"
     CDTPropertyIsPointer = "PointerDereference"
 
-    def __init__(self, variableName, variable, dereference, field):
-        VariableNode.__init__(self, variableName)
+    def __init__(self, variableName, variable, dereference, field, variableDeclaration = None):
+        VariableNode.__init__(self, variableName, variableDeclaration)
         from ADT.ResolverUtil import resolveNodeViaType
         self.variable = resolveNodeViaType(variable["$type"], variable)
         self.dereference = dereference

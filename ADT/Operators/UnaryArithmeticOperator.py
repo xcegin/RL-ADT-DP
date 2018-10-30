@@ -1,21 +1,11 @@
-from enum import Enum
-
-from ADT.ADTNode import ADTNode
+from ADT.Operators.UnaryOperator import UnaryOperator
 
 
-class CTDOperatorsUnaryArithmetic(Enum):
-    Minus = "op_minus"
-    Plus = "op_plus"
-    PostIncrement = "op_postFixDecr"
-    PostDecrement = "op_postFixIncr"
-    PreIncrement = "op_preFixDecr"
-    PreDecrement = "op_preFixIncr"
-
-
-class UnaryArithmeticOperator(ADTNode):
-    CTDOperatorsEnum = CTDOperatorsUnaryArithmetic
+class UnaryArithmeticOperator(UnaryOperator):
+    operations = {0: 'Minus', 1: 'Plus', 2: 'PostIncrement', 3: 'PostDecrement', 4: 'PreIncrement', 5: 'PreDecrement'}
 
     def __init__(self, operation, operand):
-        self.operation = operation
-        from ADT.ResolverUtil import resolveNodeViaType
-        self.operand = resolveNodeViaType(operand["$type"], operand)
+        super().__init__(operation, operand)
+
+    def resolveOperationToString(self):
+        return self.operations[self.operation]

@@ -1,18 +1,11 @@
-from enum import Enum
-
-from ADT.ADTNode import ADTNode
+from ADT.Operators.BinaryOperator import BinaryOperator
 
 
-class CTDOperatorsBitLogical(Enum):
-    And = "op_logicalAnd"
-    Or = "op_logicalOr"
-
-
-class BinaryLogicalOperator(ADTNode):
-    CTDOperatorsEnum = CTDOperatorsBitLogical
+class BinaryLogicalOperator(BinaryOperator):
+    operations = {0: 'And', 1: 'Or'}
 
     def __init__(self, operation, leftOperand, rightOperand):
-        self.operation = operation
-        from ADT.ResolverUtil import resolveNodeViaType
-        self.rightOperand = resolveNodeViaType(rightOperand["$type"], rightOperand)
-        self.leftOperand = resolveNodeViaType(leftOperand["$type"], leftOperand)
+        super().__init__(operation, leftOperand, rightOperand)
+
+    def resolveOperationToString(self):
+        return self.operations[self.operation]

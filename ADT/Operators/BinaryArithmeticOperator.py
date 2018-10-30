@@ -1,21 +1,10 @@
-from enum import Enum
+from ADT.Operators.BinaryOperator import BinaryOperator
 
-from ADT.ADTNode import ADTNode
-
-
-class CTDOperators(Enum):
-    Division = "op_divide"
-    Subtraction = "op_minus"
-    Modulus = "op_modulo"
-    Multiplication = "op_multiply"
-    Addition = "op_plus"
-
-class BinaryArithmeticOperator(ADTNode):
-
-    CTDOperatorsEnum = CTDOperators
+class BinaryArithmeticOperator(BinaryOperator):
+    operations = {0: 'Addition', 1: 'Substraction', 2: 'Multiplication', 3: 'Division', 4: 'Modulus'}
 
     def __init__(self, operation, leftOperand, rightOperand):
-        self.operation = operation
-        from ADT.ResolverUtil import resolveNodeViaType
-        self.rightOperand = resolveNodeViaType(rightOperand["$type"], rightOperand)
-        self.leftOperand = resolveNodeViaType(leftOperand["$type"], leftOperand)
+        super().__init__(operation, leftOperand, rightOperand)
+
+    def resolveOperationToString(self):
+        return self.operations[self.operation]

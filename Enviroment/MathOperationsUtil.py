@@ -136,13 +136,13 @@ def resolveMax(type):
 
 
 def randomValue(type):
-    if "t_int" in type or "t_char32_t" in type:
+    if "t_int" in type.typeName or "t_char32_t" in type.typeName:
         return random.randint(-2147483648, 2147483648)
-    elif "t_char" in type:
+    elif "t_char" in type.typeName:
         return random.randint(-127, 128)
-    elif "t_int128" in type:
+    elif "t_int128" in type.typeName:
         return random.randint(-9223372036854775807, 9223372036854775807)
-    elif "t_float" in type or "t_double" in type:
+    elif "t_float" in type.typeName or "t_double" in type.typeName:
         return round(random.uniform(sys.float_info.min, sys.float_info.max), 4)
 
 

@@ -1,16 +1,11 @@
-from enum import Enum
-
-from ADT.ADTNode import ADTNode
+from ADT.Operators.UnaryOperator import UnaryOperator
 
 
-class CTDOperatorsUnaryBitwise(Enum):
-    Negation = "op_tilde"
-
-
-class UnaryBitwiseOperator(ADTNode):
-    CTDOperatorsEnum = CTDOperatorsUnaryBitwise
+class UnaryBitwiseOperator(UnaryOperator):
+    operations = {0: 'Negation'}
 
     def __init__(self, operation, operand):
-        self.operation = operation
-        from ADT.ResolverUtil import resolveNodeViaType
-        self.operand = resolveNodeViaType(operand["$type"], operand)
+        super().__init__(operation, operand)
+
+    def resolveOperationToString(self):
+        return self.operations[self.operation]

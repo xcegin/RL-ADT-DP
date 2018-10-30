@@ -1,18 +1,11 @@
-from enum import Enum
-
-from ADT.ADTNode import ADTNode
+from ADT.Operators.UnaryOperator import UnaryOperator
 
 
-class CTDOperatorsUnaryVariable(Enum):
-    Address = "op_amper"
-    Dereference = "op_star"
-    Sizeof = "op_sizeof"
-
-
-class UnaryVariableOperator(ADTNode):
-    CTDOperatorsEnum = CTDOperatorsUnaryVariable
+class UnaryVariableOperator(UnaryOperator):
+    operations = {0: 'Dereference', 1: 'Address', 2: 'Sizeof'}
 
     def __init__(self, operation, operand):
-        self.operation = operation
-        from ADT.ResolverUtil import resolveNodeViaType
-        self.operand = resolveNodeViaType(operand["$type"], operand)
+        super().__init__(operation, operand)
+
+    def resolveOperationToString(self):
+        return self.operations[self.operation]
