@@ -1,6 +1,6 @@
 # TODO should be all the variables, not just the arguments for the small operation, abs is fine propably ->
 # TODO ideally track data dependencies
-from Enviroment.MathOperationsUtil import smallestValue
+from ADT.Utils.MathOperationsUtil import smallestValue
 
 
 def resolveHeuristic(valuesOfArguments, arguments, heuristic):

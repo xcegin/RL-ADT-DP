@@ -1,12 +1,14 @@
 import json
+from copy import deepcopy
 
 from gym import spaces
 
 import Utils
-from ADT.ResolverUtil import resolveNodeViaType
+from ADT.Utils.ResolverUtil import resolveNodeViaType
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
+from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
 from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
-from Enviroment.MathOperationsUtil import randomValue
+from ADT.Utils.MathOperationsUtil import randomValue
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Heuristic.HeuristicCalculator import HeuristicCalculator
 from Utils import getTypeOfExpression
@@ -66,7 +68,7 @@ class Enviroment():
         arguments = self.rootAdtNode["Arguments"]
         for value in arguments["$values"]:
             variableDecl = resolveNodeViaType(value["$type"], value)
-            self.arguments[variableDecl.variable.variableName.upper()] = variableDecl
+            self.arguments[variableDecl.variable.variableName] = variableDecl
 
     def parseLoadedJsonIntoTree(self):
         self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["ReturnType"],
@@ -112,13 +114,21 @@ class Enviroment():
             tableRows = []
             # Extract values for each column according to one row
             for row in table:
-                self.vectorizationVisitor = VectorizationVisitor(enviromentWalkerContext(), self.mergeDictsInRow(row))
-                self.rootTreeAdtNode.accept(self.vectorizationVisitor)
-            #self.listOfTableHeuristics.append(tableRows)
+                dictForRow = self.mergeDictsInRow(row)
+                dataDependencyVisitor = DataDependenciesVisitor(enviromentWalkerContext(), dictForRow)
+                self.rootTreeAdtNode.accept(dataDependencyVisitor)
+                self.vectorizationVisitor = VectorizationVisitor(dataDependencyVisitor.context, dictForRow, self.arguments)
+                list = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
+                numOfTimes = int(round(len(list))) ** 1/8 + 1
+                for x in range(numOfTimes):
+                    toBeAppended = deepcopy(list)
+                    list.append(toBeAppended)
+                tableRows.append(list)
+            self.listOfTableVectors.append(tableRows)
 
     def initializeArgumentValues(self):
         for argument in self.arguments:
-            self.argumentValues[self.arguments[argument].variable.variableName.upper()] = \
+            self.argumentValues[self.arguments[argument].variable.variableName] = \
                 randomValue(self.arguments[argument].variableType)
 
     def mergeDictsInRow(self, row):

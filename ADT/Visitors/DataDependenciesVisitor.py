@@ -4,7 +4,6 @@ from ADT.Loops.ForLoop import ForLoop
 from ADT.Loops.LoopNode import LoopNode
 from ADT.Operators.BinaryOperator import BinaryOperator
 from ADT.Operators.UnaryOperator import UnaryOperator
-from ADT.SequenceNode import SequenceNode
 from ADT.Statements.AssigmentStatement import AssignmentStatement
 from ADT.Statements.FunctionCall import FunctionCall
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
@@ -15,95 +14,90 @@ from ADT.Visitors.ABCVisitor import ABCVisitor
 from ADT.Visitors.ConditionSolverVisitor import ConditionSolverVisitor
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 
-if_embedding = 1
-loop_embedding = 4
 
+class DataDependenciesVisitor(ABCVisitor):
 
-class VectorizationVisitor(ABCVisitor):
-
-    def __init__(self, Context, rowExpressionValues, arguments):
+    def __init__(self, Context, rowExpressionValues):
         super().__init__(Context)
         self.rowExpressionValues = rowExpressionValues
-        self.embedding = 0
-        self.functionName = ""
-        self.numOfStaticRecursionCalls = 0
-        self.currentArgumentVectorDependency = None
-        self.arguments = arguments
+        self.isInModifyingVariableState = False
+        self.lastAssignedVariable = None
 
     def reset(self):
         self.context = enviromentWalkerContext()
-        self.embedding = 0
-        self.functionName = ""
-        self.numOfStaticRecursionCalls = 0
-        self.currentArgumentVectorDependency = None
 
     def visit_loop(self, loopNode: LoopNode):
         conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
         loopNode.condition.accept(conditionSolver)
+        loopNode.condition.accept(self)
         if conditionSolver.isConditionTrue():
-            self.embedding = self.embedding + loop_embedding
-            resultVectors = loopNode.return_vector(self)
-            self.embedding = self.embedding - loop_embedding
-            return resultVectors
+            loopNode.nodeBlock.accept(self)
         else:
             pass
 
     def visit_forloop(self, forLoop: ForLoop):
         conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
+        forLoop.nodeInit.accept(self)
         forLoop.condition.accept(conditionSolver)
+        forLoop.condition.accept(self)
         if conditionSolver.isConditionTrue():
-            self.embedding = self.embedding + loop_embedding
-            resultVectors = forLoop.return_vector(self)
-            self.embedding = self.embedding - loop_embedding
-            return resultVectors
+            forLoop.nodeBlock.accept(self)
+            forLoop.nodeAfter(self)
         else:
             pass
 
     def visit_assigment(self, assigment: AssignmentStatement):
-        return assigment.return_vector(self)
+        self.isInModifyingVariableState = True
+        self.lastAssignedVariable = assigment.variable
+        assigment.variable.accept(self)
+        assigment.value.accept(self)
+        self.isInModifyingVariableState = False
 
     def visit_binaryoperator(self, binaryOperator: BinaryOperator):
-        return binaryOperator.return_vector(self)
+        if self.isInModifyingVariableState:
+            if binaryOperator.leftOperand is VariableNode:
+                self.context.dataDependencies[self.lastAssignedVariable.name].append(binaryOperator.leftOperand.name)
+            if binaryOperator.rightOperand is VariableNode:
+                self.context.dataDependencies[self.lastAssignedVariable.name].append(binaryOperator.rightOperand.name)
+        binaryOperator.leftOperand.accept(self)
+        binaryOperator.rightOperand.accept(self)
 
     def visit_variabledeclaration(self, variableDeclaration: VariableDeclarationStatement):
-        return variableDeclaration.return_vector(self)
+        if variableDeclaration.variable.variableName not in self.context.dataDependencies:
+            self.context.dataDependencies[variableDeclaration.variable.variableName] = []
+        variableDeclaration.variable.accept(self)
+        variableDeclaration.variableType.accept(self)
 
     def visit_unaryoperator(self, unaryOperator: UnaryOperator):
-        return unaryOperator.return_vector(self)
+        if self.isInModifyingVariableState:
+            if unaryOperator.operand is VariableNode:
+                self.context.dataDependencies[self.lastAssignedVariable.name].append(unaryOperator.operand.name)
+        unaryOperator.operand.accept(self)
 
     def visit_statement(self, statementNode: StatementNode):
-        return statementNode.return_vector(self)
+        pass
 
     def visit_variable(self, variableNode: VariableNode):
-        return variableNode.return_vector(self)
-
-    def visit_functioncall(self, functioncall: FunctionCall):
-        if self.functionName == functioncall.name:
-            self.numOfStaticRecursionCalls = self.numOfStaticRecursionCalls + 1
-        return functioncall.return_vector(self)
+        if variableNode.variableName not in self.context.dataDependencies:
+            self.context.dataDependencies[variableNode.variableName] = []
 
     def visit_ifnode(self, ifNode: IfNode):
-        list = []
         conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
         ifNode.condition.accept(conditionSolver)
-        list.append(ifNode.condition.accept(self))
-        self.embedding = self.embedding + if_embedding
+        ifNode.condition.accept(self)
         if conditionSolver.isConditionTrue():
-            list.append(ifNode.nodeThen.accept(self))
+            ifNode.nodeThen.accept(self)
         else:
-            list.append(ifNode.nodeElse.accept(self))
-        self.embedding = self.embedding + if_embedding
-        return list
+            ifNode.nodeElse.accept(self)
 
     def visit_literal(self, literalNode: LiteralNode):
-        return literalNode.return_vector(self)
-
-    def visit_sequence(self, sequence: SequenceNode):
-        list = []
-        for node in sequence.nodes:
-            list.append(node.return_vector(self))
-        return list
+        pass
 
     def visit_functiondeclaration(self, functionDecl: FunctionDeclarationStatement):
-        self.functionName = functionDecl.name
-        return functionDecl.body.return_vector(self)
+        for argument in functionDecl.arguments:
+            argument.accept(self)
+        functionDecl.body.accept(self)
+
+    def visit_functioncall(self, functioncall: FunctionCall):
+        for argument in functioncall.arguments:
+            argument.accept(self)

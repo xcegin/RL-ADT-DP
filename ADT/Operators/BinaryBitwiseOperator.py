@@ -8,3 +8,6 @@ class BinaryBitwiseOperator(BinaryOperator):
 
     def resolveOperationToString(self):
         return self.operations[self.operation]
+
+    def resolveVectorizationValue(self):
+        return self.operations

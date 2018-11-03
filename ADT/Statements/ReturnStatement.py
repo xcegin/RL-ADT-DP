@@ -7,7 +7,7 @@ class ReturnStatement(StatementNode):
 
     def __init__(self, value):
         super().__init__()
-        from ADT.ResolverUtil import resolveNodeViaType
+        from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.value = resolveNodeViaType(value["$type"], value)
 
     def accept(self, visitor):

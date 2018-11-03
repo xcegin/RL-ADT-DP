@@ -9,6 +9,7 @@ from ADT.Operators.BinaryOperator import BinaryOperator
 from ADT.Operators.UnaryOperator import UnaryOperator
 from ADT.SequenceNode import SequenceNode
 from ADT.Statements.AssigmentStatement import AssignmentStatement
+from ADT.Statements.FunctionCall import FunctionCall
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
 from ADT.Statements.StatementNode import StatementNode
 from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
@@ -47,6 +48,11 @@ class ABCVisitor(ABC):
     @abc.abstractmethod
     def visit_assigment(self, assigment: AssignmentStatement):
         pass
+
+    @abc.abstractmethod
+    def visit_functioncall(self, functioncall: FunctionCall):
+        pass
+
 
     @abc.abstractmethod
     def visit_variable(self, variableNode: VariableNode):

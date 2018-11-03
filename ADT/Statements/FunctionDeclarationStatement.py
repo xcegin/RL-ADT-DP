@@ -1,4 +1,4 @@
-from ADT.ArgumentResolver import resolveArguments
+from ADT.Utils.ArgumentResolver import resolveArguments
 from ADT.Statements.StatementNode import StatementNode
 
 
@@ -12,7 +12,7 @@ class FunctionDeclarationStatement(StatementNode):
         super().__init__()
         self.name = name
         self.arguments = resolveArguments(arguments)
-        from ADT.ResolverUtil import resolveNodeViaType
+        from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.returnType = resolveNodeViaType(returnType["$type"], returnType)
         self.body = resolveNodeViaType(body["$type"], body["Nodes"])
 

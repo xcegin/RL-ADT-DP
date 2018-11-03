@@ -12,3 +12,7 @@ class LiteralNode(ADTNode):
 
     def accept(self, visitor):
         return visitor.visit_literal(self)
+
+    # TODO ADD RESOLVE KIND OF CONSTANT
+    def resolveVectorizationValue(self):
+        return -1

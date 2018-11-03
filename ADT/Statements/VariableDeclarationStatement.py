@@ -10,7 +10,7 @@ class VariableDeclarationStatement(StatementNode):
 
     def __init__(self, variableType, initialValue=None):
         super().__init__()
-        from ADT.ResolverUtil import resolveNodeViaType
+        from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.variableType = resolveNodeViaType(variableType["$type"], variableType)
         self.variable = None
         self.initialValue = initialValue

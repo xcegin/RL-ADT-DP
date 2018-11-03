@@ -1,5 +1,6 @@
 from ADT.Operators.BinaryOperator import BinaryOperator
 
+
 class BinaryArithmeticOperator(BinaryOperator):
     operations = {0: 'Addition', 1: 'Substraction', 2: 'Multiplication', 3: 'Division', 4: 'Modulus'}
 
@@ -8,3 +9,6 @@ class BinaryArithmeticOperator(BinaryOperator):
 
     def resolveOperationToString(self):
         return self.operations[self.operation]
+
+    def resolveVectorizationValue(self):
+        return self.operation

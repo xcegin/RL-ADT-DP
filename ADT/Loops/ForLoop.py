@@ -1,3 +1,6 @@
+from copy import deepcopy
+from math import sqrt
+
 from ADT.Loops.LoopNode import LoopNode
 
 
@@ -7,7 +10,7 @@ class ForLoop(LoopNode):
 
     def __init__(self, nodeInit, condition, nodeAfter, nodeBlock):
         super().__init__(condition, nodeBlock)
-        from ADT.ResolverUtil import resolveNodeViaType
+        from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.condition = resolveNodeViaType(condition["$type"], condition)
         self.nodeInit = resolveNodeViaType(nodeInit["$type"], nodeInit)
         self.nodeAfter = resolveNodeViaType(nodeAfter["$type"], nodeAfter)
@@ -15,3 +18,14 @@ class ForLoop(LoopNode):
 
     def accept(self, visitor):
         return visitor.visit_forloop(self)
+
+    def return_vector(self, visitor):
+        initNodeVectors = self.nodeInit.accept(visitor)
+        listOfChildVectors = [self.condition.accept(visitor), self.nodeBlock.accept(visitor),
+                              self.nodeAfter.accept(visitor)]
+        numOfTimes = int(round(sqrt(len(listOfChildVectors)))) + 1
+        for x in range(numOfTimes):
+            toBeAppended = deepcopy(listOfChildVectors)
+            listOfChildVectors.append(toBeAppended)
+        listOfChildVectors.insert(0, initNodeVectors)
+        return listOfChildVectors

@@ -9,8 +9,11 @@ class FunctionCall(StatementNode):
     def __init__(self, name, arguments):
         super().__init__()
         self.name = name
-        from ADT.ArgumentResolver import resolveArguments
+        from ADT.Utils.ArgumentResolver import resolveArguments
         self.arguments = resolveArguments(arguments)
 
     def accept(self, visitor):
-        return visitor.visit_statement(self)
+        return visitor.visit_functioncall(self)
+
+    def resolveVectorizationValue(self):
+        return 0

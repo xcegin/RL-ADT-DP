@@ -7,6 +7,7 @@ from ADT.Operators.BinaryOperator import BinaryOperator
 from ADT.Operators.ComparisonOperator import ComparisonOperator
 from ADT.Operators.UnaryOperator import UnaryOperator
 from ADT.Statements.AssigmentStatement import AssignmentStatement
+from ADT.Statements.FunctionCall import FunctionCall
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
 from ADT.Statements.StatementNode import StatementNode
 from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
@@ -19,6 +20,7 @@ rightBracket = ")"
 
 
 class ConditionSolverVisitor(ABCVisitor):
+
 
     def __init__(self, Context, rowExpressionValues):
         super().__init__(Context)
@@ -90,6 +92,9 @@ class ConditionSolverVisitor(ABCVisitor):
         pass
 
     def visit_assigment(self, assigment: AssignmentStatement):
+        pass
+
+    def visit_functioncall(self, functioncall: FunctionCall):
         pass
 
     def visit_functiondeclaration(self, functionDecl: FunctionDeclarationStatement):

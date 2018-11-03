@@ -8,3 +8,6 @@ class UnknownNode(ADTNode):
 
     def accept(self, visitor):
         return visitor.visit_unknown(self)
+
+    def resolveVectorizationValue(self):
+        return -1

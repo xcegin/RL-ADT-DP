@@ -5,7 +5,7 @@ class IfNode(ADTNode):
     CDTName = "c.CASTIfStatement"
 
     def __init__(self, condition, nodeThen, nodeElse=None):
-        from ADT.ResolverUtil import resolveNodeViaType
+        from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.condition = resolveNodeViaType(condition["$type"], condition)
         self.nodeThen = resolveNodeViaType(nodeThen["$type"], nodeThen)
         if nodeElse is not None:

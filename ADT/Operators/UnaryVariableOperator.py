@@ -9,3 +9,6 @@ class UnaryVariableOperator(UnaryOperator):
 
     def resolveOperationToString(self):
         return self.operations[self.operation]
+
+    def resolveVectorizationValue(self):
+        return self.operation

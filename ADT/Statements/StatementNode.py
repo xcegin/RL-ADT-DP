@@ -8,3 +8,6 @@ class StatementNode(ADTNode):
 
     def __init__(self):
         pass
+
+    def resolveVectorizationValue(self):
+        return -1
