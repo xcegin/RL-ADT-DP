@@ -21,12 +21,12 @@ rightBracket = ")"
 
 class ConditionSolverVisitor(ABCVisitor):
 
-
     def __init__(self, Context, rowExpressionValues):
         super().__init__(Context)
         self.simpleExpressions = []
         self.expression = ""
         self.rowExpressionValues = rowExpressionValues
+        self.isRoot = True
 
     def visit_loop(self, loopNode: LoopNode):
         pass
@@ -36,37 +36,40 @@ class ConditionSolverVisitor(ABCVisitor):
 
     def visit_binaryoperator(self, binaryOperator: BinaryOperator):
         if isinstance(binaryOperator, BinaryLogicalOperator):
+            tmpExpression = ""
+            self.isRoot = False
             if self.checkIfIsComposite(binaryOperator.leftOperand):
                 length = len(self.expression)
-                composite = binaryOperator.leftOperand.accept(self)
-                self.expression = self.expression[:length] + leftBracket + composite + rightBracket + \
-                                  self.expression[length:]
+                binaryOperator.leftOperand.accept(self)
+                self.expression = self.expression[:length] + leftBracket + \
+                                  self.expression[length:] + rightBracket
             else:
                 simpleExpression = binaryOperator.leftOperand.accept(self)
                 self.simpleExpressions.append(simpleExpression)
-                self.expression = simpleExpression
-                return simpleExpression
+                self.expression += simpleExpression
+                tmpExpression += simpleExpression
 
             self.expression += space + binaryOperator.resolveOperationToString() + space
 
             if self.checkIfIsComposite(binaryOperator.rightOperand):
                 length = len(self.expression)
-                composite = binaryOperator.rightOperand.accept(self)
-                self.expression = self.expression[:length] + leftBracket + composite + rightBracket + \
+                binaryOperator.rightOperand.accept(self)
+                self.expression = self.expression[:length] + leftBracket + rightBracket + \
                                   self.expression[length:]
             else:
                 simpleExpression = binaryOperator.rightOperand.accept(self)
                 self.simpleExpressions.append(simpleExpression)
-                self.expression = simpleExpression
-                return simpleExpression
+                self.expression += simpleExpression
+                tmpExpression += simpleExpression
+            return tmpExpression
 
         else:
             expression = binaryOperator.leftOperand.accept(self)
             expression += space + binaryOperator.resolveOperationToString()
             expression += space + binaryOperator.rightOperand.accept(self)
-            if self.expression == "":
+            if self.expression == "" and self.isRoot:
                 self.simpleExpressions.append(expression)
-                self.expression = expression
+                self.expression += expression
             return expression
 
     def visit_unaryoperator(self, unaryOperator: UnaryOperator):
@@ -103,10 +106,17 @@ class ConditionSolverVisitor(ABCVisitor):
     def isConditionTrue(self):
         for expression in self.simpleExpressions:
             self.expression = self.expression.replace(expression, str(self.rowExpressionValues[expression]))
+        self.expression = self.expression.replace("And", "and")
+        self.expression = self.expression.replace("Or", "or")
         return eval(self.expression)
 
     def checkIfIsComposite(self, node):
         if isinstance(node, BinaryLogicalOperator) or isinstance(node, ComparisonOperator):
-            return True
+            if isinstance(node.leftOperand, BinaryLogicalOperator) or isinstance(node.leftOperand, ComparisonOperator) \
+                    or isinstance(node.rightOperand, BinaryLogicalOperator) or \
+                    isinstance(node.leftOperand, ComparisonOperator):
+                return True
+            else:
+                return False
         else:
             return False

@@ -86,12 +86,13 @@ class VectorizationVisitor(ABCVisitor):
         list = []
         conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
         ifNode.condition.accept(conditionSolver)
-        list.append(ifNode.condition.accept(self))
+        list = list + ifNode.condition.accept(self)
         self.embedding = self.embedding + if_embedding
         if conditionSolver.isConditionTrue():
-            list.append(ifNode.nodeThen.accept(self))
+            list = list + ifNode.nodeThen.accept(self)
         else:
-            list.append(ifNode.nodeElse.accept(self))
+            if ifNode.nodeElse is not None:
+                list = list + ifNode.nodeElse.accept(self)
         self.embedding = self.embedding + if_embedding
         return list
 
@@ -101,9 +102,10 @@ class VectorizationVisitor(ABCVisitor):
     def visit_sequence(self, sequence: SequenceNode):
         list = []
         for node in sequence.nodes:
-            list.append(node.return_vector(self))
+            list = list + node.return_vector(self)
         return list
 
     def visit_functiondeclaration(self, functionDecl: FunctionDeclarationStatement):
         self.functionName = functionDecl.name
-        return functionDecl.body.return_vector(self)
+        list = functionDecl.body.accept(self)
+        return functionDecl.body.accept(self)

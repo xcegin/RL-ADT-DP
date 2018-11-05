@@ -88,7 +88,8 @@ class DataDependenciesVisitor(ABCVisitor):
         if conditionSolver.isConditionTrue():
             ifNode.nodeThen.accept(self)
         else:
-            ifNode.nodeElse.accept(self)
+            if ifNode.nodeElse is not None:
+                ifNode.nodeElse.accept(self)
 
     def visit_literal(self, literalNode: LiteralNode):
         pass

@@ -25,7 +25,7 @@ class UnaryOperator(ADTNode):
         vectorsOfChildren = [self.operand.accept(visitor)]
         if len(vectorsOfChildren) == 0:
             return vectorsOfChildren
-        for argument in reversed(visitor.arguments):
+        for argument in reversed(list(visitor.arguments.keys())):
             vector = numpy.zeros(shape=8)
             vector[0] = typeOfVectorData(self)
             vector[1] = self.resolveVectorizationValue()

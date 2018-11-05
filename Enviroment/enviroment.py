@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from gym import spaces
 
-import Utils
+from Enviroment import Utils
 from ADT.Utils.ResolverUtil import resolveNodeViaType
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
 from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
@@ -11,7 +11,7 @@ from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
 from ADT.Utils.MathOperationsUtil import randomValue
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Heuristic.HeuristicCalculator import HeuristicCalculator
-from Utils import getTypeOfExpression
+from Enviroment.Utils import getTypeOfExpression
 
 
 class Enviroment():
@@ -45,6 +45,13 @@ class Enviroment():
         self.createVectorsForRows()
 
         self.action_space = spaces.Discrete(34)
+
+    #TODO make some env reset function
+    def reset(self):
+        pass
+
+    def step(self, action):
+        pass
 
     def getRootADTNode(self):
         found_root_node = False
@@ -119,10 +126,11 @@ class Enviroment():
                 self.rootTreeAdtNode.accept(dataDependencyVisitor)
                 self.vectorizationVisitor = VectorizationVisitor(dataDependencyVisitor.context, dictForRow, self.arguments)
                 list = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
-                numOfTimes = int(round(len(list))) ** 1/8 + 1
+                list = [x for x in list if x != []]
+                numOfTimes = int(round(len(list)) ** 1/3) + 1
                 for x in range(numOfTimes):
                     toBeAppended = deepcopy(list)
-                    list.append(toBeAppended)
+                    list = list + toBeAppended
                 tableRows.append(list)
             self.listOfTableVectors.append(tableRows)
 
@@ -135,8 +143,23 @@ class Enviroment():
         finalDict = {}
         for dictionary in row:
             finalDict = {**finalDict, **dictionary}
+        for key in list(finalDict.keys()):
+            if "~" in key:
+                tmpKey = key + " "
+                newKey = self.replaceTildeVariableNames(tmpKey)
+                finalDict[newKey] = finalDict[key]
+                del finalDict[key]
         return finalDict
 
+    #TODO: Replace with tilde addition in datadependenciesvisitor
+    def replaceTildeVariableNames(self, key):
+        indexOfTilde = key.find("~")
+        tmp = key[indexOfTilde:]
+        indexOfSpace = tmp.find(" ")
+        newKey = key[:indexOfTilde] + tmp[indexOfSpace:]
+        if "~" in newKey:
+            return self.replaceTildeVariableNames(newKey)
+        return newKey[:-1]
 
 
 env = Enviroment()

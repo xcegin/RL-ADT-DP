@@ -26,6 +26,6 @@ class ForLoop(LoopNode):
         numOfTimes = int(round(sqrt(len(listOfChildVectors)))) + 1
         for x in range(numOfTimes):
             toBeAppended = deepcopy(listOfChildVectors)
-            listOfChildVectors.append(toBeAppended)
+            listOfChildVectors = listOfChildVectors + toBeAppended
         listOfChildVectors.insert(0, initNodeVectors)
         return listOfChildVectors

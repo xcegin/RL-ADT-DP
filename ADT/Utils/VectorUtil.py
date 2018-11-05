@@ -1,30 +1,29 @@
-from ADT import LiteralNode, IfNode
-from ADT.Loops.DoLoop import DoLoop
-from ADT.Loops.WhileLoop import WhileLoop
-from ADT.Operators.BinaryArithmeticOperator import BinaryArithmeticOperator
-from ADT.Operators.BinaryBitwiseOperator import BinaryBitwiseOperator
-from ADT.Operators.BinaryLogicalOperator import BinaryLogicalOperator
-from ADT.Operators.BinaryOperator import BinaryOperator
-from ADT.Operators.ComparisonOperator import ComparisonOperator
-from ADT.Operators.UnaryArithmeticOperator import UnaryArithmeticOperator
-from ADT.Operators.UnaryBitwiseOpeartor import UnaryBitwiseOperator
-from ADT.Operators.UnaryLogicalOperator import UnaryLogicalOperator
-from ADT.Operators.UnaryOperator import UnaryOperator
-from ADT.Operators.UnaryVariableOperator import UnaryVariableOperator
-from ADT.Statements.AssigmentStatement import AssignmentStatement
-from ADT.Statements.BreakStatement import BreakStatement
-from ADT.Statements.FunctionCall import FunctionCall
-from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
-from ADT.Statements.ReturnStatement import ReturnStatement
-from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
-from ADT.Variables.ArraySubscriptVariable import ArraySubscriptVariable
-from ADT.Variables.FieldReferenceVariable import FieldReferenceVariable
-from ADT.Variables.OperatorVariable import OperatorVariable
-from ADT.Variables.SimpleVariable import SimpleVariable
-from ADT.Variables.VariableNode import VariableNode
+
 
 #TODO think more of the grouping values
 def typeOfVector(node):
+    from ADT.Operators.BinaryArithmeticOperator import BinaryArithmeticOperator
+    from ADT.Loops.DoLoop import DoLoop
+    from ADT.Loops.WhileLoop import WhileLoop
+    from ADT.Operators.BinaryBitwiseOperator import BinaryBitwiseOperator
+    from ADT.Operators.BinaryLogicalOperator import BinaryLogicalOperator
+    from ADT.Operators.UnaryArithmeticOperator import UnaryArithmeticOperator
+    from ADT.Operators.ComparisonOperator import ComparisonOperator
+    from ADT.Operators.UnaryBitwiseOpeartor import UnaryBitwiseOperator
+    from ADT.Operators.UnaryLogicalOperator import UnaryLogicalOperator
+    from ADT.Operators.UnaryVariableOperator import UnaryVariableOperator
+    from ADT.Statements.AssigmentStatement import AssignmentStatement
+    from ADT.Statements.BreakStatement import BreakStatement
+    from ADT.Statements.FunctionCall import FunctionCall
+    from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
+    from ADT.Statements.ReturnStatement import ReturnStatement
+    from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
+    from ADT.Variables.ArraySubscriptVariable import ArraySubscriptVariable
+    from ADT.Variables.FieldReferenceVariable import FieldReferenceVariable
+    from ADT.Variables.SimpleVariable import SimpleVariable
+    from ADT.Variables.OperatorVariable import OperatorVariable
+    from ADT.IfNode import IfNode
+    from ADT.LiteralNode import LiteralNode
     if node is DoLoop or node is WhileLoop:
         return 0
     elif node is BinaryArithmeticOperator:
@@ -71,6 +70,11 @@ def typeOfVector(node):
         return 21
 
 def typeOfVectorData(node):
+    from ADT.Variables.VariableNode import VariableNode
+    from ADT.LiteralNode import LiteralNode
+    from ADT.Operators.BinaryOperator import BinaryOperator
+    from ADT.Operators.UnaryOperator import UnaryOperator
+    from ADT.Statements.FunctionCall import FunctionCall
     if node is VariableNode:
         return 0
     elif node is LiteralNode:

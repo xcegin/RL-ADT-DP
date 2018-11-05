@@ -18,5 +18,5 @@ class LoopNode(ADTNode):
         numOfTimes = int(round(sqrt(len(listOfChildVectors)))) + 1
         for x in range(numOfTimes):
             toBeAppended = deepcopy(listOfChildVectors)
-            listOfChildVectors.append(toBeAppended)
+            listOfChildVectors = listOfChildVectors + toBeAppended
         return listOfChildVectors

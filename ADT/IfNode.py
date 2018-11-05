@@ -15,3 +15,6 @@ class IfNode(ADTNode):
 
     def accept(self, visitor):
         return visitor.visit_ifnode(self)
+
+    def return_vector(self, visitor):
+        return visitor.visit_ifnode(self)

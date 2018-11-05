@@ -4,7 +4,7 @@ from ADT.ADTNode import ADTNode
 class SequenceNode(ADTNode):
 
     def accept(self, visitor):
-        visitor.visit_sequence(self)
+        return visitor.visit_sequence(self)
 
     CDTNameAsBlock = "c.CASTCompoundStatement"
     CDTNameAsExpression = "c.CASTExpressionList"
