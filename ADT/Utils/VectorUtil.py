@@ -1,6 +1,6 @@
 
 
-#TODO think more of the grouping values
+#TODO think more of the grouping values -> needs to be talked about with someone who knows this shait
 def typeOfVector(node):
     from ADT.Operators.BinaryArithmeticOperator import BinaryArithmeticOperator
     from ADT.Loops.DoLoop import DoLoop
@@ -91,7 +91,7 @@ def typeOfVectorData(node):
 
 def vectorizationTypeUtil(type):
     if type == "t_int":
-        return 0
+        return 1
     elif type == "t_char16_t":
         return 20
     elif type == "t_char":
@@ -116,6 +116,23 @@ def vectorizationTypeUtil(type):
         return 104
     else:
         return 105
+
+def vectorizationTypeLiteral(type):
+    if type == "lk_nullptr":
+        return 0
+    elif type == "lk_char_constant":
+        return 20
+    elif type == "lk_string_literal":
+        return 21
+    elif type == "lk_false" or type == "lk_true":
+        return 50
+    elif type == "lk_this":
+        return 1
+    elif type == "lk_float_constant":
+        return 100
+    else:
+        return 150
+
 
 def resolve_argument_involvement(argument, visitor):
     if visitor.currentArgumentVectorDependency == None:

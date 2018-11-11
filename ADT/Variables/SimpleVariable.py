@@ -9,8 +9,8 @@ class SimpleVariable(VariableNode):
     CDTPropertyDefinition = "Definition"
     CDTPropertyDeclaration = "Declaration"
 
-    def __init__(self, variableName, isReference, isDefinition, isDeclaration, variableDeclaration=None):
-        VariableNode.__init__(self, variableName, variableDeclaration)
+    def __init__(self, id, variableName, isReference, isDefinition, isDeclaration, variableDeclaration=None):
+        VariableNode.__init__(self, id, variableName, variableDeclaration)
         self.isReference = isReference
         self.isDefinition = isDefinition
         self.isDeclaration = isDeclaration

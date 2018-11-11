@@ -47,79 +47,64 @@ def resolveNodeViaType(type, node):
         return variableDeclarations[node["$id"]]
     # ADT Nodes
     elif type == "IfNode":
-        return IfNode(node["Condition"], node["NodeThen"], node["NodeElse"])
+        return IfNode(node["$id"], node["Condition"], node["NodeThen"], node["NodeElse"])
     elif type == "LiteralNode":
-        return LiteralNode(node["Value"], node["Kind"])
+        return LiteralNode(node["$id"],node["Value"], node["Kind"])
     elif type == "SequenceNode" or type == "IAdtNode":
-        return SequenceNode(node)
+        return SequenceNode("sequenceNode", node)
     # Statement Nodes
     elif type == "AssignmentStatement":
-        return AssignmentStatement(node["Variable"], node["Value"])
+        return AssignmentStatement(node["$id"], node["Variable"], node["Value"])
     elif type == "BreakStatement":
-        return BreakStatement()
+        return BreakStatement(node["$id"])
     elif type == "FunctionCall":
-        return FunctionCall(node["Name"], node["Arguments"])
+        return FunctionCall(node["$id"], node["Name"], node["Arguments"], node["FunctionDeclaration"])
     elif type == "FunctionDeclarationStatement":
-        return FunctionDeclarationStatement(node["ReturnTypeModifiers"], node["ReturnType"], node["Name"],
-                                            node["Arguments"])
+        return FunctionDeclarationStatement(node["$id"], node["ReturnType"], node["Name"],
+                                            node["Arguments"], node["Body"])
     elif type == "ReturnStatement":
-        return ReturnStatement(node["Value"])
+        return ReturnStatement(node["$id"], node["Value"])
     # Variable Nodes
     elif type == "ArraySubscriptVariable":
-        variableDeclaration = tryResolveVariableDeclarationStatement(node)
-        return ArraySubscriptVariable(node["VariableName"], node["Array"], node["Subscript"], variableDeclaration)
+        return ArraySubscriptVariable(node["$id"], node["VariableName"], node["Array"], node["Subscript"],
+                                      node["VariableDeclaration"])
     elif type == "FieldReferenceVariable":
-        variableDeclaration = tryResolveVariableDeclarationStatement(node)
-        return FieldReferenceVariable(node["VariableName"], node["Variable"], node["Dereference"], node["Field"],
-                                      variableDeclaration)
+        return FieldReferenceVariable(node["$id"], node["VariableName"], node["Variable"], node["Dereference"],
+                                      node["Field"],
+                                      node["VariableDeclaration"])
     elif type == "OperatorVariable":
-        variableDeclaration = tryResolveVariableDeclarationStatement(node)
-        return OperatorVariable(node["VariableName"], node["Operator"], variableDeclaration)
+        return OperatorVariable(node["$id"], node["VariableName"], node["Operator"], node["VariableDeclaration"])
     elif type == "SimpleVariable":
-        variableDeclaration = tryResolveVariableDeclarationStatement(node)
-        return SimpleVariable(node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"],
-                              variableDeclaration)
+        return SimpleVariable(node["$id"],
+                              node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"],
+                              node["VariableDeclaration"])
     elif type == "TypeDefinition":
-        return TypeDefinition(node["TypeName"], node["PointerDimension"], node["ArrayDimension"],
+        return TypeDefinition(node["$id"], node["TypeName"], node["PointerDimension"], node["ArrayDimension"],
                               node["ArrayDimensionSize"],
                               node["Modifiers"], node["TypeNode"])
     # Loop Nodes
     elif type == "DoLoop":
-        return DoLoop(node["Condition"], node["NodeBlock"])
+        return DoLoop(node["$id"], node["Condition"], node["NodeBlock"])
     elif type == "ForLoop":
-        return ForLoop(node["NodeInit"], node["Condition"], node["NodeAfter"], node["NodeBlock"])
+        return ForLoop(node["$id"], node["NodeInit"], node["Condition"], node["NodeAfter"], node["NodeBlock"])
     elif type == "WhileLoop":
-        return WhileLoop(node["Condition"], node["NodeBlock"])
+        return WhileLoop(node["$id"], node["Condition"], node["NodeBlock"])
     # Operator nodes
     elif type == "BinaryArithmeticOperator":
-        return BinaryArithmeticOperator(node["Operation"], node["LeftOperand"], node["RightOperand"])
+        return BinaryArithmeticOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"])
     elif type == "BinaryArithmeticOperator":
-        return BinaryBitwiseOperator(node["Operation"], node["LeftOperand"], node["RightOperand"])
+        return BinaryBitwiseOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"])
     elif type == "BinaryLogicalOperator":
-        return BinaryLogicalOperator(node["Operation"], node["LeftOperand"], node["RightOperand"])
+        return BinaryLogicalOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"])
     elif type == "ComparisonOperator":
-        return ComparisonOperator(node["Operation"], node["LeftOperand"], node["RightOperand"])
+        return ComparisonOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"])
     elif type == "UnaryArithmeticOperator":
-        return UnaryArithmeticOperator(node["Operation"], node["Operand"])
+        return UnaryArithmeticOperator(node["$id"], node["Operation"], node["Operand"])
     elif type == "UnaryBitwiseOperator":
-        return UnaryArithmeticOperator(node["Operation"], node["Operand"])
+        return UnaryArithmeticOperator(node["$id"], node["Operation"], node["Operand"])
     elif type == "UnaryLogicalOperator":
-        return UnaryLogicalOperator(node["Operation"], node["Operand"])
+        return UnaryLogicalOperator(node["$id"], node["Operation"], node["Operand"])
     elif type == "UnaryVariableOperator":
-        return UnaryVariableOperator(node["Operation"], node["Operand"])
+        return UnaryVariableOperator(node["$id"], node["Operation"], node["Operand"])
     else:
-        return UnknownNode()
-
-def tryResolveVariableDeclarationStatement(node):
-    if "VariableDeclaration" in node:
-        variableDeclaration = node["VariableDeclaration"]
-        if "$ref" in variableDeclaration:
-            numOfRef = variableDeclaration["$ref"]
-            if numOfRef in variableDeclarations:
-                return variableDeclarations[numOfRef]
-            else:
-                return None
-        else:
-            return None
-    else:
-        return None
+        return UnknownNode(node["$id"])

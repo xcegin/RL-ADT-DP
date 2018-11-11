@@ -12,13 +12,16 @@ from ADT.Statements.VariableDeclarationStatement import VariableDeclarationState
 from ADT.Variables.VariableNode import VariableNode
 from ADT.Visitors.ABCVisitor import ABCVisitor
 from ADT.Visitors.ConditionSolverVisitor import ConditionSolverVisitor
+from Enviroment import Utils
+from Enviroment.Utils import getTypeOfExpression
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
 class DataDependenciesVisitor(ABCVisitor):
 
-    def __init__(self, Context, rowExpressionValues):
+    def __init__(self, Context, rowExpressionValues, expressions):
         super().__init__(Context)
+        self.expressions = expressions
         self.rowExpressionValues = rowExpressionValues
         self.isInModifyingVariableState = False
         self.lastAssignedVariable = None
@@ -27,20 +30,32 @@ class DataDependenciesVisitor(ABCVisitor):
         self.context = enviromentWalkerContext()
 
     def visit_loop(self, loopNode: LoopNode):
-        conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
-        loopNode.condition.accept(conditionSolver)
+        expression = self.expressions[loopNode.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
         loopNode.condition.accept(self)
-        if conditionSolver.isConditionTrue():
+        if isConditionTrue:
             loopNode.nodeBlock.accept(self)
         else:
             pass
 
     def visit_forloop(self, forLoop: ForLoop):
-        conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
+        expression = self.expressions[forLoop.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
         forLoop.nodeInit.accept(self)
-        forLoop.condition.accept(conditionSolver)
         forLoop.condition.accept(self)
-        if conditionSolver.isConditionTrue():
+        if isConditionTrue:
             forLoop.nodeBlock.accept(self)
             forLoop.nodeAfter(self)
         else:
@@ -82,10 +97,17 @@ class DataDependenciesVisitor(ABCVisitor):
             self.context.dataDependencies[variableNode.variableName] = []
 
     def visit_ifnode(self, ifNode: IfNode):
-        conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
-        ifNode.condition.accept(conditionSolver)
+        expression = self.expressions[ifNode.id]
+
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
         ifNode.condition.accept(self)
-        if conditionSolver.isConditionTrue():
+        if isConditionTrue:
             ifNode.nodeThen.accept(self)
         else:
             if ifNode.nodeElse is not None:

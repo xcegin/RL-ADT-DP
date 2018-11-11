@@ -8,8 +8,8 @@ class ForLoop(LoopNode):
 
     CDTName = "c.CASTForStatement"
 
-    def __init__(self, nodeInit, condition, nodeAfter, nodeBlock):
-        super().__init__(condition, nodeBlock)
+    def __init__(self, id, nodeInit, condition, nodeAfter, nodeBlock):
+        super().__init__(id, condition, nodeBlock)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.condition = resolveNodeViaType(condition["$type"], condition)
         self.nodeInit = resolveNodeViaType(nodeInit["$type"], nodeInit)

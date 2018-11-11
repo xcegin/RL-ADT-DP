@@ -6,8 +6,8 @@ from ADT.Utils.VectorUtil import typeOfVectorData, resolve_argument_involvement
 
 class UnaryOperator(ADTNode):
 
-
-    def __init__(self, operation, operand):
+    def __init__(self, id, operation, operand):
+        super().__init__(id)
         self.operation = operation
         from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.operand = resolveNodeViaType(operand["$type"], operand)

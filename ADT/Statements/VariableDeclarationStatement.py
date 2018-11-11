@@ -8,10 +8,14 @@ class VariableDeclarationStatement(StatementNode):
     CDTChildParameter = "c.CASTSimpleDeclaration"
     CDTChildInitializer = "c.CASTEqualsInitializer"
 
-    def __init__(self, variableType, initialValue=None):
-        super().__init__()
+    def __init__(self, id, variableType, initialValue=None):
+        super().__init__(id)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.variableType = resolveNodeViaType(variableType["$type"], variableType)
+        if variableType is None:
+            from ADT.UnknowNode import UnknownNode
+            self.variableType = UnknownNode("unknown")
+        else:
+            self.variableType = resolveNodeViaType(variableType["$type"], variableType)
         self.variable = None
         self.initialValue = initialValue
 

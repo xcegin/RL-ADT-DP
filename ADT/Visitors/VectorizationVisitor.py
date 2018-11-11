@@ -13,6 +13,8 @@ from ADT.Statements.VariableDeclarationStatement import VariableDeclarationState
 from ADT.Variables.VariableNode import VariableNode
 from ADT.Visitors.ABCVisitor import ABCVisitor
 from ADT.Visitors.ConditionSolverVisitor import ConditionSolverVisitor
+from Enviroment.Utils import getTypeOfExpression
+from Enviroment import Utils
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 if_embedding = 1
@@ -21,8 +23,9 @@ loop_embedding = 4
 
 class VectorizationVisitor(ABCVisitor):
 
-    def __init__(self, Context, rowExpressionValues, arguments):
+    def __init__(self, Context, rowExpressionValues, arguments, expressions):
         super().__init__(Context)
+        self.expressions = expressions
         self.rowExpressionValues = rowExpressionValues
         self.embedding = 0
         self.functionName = ""
@@ -38,9 +41,15 @@ class VectorizationVisitor(ABCVisitor):
         self.currentArgumentVectorDependency = None
 
     def visit_loop(self, loopNode: LoopNode):
-        conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
-        loopNode.condition.accept(conditionSolver)
-        if conditionSolver.isConditionTrue():
+        expression = self.expressions[loopNode.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        if isConditionTrue:
             self.embedding = self.embedding + loop_embedding
             resultVectors = loopNode.return_vector(self)
             self.embedding = self.embedding - loop_embedding
@@ -49,9 +58,15 @@ class VectorizationVisitor(ABCVisitor):
             pass
 
     def visit_forloop(self, forLoop: ForLoop):
-        conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
-        forLoop.condition.accept(conditionSolver)
-        if conditionSolver.isConditionTrue():
+        expression = self.expressions[forLoop.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        if isConditionTrue:
             self.embedding = self.embedding + loop_embedding
             resultVectors = forLoop.return_vector(self)
             self.embedding = self.embedding - loop_embedding
@@ -84,11 +99,17 @@ class VectorizationVisitor(ABCVisitor):
 
     def visit_ifnode(self, ifNode: IfNode):
         list = []
-        conditionSolver = ConditionSolverVisitor(enviromentWalkerContext(), self.rowExpressionValues)
-        ifNode.condition.accept(conditionSolver)
+        expression = self.expressions[ifNode.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
         list = list + ifNode.condition.accept(self)
         self.embedding = self.embedding + if_embedding
-        if conditionSolver.isConditionTrue():
+        if isConditionTrue:
             list = list + ifNode.nodeThen.accept(self)
         else:
             if ifNode.nodeElse is not None:
@@ -107,5 +128,4 @@ class VectorizationVisitor(ABCVisitor):
 
     def visit_functiondeclaration(self, functionDecl: FunctionDeclarationStatement):
         self.functionName = functionDecl.name
-        list = functionDecl.body.accept(self)
         return functionDecl.body.accept(self)

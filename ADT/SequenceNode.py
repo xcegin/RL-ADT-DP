@@ -9,7 +9,8 @@ class SequenceNode(ADTNode):
     CDTNameAsBlock = "c.CASTCompoundStatement"
     CDTNameAsExpression = "c.CASTExpressionList"
 
-    def __init__(self, nodes):
+    def __init__(self, id, nodes):
+        super().__init__(id)
         self.nodes = []
         if "Nodes" in nodes:
             from ADT.Utils.ResolverUtil import resolveNodeViaType

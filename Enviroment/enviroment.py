@@ -3,30 +3,41 @@ from copy import deepcopy
 
 from gym import spaces
 
-from Enviroment import Utils
-from ADT.Utils.ResolverUtil import resolveNodeViaType
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
+from ADT.Utils.MathOperationsUtil import randomValue, resolveMathOperation
+from ADT.Utils.ResolverUtil import resolveNodeViaType
 from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
 from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
-from ADT.Utils.MathOperationsUtil import randomValue
+from Enviroment import Utils
+from Enviroment.ResolveJsonRef import resolveRef
+from Enviroment.Utils import getTypeOfExpression
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Heuristic.HeuristicCalculator import HeuristicCalculator
-from Enviroment.Utils import getTypeOfExpression
+from Heuristic.HeuristicResolver import resolveHeuristic
 
 
 class Enviroment():
 
     def __init__(self):
-        with open('data.json') as f:
+        with open('Enviroment/mcdc.json') as f:
             data = json.load(f)
-        with open('mcdc.json') as f:
-            mcdc = json.load(f)
+
+        self.currentVector = 0
+        self.currentNumOfTable = 0
+        self.currentNumOfRow = 0
+        self.argumentChangedVal = 0
+        self.currentHeuristicValue = 0
+        self.expressions = {}
+        self.currentHeuristics = []
+        self.currentVectors = []
+        self.currentHeuristicRow = []
+        self.currentVectorRow = []
 
         self.heuristicCalc = HeuristicCalculator()
-        self.data = data
-        self.mcdc = mcdc
+        self.data = resolveRef(data, {})
+        self.mcdc = data
         self.logicTable = None
-        self.rootAdtNode = None
+        self.rootAdtNode = {}
         self.arguments = {}
         self.argumentValues = {}
         self.rootTreeAdtNode = None
@@ -41,17 +52,45 @@ class Enviroment():
         self.parseLoadedJsonIntoTree()
         self.createListOfMcDcTableRows()
         self.createHeuristicEquationsForRows()
-        self.initializeArgumentValues()
         self.createVectorsForRows()
 
         self.action_space = spaces.Discrete(34)
 
-    #TODO make some env reset function
-    def reset(self):
-        pass
+    def startTable(self):
+        self.currentHeuristics = self.listOfTableHeuristics[self.currentNumOfTable]
+        self.currentVectors = self.listOfTableVectors[self.currentNumOfTable]
+        self.currentNumOfTable = self.currentNumOfTable + 1
+
+    def startRow(self):
+        self.initializeArgumentValues()
+        self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow]
+        self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
+        self.currentNumOfRow = self.currentNumOfRow + 1
+        self.startingHeuristicValue = resolveHeuristic(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        self.currentHeuristicValue = self.startingHeuristicValue
+        return self.currentVectorRow[0]
 
     def step(self, action):
-        pass
+        #self.currentVector = self.currentVector + 1
+        assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
+        argumentValue = self.argumentValues[self.argumentChangedVal]
+        argument = self.arguments[self.argumentChangedVal]
+        self.argumentValues[self.argumentChangedVal] = resolveMathOperation(action, argumentValue,
+                                                                            argument.variableType.typeName)
+        currentHeuristicValue = resolveHeuristic(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        reward = self.returnReward(currentHeuristicValue)
+        self.currentHeuristicValue = currentHeuristicValue
+        self.argumentChangedVal = self.argumentChangedVal + 1
+        #nextState = self.currentVectorRow[self.currentVector]
+
+        done = False
+        #TODO: reconsider the done checks
+        if self.currentHeuristicValue < 0.5:
+            done = True
+        return reward, done, {}
+
+        # ADD CHECK IF DONE - ITERATE THROUGH VECTORS IN ROW AND HEURISTIC VALUE CHECK
+        # ADD RETURN VALUES
 
     def getRootADTNode(self):
         found_root_node = False
@@ -78,7 +117,8 @@ class Enviroment():
             self.arguments[variableDecl.variable.variableName] = variableDecl
 
     def parseLoadedJsonIntoTree(self):
-        self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["ReturnType"],
+        self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["$id"],
+                                                            self.rootAdtNode["ReturnType"],
                                                             self.rootAdtNode["Name"], self.rootAdtNode["Arguments"],
                                                             self.rootAdtNode["Body"])
 
@@ -99,11 +139,14 @@ class Enviroment():
                 tableRows.append(rowList)
             self.listOfTables.append(tableRows)
 
+    # TODO: REWORK EXPRESSIONS TO NEW FORMAT
     def retrieveExpressions(self, values, expressions):
         for expression in values:
             if getTypeOfExpression(expression["$type"]) == Utils.COMPOSITE_EXPRESSION:
+                self.expressions[expression["AdtNode"]["$id"]] = expression
                 self.retrieveExpressions(expression["Children"]["$values"], expressions)
             else:
+                self.expressions[expression["AdtNode"]["$id"]] = expression
                 expressions.append(expression["Token"])
         return expressions
 
@@ -122,12 +165,13 @@ class Enviroment():
             # Extract values for each column according to one row
             for row in table:
                 dictForRow = self.mergeDictsInRow(row)
-                dataDependencyVisitor = DataDependenciesVisitor(enviromentWalkerContext(), dictForRow)
+                dataDependencyVisitor = DataDependenciesVisitor(enviromentWalkerContext(), dictForRow, self.expressions)
                 self.rootTreeAdtNode.accept(dataDependencyVisitor)
-                self.vectorizationVisitor = VectorizationVisitor(dataDependencyVisitor.context, dictForRow, self.arguments)
+                self.vectorizationVisitor = VectorizationVisitor(dataDependencyVisitor.context, dictForRow,
+                                                                 self.arguments, self.expressions)
                 list = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
                 list = [x for x in list if x != []]
-                numOfTimes = int(round(len(list)) ** 1/3) + 1
+                numOfTimes = int(round(len(list)) ** 1/4) + 1
                 for x in range(numOfTimes):
                     toBeAppended = deepcopy(list)
                     list = list + toBeAppended
@@ -162,4 +206,9 @@ class Enviroment():
         return newKey[:-1]
 
 
-env = Enviroment()
+    def returnReward(self, currentHeuristicValue):
+        difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)
+        if difference > 0:
+            return difference / abs(self.currentHeuristicValue)
+        else:
+            return difference / abs(self.currentHeuristicValue)

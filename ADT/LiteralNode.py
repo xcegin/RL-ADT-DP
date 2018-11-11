@@ -1,4 +1,5 @@
 from ADT.ADTNode import ADTNode
+from ADT.Utils.VectorUtil import vectorizationTypeLiteral
 
 
 class LiteralNode(ADTNode):
@@ -6,13 +7,13 @@ class LiteralNode(ADTNode):
     CDTPropertyKind = "Kind"
     CDTPropertyValue = "Value"
 
-    def __init__(self, value, kind):
+    def __init__(self, id, value, kind):
+        super().__init__(id)
         self.value = value
         self.kind = kind
 
     def accept(self, visitor):
         return visitor.visit_literal(self)
 
-    # TODO ADD RESOLVE KIND OF CONSTANT
     def resolveVectorizationValue(self):
-        return -1
+        return vectorizationTypeLiteral(self.kind)

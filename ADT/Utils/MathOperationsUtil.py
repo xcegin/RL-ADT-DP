@@ -81,58 +81,59 @@ def resolveMathOperation(numOfAction, value, type):
 
 def resolveMin(type):
     if type == "t_int":
-        return "-2147483648"
+        return -2147483648
     elif type == "t_char16_t":
-        return "-32768"
+        return -32768
     elif type == "t_char":
-        return "-127"
+        return -127
     elif type == "t_char32_t":
-        return "-2147483648"
+        return -2147483648
+    # TODO: REINVENT BOOL OPERATIONS - This should not be here, heuristic deals with them, so somehow fix it probs - or return 0/1
     elif type == "t_bool":
-        return "False"
+        return False
     elif type == "t_wchar_t":
-        return "0"
+        return 0
     elif type == "t_int128":
-        return "-9223372036854775807"
-    # TODO: Complete the min max values
+        return -9223372036854775807
+        # TODO: Return different values for the coverage tool
     elif type == "t_float128" or type == "t_double":
-        return ""
+        return float('-inf')
     elif type == "t_float":
-        return ""
+        return float('-inf')
     elif type == "t_decimal128":
-        return ""
+        return float('-inf')
     elif type == "t_decimal32":
-        return ""
+        return float('-inf')
     elif type == "t_decimal64":
-        return ""
+        return float('-inf')
 
 
 def resolveMax(type):
     if type == "t_int":
-        return "2147483648"
+        return 2147483648
     elif type == "t_char16_t":
-        return "32768"
+        return 32768
     elif type == "t_char":
-        return "128"
+        return 128
     elif type == "t_char32_t":
-        return "2147483648"
+        return 2147483648
     elif type == "t_bool":
-        return "True"
+        return True
     elif type == "t_wchar_t":
-        return "65535"
+        return 65535
     elif type == "t_int128":
-        return "9223372036854775807"
-        # TODO: Complete the min max values
+        return 9223372036854775807
+        # TODO: Return different values for the coverage tool
     elif type == "t_float128" or type == "t_double":
-        return ""
+        return float('inf')
     elif type == "t_float":
-        return ""
+        return float('inf')
     elif type == "t_decimal128":
-        return ""
+        return float('inf')
     elif type == "t_decimal32":
-        return ""
+        return float('inf')
     elif type == "t_decimal64":
-        return ""
+        return float('inf')
 
 
 def randomValue(type):

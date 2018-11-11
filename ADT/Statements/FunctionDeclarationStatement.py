@@ -8,8 +8,8 @@ class FunctionDeclarationStatement(StatementNode):
     CDTChildFunction = "c.CASTFunctionDeclarator"
     CDTChildParameter = "c.CASTParameterDeclaration"
 
-    def __init__(self, returnType, name, arguments, body):
-        super().__init__()
+    def __init__(self, id, returnType, name, arguments, body):
+        super().__init__(id)
         self.name = name
         self.arguments = resolveArguments(arguments)
         from ADT.Utils.ResolverUtil import resolveNodeViaType

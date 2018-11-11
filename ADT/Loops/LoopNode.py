@@ -6,7 +6,8 @@ from ADT.ADTNode import ADTNode
 
 class LoopNode(ADTNode):
 
-    def __init__(self, condition, nodeBlock):
+    def __init__(self, id, condition, nodeBlock):
+        super().__init__(id)
         self.condition = condition
         self.nodeBlock = nodeBlock
 

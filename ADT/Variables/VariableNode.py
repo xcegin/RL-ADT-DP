@@ -7,7 +7,8 @@ class VariableNode(ADTNode):
     def accept(self, visitor):
         return visitor.visit_variable(self)
 
-    def __init__(self, variableName=None, variableDeclaration = None):
+    def __init__(self, id, variableName=None, variableDeclaration=None):
+        super().__init__(id)
         self.variableName = variableName
         self.variableDeclaration = variableDeclaration
 
