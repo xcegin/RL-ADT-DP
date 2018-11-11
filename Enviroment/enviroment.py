@@ -139,7 +139,6 @@ class Enviroment():
                 tableRows.append(rowList)
             self.listOfTables.append(tableRows)
 
-    # TODO: REWORK EXPRESSIONS TO NEW FORMAT
     def retrieveExpressions(self, values, expressions):
         for expression in values:
             if getTypeOfExpression(expression["$type"]) == Utils.COMPOSITE_EXPRESSION:
@@ -187,24 +186,7 @@ class Enviroment():
         finalDict = {}
         for dictionary in row:
             finalDict = {**finalDict, **dictionary}
-        for key in list(finalDict.keys()):
-            if "~" in key:
-                tmpKey = key + " "
-                newKey = self.replaceTildeVariableNames(tmpKey)
-                finalDict[newKey] = finalDict[key]
-                del finalDict[key]
         return finalDict
-
-    #TODO: Replace with tilde addition in datadependenciesvisitor
-    def replaceTildeVariableNames(self, key):
-        indexOfTilde = key.find("~")
-        tmp = key[indexOfTilde:]
-        indexOfSpace = tmp.find(" ")
-        newKey = key[:indexOfTilde] + tmp[indexOfSpace:]
-        if "~" in newKey:
-            return self.replaceTildeVariableNames(newKey)
-        return newKey[:-1]
-
 
     def returnReward(self, currentHeuristicValue):
         difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)

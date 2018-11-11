@@ -44,7 +44,6 @@ with tf.Session() as sess:
         env.startTable()
         running_reward = 0
         ep_history = []
-        s = env.startRow()
         while j < len(env.currentVectors):
             s = env.startRow()
             numOfVectors = 1
@@ -64,7 +63,7 @@ with tf.Session() as sess:
                 if numOfVectors == len(env.currentVectorRow):
                     d = True
 
-                if d == True:
+                if d:
                     # Update the network.
                     ep_history = np.array(ep_history)
                     ep_history[:, 2] = discount_rewards(ep_history[:, 2])
