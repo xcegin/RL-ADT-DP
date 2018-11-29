@@ -47,14 +47,18 @@ class AssigmentComplexityVisitor(ABCVisitor):
                 self.complexityOfCurrExpression += bulgarianConstantDivisionMultiply
         if isinstance(binaryOperator, BinaryBitwiseOperator):
             self.complexityOfCurrExpression += bulgarianBitwiseOperation
+        if isinstance(binaryOperator, BinaryLogicalOperator):
+            self.complexityOfCurrExpression += bulgarianBitwiseOperation
         binaryOperator.leftOperand.accept(self)
         binaryOperator.rightOperand.accept(self)
 
     def visit_unaryoperator(self, unaryOperator: UnaryOperator):
         if isinstance(unaryOperator, BinaryBitwiseOperator):
             self.complexityOfCurrExpression += bulgarianConstantPlusMinus
-        if isinstance(unaryOperator, UnaryBitwiseOperator):
+        elif isinstance(unaryOperator, UnaryBitwiseOperator):
             self.complexityOfCurrExpression += bulgarianConstantPlusMinus
+        else:
+            self.complexityOfCurrExpression += bulgarianBitwiseOperation
         unaryOperator.operand.accept(self)
 
     def visit_statement(self, statementNode: StatementNode):

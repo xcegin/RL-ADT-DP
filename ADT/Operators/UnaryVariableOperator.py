@@ -11,4 +11,4 @@ class UnaryVariableOperator(UnaryOperator):
         return self.operations[self.operation]
 
     def resolveVectorizationValue(self):
-        return self.operation
+        return self.operation + 1

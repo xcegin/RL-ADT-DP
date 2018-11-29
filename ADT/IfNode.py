@@ -1,4 +1,7 @@
+from copy import deepcopy
+
 from ADT.ADTNode import ADTNode
+from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
 class IfNode(ADTNode):
@@ -18,4 +21,14 @@ class IfNode(ADTNode):
         return visitor.visit_ifnode(self)
 
     def return_vector(self, visitor):
-        return visitor.visit_ifnode(self)
+        from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
+        visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
+        self.condition.accept(visitorComplexity)
+        # TODO: Fix the vector argument to work with multiple arguments
+        #visitor.currentArgumentVectorDependency = self.condition.variableName
+        #lists = self.condition.accept(visitor)
+        #numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
+        #for x in range(numOfTimes):
+        #    toBeAppended = deepcopy(lists)
+        #    lists = lists + toBeAppended
+        return []

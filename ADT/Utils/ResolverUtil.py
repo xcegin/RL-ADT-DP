@@ -25,6 +25,8 @@ from ADT.Variables.SimpleVariable import SimpleVariable
 from ADT.Variables.TypeDefinition import TypeDefinition
 
 variableDeclarations = {}
+variableNameDecl = {}
+
 
 def resolveType(type):
     startIndex = type.find('[')
@@ -38,10 +40,17 @@ def resolveType(type):
     return givenType.split('.')[-1]
 
 
+def resetUtil():
+    global variableDeclarations
+    global variableNameDecl
+    variableDeclarations = {}
+    variableNameDecl = {}
+
 def resolveNodeViaType(type, node):
     type = resolveType(type)
     if type == "VariableDeclarationStatement":
-        variableDeclarationStatement = VariableDeclarationStatement(node["VariableType"],node["InitialValue"])
+        variableDeclarationStatement = VariableDeclarationStatement(node["$id"], node["VariableType"],
+                                                                    node["InitialValue"])
         variableDeclarations[node["$id"]] = variableDeclarationStatement
         variableDeclarationStatement.variable = resolveNodeViaType(node["Variable"]["$type"], node["Variable"])
         return variableDeclarations[node["$id"]]
@@ -49,7 +58,7 @@ def resolveNodeViaType(type, node):
     elif type == "IfNode":
         return IfNode(node["$id"], node["Condition"], node["NodeThen"], node["NodeElse"])
     elif type == "LiteralNode":
-        return LiteralNode(node["$id"],node["Value"], node["Kind"])
+        return LiteralNode(node["$id"], node["Value"], node["Kind"])
     elif type == "SequenceNode" or type == "IAdtNode":
         return SequenceNode("sequenceNode", node)
     # Statement Nodes
@@ -66,18 +75,22 @@ def resolveNodeViaType(type, node):
         return ReturnStatement(node["$id"], node["Value"])
     # Variable Nodes
     elif type == "ArraySubscriptVariable":
+        variableDeclaration = resolveVarDecl(node)
         return ArraySubscriptVariable(node["$id"], node["VariableName"], node["Array"], node["Subscript"],
-                                      node["VariableDeclaration"])
+                                      variableDeclaration)
     elif type == "FieldReferenceVariable":
+        variableDeclaration = resolveVarDecl(node)
         return FieldReferenceVariable(node["$id"], node["VariableName"], node["Variable"], node["Dereference"],
                                       node["Field"],
-                                      node["VariableDeclaration"])
+                                      variableDeclaration)
     elif type == "OperatorVariable":
-        return OperatorVariable(node["$id"], node["VariableName"], node["Operator"], node["VariableDeclaration"])
+        variableDeclaration = resolveVarDecl(node)
+        return OperatorVariable(node["$id"], node["VariableName"], node["Operator"], variableDeclaration)
     elif type == "SimpleVariable":
+        variableDeclaration = resolveVarDecl(node)
         return SimpleVariable(node["$id"],
                               node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"],
-                              node["VariableDeclaration"])
+                              variableDeclaration)
     elif type == "TypeDefinition":
         return TypeDefinition(node["$id"], node["TypeName"], node["PointerDimension"], node["ArrayDimension"],
                               node["ArrayDimensionSize"],
@@ -108,3 +121,29 @@ def resolveNodeViaType(type, node):
         return UnaryVariableOperator(node["$id"], node["Operation"], node["Operand"])
     else:
         return UnknownNode(node["$id"])
+
+
+def tryResolveVariableDeclarationStatement(node):
+    if "VariableDeclaration" in node:
+        variableDeclaration = node["VariableDeclaration"]
+        if variableDeclaration is None:
+            return None
+        if "$id" in variableDeclaration:
+            numOfRef = variableDeclaration["$id"]
+            if numOfRef in variableDeclarations:
+                return variableDeclarations[numOfRef]
+            else:
+                return None
+        else:
+            return None
+    else:
+        return None
+
+
+def resolveVarDecl(node):
+    variableDeclaration = tryResolveVariableDeclarationStatement(node)
+    if variableDeclaration is None:
+        variableDeclaration = variableNameDecl[node["VariableName"]]
+    else:
+        variableNameDecl[node["VariableName"]] = variableDeclaration
+    return variableDeclaration

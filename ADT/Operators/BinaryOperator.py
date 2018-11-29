@@ -22,9 +22,9 @@ class BinaryOperator(ADTNode):
         return 0
 
     def return_vector(self, visitor):
-        vectorsOfChildren = [self.leftOperand.accept(visitor), self.rightOperand.accept(visitor)]
-        if len(vectorsOfChildren) == 0:
-            return vectorsOfChildren
+        vectorsOfChildren = []
+        vectorsOfChildren += self.leftOperand.accept(visitor)
+        vectorsOfChildren += self.rightOperand.accept(visitor)
         for argument in reversed(list(visitor.arguments.keys())):
             vector = numpy.zeros(shape=8)
             vector[0] = typeOfVectorData(self)

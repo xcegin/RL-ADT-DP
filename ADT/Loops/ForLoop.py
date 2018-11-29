@@ -2,6 +2,7 @@ from copy import deepcopy
 from math import sqrt
 
 from ADT.Loops.LoopNode import LoopNode
+from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
 class ForLoop(LoopNode):
@@ -28,4 +29,13 @@ class ForLoop(LoopNode):
             toBeAppended = deepcopy(listOfChildVectors)
             listOfChildVectors = listOfChildVectors + toBeAppended
         listOfChildVectors.insert(0, initNodeVectors)
+        from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
+        visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
+        self.condition.accept(visitorComplexity)
+        visitor.currentArgumentVectorDependency = self.condition.variableName
+        listOfChildVectors += self.condition.accept(visitor)
+        numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
+        for x in range(numOfTimes):
+            toBeAppended = deepcopy(listOfChildVectors)
+            listOfChildVectors = listOfChildVectors + toBeAppended
         return listOfChildVectors

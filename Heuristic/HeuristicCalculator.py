@@ -13,13 +13,17 @@ class HeuristicCalculator:
         return finalShait
 
     def resolveOneExpressions(self, token, truthValue):
+        if "And" in token:
+            token = token.replace("And", " And ")
+        if "Or" in token:
+            token = token.replace("Or", " Or ")
         splitToken = token.split(" ")
         tmpList = []
-        for token in splitToken:
-            if "~" in token:
-                tmpList.append(self.replaceTildeVariableNames(token))
+        for stoken in splitToken:
+            if "~" in stoken:
+                tmpList.append(self.replaceTildeVariableNames(stoken))
             else:
-                tmpList.append(token)
+                tmpList.append(stoken)
         splitToken = tmpList
 
         if (splitToken[1] == "Equals" and truthValue) or (splitToken[1] == "NotEquals" and not truthValue):

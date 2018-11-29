@@ -10,4 +10,4 @@ class StatementNode(ADTNode):
         super().__init__(id)
 
     def resolveVectorizationValue(self):
-        return -1
+        return 0

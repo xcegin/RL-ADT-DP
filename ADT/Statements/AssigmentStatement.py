@@ -1,3 +1,4 @@
+import numpy
 from copy import deepcopy
 
 from ADT.Statements.StatementNode import StatementNode
@@ -19,15 +20,33 @@ class AssignmentStatement(StatementNode):
         return visitor.visit_assigment(self)
 
     def return_vector(self, visitor):
-        list = []
+        lists = []
         from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
         visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
         self.value.accept(visitorComplexity)
-        if self.variable is VariableNode:
+        if isinstance(self.variable, VariableNode):
             visitor.currentArgumentVectorDependency = self.variable.variableName
-            list = self.value.accept(visitor)
-            numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** 1 / 4) + 1
+            lists += self.make_vector(visitor)
+            lists += self.value.accept(visitor)
+            numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
             for x in range(numOfTimes):
-                toBeAppended = deepcopy(list)
-                list = list + toBeAppended
-        return list
+                toBeAppended = deepcopy(lists)
+                lists = lists + toBeAppended
+        return lists
+
+    def make_vector(self, visitor):
+        vectors =[]
+        for argument in reversed(list(visitor.arguments.keys())):
+            vector = numpy.zeros(shape=8)
+            from ADT.Utils.VectorUtil import typeOfVectorData
+            vector[0] = typeOfVectorData(self)
+            vector[1] = self.resolveVectorizationValue()
+            vector[2] = typeOfVectorData(self.variable)
+            vector[3] = typeOfVectorData(self.value)
+            vector[4] = self.variable.resolveVectorizationValue()
+            vector[5] = self.value.resolveVectorizationValue()
+            vector[6] = visitor.embedding
+            from ADT.Utils.VectorUtil import resolve_argument_involvement
+            vector[7] = resolve_argument_involvement(argument, visitor)
+            vectors.insert(0, vector)
+        return vectors

@@ -1,6 +1,4 @@
 
-
-#TODO think more of the grouping values -> needs to be talked about with someone who knows this shait
 def typeOfVector(node):
     from ADT.Operators.BinaryArithmeticOperator import BinaryArithmeticOperator
     from ADT.Loops.DoLoop import DoLoop
@@ -24,114 +22,137 @@ def typeOfVector(node):
     from ADT.Variables.OperatorVariable import OperatorVariable
     from ADT.IfNode import IfNode
     from ADT.LiteralNode import LiteralNode
-    if node is DoLoop or node is WhileLoop:
-        return 0
-    elif node is BinaryArithmeticOperator:
+    if isinstance(node, DoLoop) or node is isinstance(node, WhileLoop):
+        return 21
+    elif isinstance(node, BinaryArithmeticOperator):
         return 1
-    elif node is BinaryBitwiseOperator:
+    elif isinstance(node, BinaryBitwiseOperator):
         return 2
-    elif node is BinaryLogicalOperator:
+    elif isinstance(node, BinaryLogicalOperator):
         return 3
-    elif node is UnaryArithmeticOperator:
+    elif isinstance(node, UnaryArithmeticOperator):
         return 4
-    elif node is ComparisonOperator:
+    elif isinstance(node, ComparisonOperator):
         return 5
-    elif node is UnaryBitwiseOperator:
+    elif isinstance(node, UnaryBitwiseOperator):
         return 6
-    elif node is UnaryLogicalOperator:
+    elif isinstance(node, UnaryLogicalOperator):
         return 7
-    elif node is UnaryVariableOperator:
+    elif isinstance(node, UnaryVariableOperator):
         return 8
-    elif node is AssignmentStatement:
+    elif isinstance(node, AssignmentStatement):
         return 9
-    elif node is BreakStatement:
+    elif isinstance(node, BreakStatement):
         return 10
-    elif node is FunctionCall:
+    elif isinstance(node, FunctionCall):
         return 11
-    elif node is FunctionDeclarationStatement:
+    elif isinstance(node, FunctionDeclarationStatement):
         return 12
-    elif node is ReturnStatement:
+    elif isinstance(node, ReturnStatement):
         return 13
-    elif node is VariableDeclarationStatement:
+    elif isinstance(node, VariableDeclarationStatement):
         return 14
-    elif node is ArraySubscriptVariable:
+    elif isinstance(node, ArraySubscriptVariable):
         return 15
-    elif node is FieldReferenceVariable:
+    elif isinstance(node, FieldReferenceVariable):
         return 16
-    elif node is SimpleVariable:
+    elif isinstance(node, SimpleVariable):
         return 17
-    elif node is OperatorVariable:
+    elif isinstance(node, OperatorVariable):
         return 18
-    elif node is IfNode:
+    elif isinstance(node, IfNode):
         return 19
-    elif node is LiteralNode:
+    elif isinstance(node, LiteralNode):
         return 20
     else:
-        return 21
+        return 0
 
 def typeOfVectorData(node):
     from ADT.Variables.VariableNode import VariableNode
     from ADT.LiteralNode import LiteralNode
-    from ADT.Operators.BinaryOperator import BinaryOperator
-    from ADT.Operators.UnaryOperator import UnaryOperator
     from ADT.Statements.FunctionCall import FunctionCall
-    if node is VariableNode:
-        return 0
-    elif node is LiteralNode:
+    from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
+    from ADT.Operators.BinaryArithmeticOperator import BinaryArithmeticOperator
+    from ADT.Operators.BinaryBitwiseOperator import BinaryBitwiseOperator
+    from ADT.Operators.BinaryLogicalOperator import BinaryLogicalOperator
+    from ADT.Operators.UnaryArithmeticOperator import UnaryArithmeticOperator
+    from ADT.Operators.ComparisonOperator import ComparisonOperator
+    from ADT.Operators.UnaryBitwiseOpeartor import UnaryBitwiseOperator
+    from ADT.Operators.UnaryLogicalOperator import UnaryLogicalOperator
+    from ADT.Operators.UnaryVariableOperator import UnaryVariableOperator
+    if isinstance(node, VariableNode):
+        return 6
+    elif isinstance(node, LiteralNode):
         return 1
-    elif node is BinaryOperator:
+    elif isinstance(node, BinaryArithmeticOperator):
+        return 8
+    elif isinstance(node, BinaryBitwiseOperator):
         return 2
-    elif node is UnaryOperator:
-        return 3
-    elif node is FunctionCall:
+    elif isinstance(node, BinaryLogicalOperator):
+        return 9
+    elif isinstance(node, FunctionCall):
         return 4
-    else:
+    elif isinstance(node, VariableDeclarationStatement):
         return 5
+    elif node is None:
+        return 0
+    elif isinstance(node, UnaryArithmeticOperator):
+        return 3
+    elif isinstance(node, ComparisonOperator):
+        return 10
+    elif isinstance(node, UnaryBitwiseOperator):
+        return 11
+    elif isinstance(node, UnaryLogicalOperator):
+        return 12
+    elif isinstance(node, UnaryVariableOperator):
+        return 13
+    else:
+        return 7
 
 
 def vectorizationTypeUtil(type):
     if type == "t_int":
         return 1
     elif type == "t_char16_t":
-        return 20
+        return 2
     elif type == "t_char":
-        return 21
+        return 2
     elif type == "t_char32_t":
-        return 22
+        return 2
     elif type == "t_bool":
-        return 50
+        return 3
     elif type == "t_wchar_t":
-        return 23
+        return 2
     elif type == "t_int128":
         return 1
     elif type == "t_float128" or type == "t_double":
-        return 100
+        return 4
     elif type == "t_float":
-        return 101
+        return 4
     elif type == "t_decimal128":
-        return 102
+        return 4
     elif type == "t_decimal32":
-        return 103
+        return 4
     elif type == "t_decimal64":
-        return 104
+        return 4
     else:
-        return 105
+        return 5
 
 def vectorizationTypeLiteral(type):
     if type == "lk_nullptr":
-        return 0
+        return 6
     elif type == "lk_char_constant":
-        return 20
-    elif type == "lk_string_literal":
-        return 21
-    elif type == "lk_false" or type == "lk_true":
-        return 50
-    elif type == "lk_this":
         return 1
+    elif type == "lk_string_literal":
+        return 2
+    elif type == "lk_false" or type == "lk_true":
+        return 3
+    elif type == "lk_this":
+        return 4
     elif type == "lk_float_constant":
-        return 100
+        return 5
     else:
-        return 150
+        return 0
 
 
 def resolve_argument_involvement(argument, visitor):

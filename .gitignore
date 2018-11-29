@@ -50,6 +50,9 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+*.json
+*.py___jb_tmp___
+
 # Translations
 *.mo
 *.pot

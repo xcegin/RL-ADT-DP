@@ -123,7 +123,7 @@ class VectorizationVisitor(ABCVisitor):
     def visit_sequence(self, sequence: SequenceNode):
         list = []
         for node in sequence.nodes:
-            list = list + node.return_vector(self)
+            list = list + node.accept(self)
         return list
 
     def visit_functiondeclaration(self, functionDecl: FunctionDeclarationStatement):

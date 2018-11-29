@@ -77,6 +77,10 @@ def resolveMathOperation(numOfAction, value, type):
         return cos(Decimal(value))
     elif numOfAction == 33:
         return tan(Decimal(value))
+    elif numOfAction == 34:
+        return 0
+    elif numOfAction == 35:
+        return 1
 
 
 def resolveMin(type):

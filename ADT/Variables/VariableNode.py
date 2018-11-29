@@ -13,4 +13,4 @@ class VariableNode(ADTNode):
         self.variableDeclaration = variableDeclaration
 
     def resolveVectorizationValue(self):
-        return vectorizationTypeUtil(self.variableDeclaration.variableType.typeNode)
+        return vectorizationTypeUtil(self.variableDeclaration.variableType.typeName)

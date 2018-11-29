@@ -22,9 +22,8 @@ class UnaryOperator(ADTNode):
         return 0
 
     def return_vector(self, visitor):
-        vectorsOfChildren = [self.operand.accept(visitor)]
-        if len(vectorsOfChildren) == 0:
-            return vectorsOfChildren
+        vectorsOfChildren = []
+        vectorsOfChildren += self.operand.accept(visitor)
         for argument in reversed(list(visitor.arguments.keys())):
             vector = numpy.zeros(shape=8)
             vector[0] = typeOfVectorData(self)

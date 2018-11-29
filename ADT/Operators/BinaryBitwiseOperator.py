@@ -10,4 +10,4 @@ class BinaryBitwiseOperator(BinaryOperator):
         return self.operations[self.operation]
 
     def resolveVectorizationValue(self):
-        return self.operations
+        return self.operation + 1
