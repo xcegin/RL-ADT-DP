@@ -1,4 +1,3 @@
-
 def typeOfVector(node):
     from ADT.Operators.BinaryArithmeticOperator import BinaryArithmeticOperator
     from ADT.Loops.DoLoop import DoLoop
@@ -66,6 +65,7 @@ def typeOfVector(node):
         return 20
     else:
         return 0
+
 
 def typeOfVectorData(node):
     from ADT.Variables.VariableNode import VariableNode
@@ -138,6 +138,7 @@ def vectorizationTypeUtil(type):
     else:
         return 5
 
+
 def vectorizationTypeLiteral(type):
     if type == "lk_nullptr":
         return 6
@@ -156,20 +157,22 @@ def vectorizationTypeLiteral(type):
 
 
 def resolve_argument_involvement(argument, visitor):
-    if visitor.currentArgumentVectorDependency == None:
-        return 0
-    if argument == visitor.currentArgumentVectorDependency:
-        return 2
-    elif IsInfluencedByCurrentArgVector(argument, visitor):
-        return 1
-    else:
-        return 0
+    highest = 0
+    for currArg in visitor.currentArgumentVectorDependency:
+        if currArg is None:
+            continue
+        elif argument == currArg:
+            highest = 2 if highest < 2 else highest
+        elif IsInfluencedByCurrentArgVector(argument, visitor, currArg):
+            highest = 1 if highest < 1 else highest
+    return highest
 
-def IsInfluencedByCurrentArgVector(argument, visitor):
+
+def IsInfluencedByCurrentArgVector(argument, visitor, currArg):
     dataDependencyDict = visitor.context.dataDependencies
-    if argument in dataDependencyDict:
+    if currArg in dataDependencyDict[argument]:
         return True
-    for arg in dataDependencyDict[visitor.currentArgumentVectorDependency]:
-        if visitor.currentArgumentVectorDependency in visitor.currentArgumentVectorDependency[arg]:
+    for arg in dataDependencyDict[currArg]:
+        if arg in dataDependencyDict[argument]:
             return True
     return False

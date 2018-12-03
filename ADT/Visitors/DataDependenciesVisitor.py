@@ -69,11 +69,18 @@ class DataDependenciesVisitor(ABCVisitor):
         self.isInModifyingVariableState = False
 
     def visit_binaryoperator(self, binaryOperator: BinaryOperator):
+        from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
+        variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
         if self.isInModifyingVariableState:
-            if binaryOperator.leftOperand is VariableNode:
-                self.context.dataDependencies[self.lastAssignedVariable.name].append(binaryOperator.leftOperand.name)
-            if binaryOperator.rightOperand is VariableNode:
-                self.context.dataDependencies[self.lastAssignedVariable.name].append(binaryOperator.rightOperand.name)
+            binaryOperator.leftOperand.accept(variablesUsedInCondition)
+            self.context.dataDependencies[self.lastAssignedVariable.variableName] += variablesUsedInCondition.currentArguments
+            self.context.dataDependencies[self.lastAssignedVariable.variableName] = list(set(self.context.dataDependencies[self.lastAssignedVariable.variableName]))
+
+            variablesUsedInCondition.reset()
+            binaryOperator.rightOperand.accept(variablesUsedInCondition)
+            self.context.dataDependencies[self.lastAssignedVariable.variableName] += variablesUsedInCondition.currentArguments
+            self.context.dataDependencies[self.lastAssignedVariable.variableName] = list(
+                set(self.context.dataDependencies[self.lastAssignedVariable.variableName]))
         binaryOperator.leftOperand.accept(self)
         binaryOperator.rightOperand.accept(self)
 
@@ -84,9 +91,12 @@ class DataDependenciesVisitor(ABCVisitor):
         variableDeclaration.variableType.accept(self)
 
     def visit_unaryoperator(self, unaryOperator: UnaryOperator):
-        if self.isInModifyingVariableState:
-            if unaryOperator.operand is VariableNode:
-                self.context.dataDependencies[self.lastAssignedVariable.name].append(unaryOperator.operand.name)
+        from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
+        variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
+        unaryOperator.operand.accept(variablesUsedInCondition)
+        self.context.dataDependencies[self.lastAssignedVariable.variableName] += variablesUsedInCondition.currentArguments
+        self.context.dataDependencies[self.lastAssignedVariable.variableName] = list(
+            set(self.context.dataDependencies[self.lastAssignedVariable.variableName]))
         unaryOperator.operand.accept(self)
 
     def visit_statement(self, statementNode: StatementNode):

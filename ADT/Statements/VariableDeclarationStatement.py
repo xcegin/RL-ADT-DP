@@ -34,13 +34,17 @@ class VariableDeclarationStatement(StatementNode):
         lists = []
         from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
         visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
+        from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
+        variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
         from ADT.LiteralNode import LiteralNode
         from ADT.Variables.VariableNode import VariableNode
         lists += self.make_vector(visitor)
         if self.initialValue is not None or not isinstance(self.initialValue, LiteralNode) or\
                 not isinstance(self.initialValue, VariableNode):
             self.initialValue.accept(visitorComplexity)
-            visitor.currentArgumentVectorDependency = self.variable.variableName
+            self.initialValue.accept(variablesUsedInCondition)
+            visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments +\
+                                                      [self.variable.variableName]
             lists += self.initialValue.accept(visitor)
             numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
             for x in range(numOfTimes):

@@ -23,12 +23,14 @@ class IfNode(ADTNode):
     def return_vector(self, visitor):
         from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
         visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
+        from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
+        variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
         self.condition.accept(visitorComplexity)
-        # TODO: Fix the vector argument to work with multiple arguments
-        #visitor.currentArgumentVectorDependency = self.condition.variableName
-        #lists = self.condition.accept(visitor)
-        #numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
-        #for x in range(numOfTimes):
-        #    toBeAppended = deepcopy(lists)
-        #    lists = lists + toBeAppended
+        self.condition.accept(variablesUsedInCondition)
+        visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments
+        lists = self.condition.accept(visitor)
+        numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
+        for x in range(numOfTimes):
+            toBeAppended = deepcopy(lists)
+            lists = lists + toBeAppended
         return []

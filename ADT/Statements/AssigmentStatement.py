@@ -23,9 +23,12 @@ class AssignmentStatement(StatementNode):
         lists = []
         from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
         visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
+        from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
+        variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
         self.value.accept(visitorComplexity)
         if isinstance(self.variable, VariableNode):
-            visitor.currentArgumentVectorDependency = self.variable.variableName
+            self.value.accept(variablesUsedInCondition)
+            visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments + [self.variable.variableName]
             lists += self.make_vector(visitor)
             lists += self.value.accept(visitor)
             numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1

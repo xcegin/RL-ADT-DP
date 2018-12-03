@@ -30,7 +30,7 @@ class VectorizationVisitor(ABCVisitor):
         self.embedding = 0
         self.functionName = ""
         self.numOfStaticRecursionCalls = 0
-        self.currentArgumentVectorDependency = None
+        self.currentArgumentVectorDependency = []
         self.arguments = arguments
 
     def reset(self):
@@ -38,7 +38,7 @@ class VectorizationVisitor(ABCVisitor):
         self.embedding = 0
         self.functionName = ""
         self.numOfStaticRecursionCalls = 0
-        self.currentArgumentVectorDependency = None
+        self.currentArgumentVectorDependency = []
 
     def visit_loop(self, loopNode: LoopNode):
         expression = self.expressions[loopNode.id]

@@ -31,8 +31,11 @@ class ForLoop(LoopNode):
         listOfChildVectors.insert(0, initNodeVectors)
         from ADT.Visitors.AssigmentComplexityVisitor import AssigmentComplexityVisitor
         visitorComplexity = AssigmentComplexityVisitor(enviromentWalkerContext())
+        from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
+        variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
         self.condition.accept(visitorComplexity)
-        visitor.currentArgumentVectorDependency = self.condition.variableName
+        self.condition.accept(variablesUsedInCondition)
+        visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments
         listOfChildVectors += self.condition.accept(visitor)
         numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
         for x in range(numOfTimes):

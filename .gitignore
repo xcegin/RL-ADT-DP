@@ -52,6 +52,7 @@ coverage.xml
 
 *.json
 *.py___jb_tmp___
+*.c
 
 # Translations
 *.mo
