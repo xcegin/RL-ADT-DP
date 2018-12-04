@@ -12,9 +12,8 @@ from Enviroment import Utils
 from Enviroment.ResolveJsonRef import resolveRef
 from Enviroment.Utils import getTypeOfExpression
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
-from Heuristic.HeuristicCalculator import HeuristicCalculator
-#from Heuristic.HeuristicResolver import resolveHeuristic
-from Reward.CoverageCalculatorStatic import resolveHeuristic
+from Reward.Heuristic.HeuristicCalculator import HeuristicCalculator
+from Reward.StaticRewarder import StaticRewardCalculator
 
 
 class Enviroment():
@@ -47,6 +46,7 @@ class Enviroment():
         self.currentVectorRow = []
 
         self.heuristicCalc = HeuristicCalculator()
+        self.rewarder = StaticRewardCalculator()
         self.data = resolveRef(data, {})
         self.mcdc = data
         self.logicTable = None
@@ -79,8 +79,9 @@ class Enviroment():
         self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow]
         self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
         self.currentNumOfRow = self.currentNumOfRow + 1
-        #self.startingHeuristicValue = resolveHeuristic(self.argumentValues, self.arguments, self.currentHeuristicRow)
-        self.startingHeuristicValue = resolveHeuristic(self.listOfTables[self.currentNumOfTable-1][self.currentNumOfRow-1], self.argumentValues, numOfFile)
+        #self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        self.startingHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
+                                                                  [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
         self.currentHeuristicValue = self.startingHeuristicValue
         return self.currentVectorRow[0]
 
@@ -91,8 +92,9 @@ class Enviroment():
         argument = self.arguments[self.argumentChangedVal]
         self.argumentValues[self.argumentChangedVal] = resolveMathOperation(action, argumentValue,
                                                                             argument.variableType.typeName)
-        #currentHeuristicValue = resolveHeuristic(self.argumentValues, self.arguments, self.currentHeuristicRow)
-        currentHeuristicValue = resolveHeuristic(self.listOfTables[self.currentNumOfTable-1][self.currentNumOfRow-1], self.argumentValues, numOfFile)
+        #currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
+                                                            [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
         reward = self.returnReward(currentHeuristicValue)
         self.currentHeuristicValue = currentHeuristicValue
         self.argumentChangedVal = self.argumentChangedVal + 1
