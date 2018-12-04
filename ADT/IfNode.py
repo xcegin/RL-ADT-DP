@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from ADT.ADTNode import ADTNode
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from constants import NUM_COPY_SUBLIST
 
 
 class IfNode(ADTNode):
@@ -29,7 +30,7 @@ class IfNode(ADTNode):
         self.condition.accept(variablesUsedInCondition)
         visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments
         lists = self.condition.accept(visitor)
-        numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
+        numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** NUM_COPY_SUBLIST) + 1
         for x in range(numOfTimes):
             toBeAppended = deepcopy(lists)
             lists = lists + toBeAppended

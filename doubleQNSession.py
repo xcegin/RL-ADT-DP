@@ -13,9 +13,9 @@ y = .99  # Discount factor.
 num_episodes = 20000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
 batch_size = 32  # Size of training batch
-startE = 1  # Starting chance of random action
-endE = 0.1  # Final chance of random action
-anneling_steps = 200000  # How many steps of training to reduce startE to endE.
+startE = 0.5  # Starting chance of random action
+endE = 0.01  # Final chance of random action
+anneling_steps = 1000  # How many steps of training to reduce startE to endE.
 pre_train_steps = 50000  # Number of steps used before training updates begin.
 
 tf.reset_default_graph()
@@ -39,19 +39,19 @@ with tf.Session() as sess:
     e = startE
     stepDrop = (startE - endE) / anneling_steps
     total_steps = 0
-    i = 0
     k = 0
-    rAll = 0
-    d = False
-    j = 0
     m = 0
     while m < len(env.listOfFiles):
         env.prepareNextFile()
         for k in range(num_episodes):
+            rAll = 0
+            d = False
+            i = 0
             while i < len(env.listOfTables):
                 env.startTable()
                 running_reward = 0 #TODO: check the position of running_reward
                 ep_history = []
+                j = 0
                 while j < len(env.currentVectors):
                     s = env.startRow()
                     numOfVectors = 1

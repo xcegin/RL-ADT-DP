@@ -107,7 +107,7 @@ class VectorizationVisitor(ABCVisitor):
                                                      self.rowExpressionValues,
                                                      self.expressions)
             isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        list = list + ifNode.condition.accept(self)
+        list = list + ifNode.return_vector(self)
         self.embedding = self.embedding + if_embedding
         if isConditionTrue:
             list = list + ifNode.nodeThen.accept(self)

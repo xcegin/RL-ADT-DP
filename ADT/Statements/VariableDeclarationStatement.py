@@ -4,6 +4,7 @@ from copy import deepcopy
 from ADT.Statements.StatementNode import StatementNode
 from ADT.Utils.VectorUtil import typeOfVectorData, resolve_argument_involvement
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from constants import NUM_COPY_SUBLIST
 
 
 class VariableDeclarationStatement(StatementNode):
@@ -46,7 +47,7 @@ class VariableDeclarationStatement(StatementNode):
             visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments +\
                                                       [self.variable.variableName]
             lists += self.initialValue.accept(visitor)
-            numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
+            numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** NUM_COPY_SUBLIST) + 1
             for x in range(numOfTimes):
                 toBeAppended = deepcopy(lists)
                 lists += toBeAppended

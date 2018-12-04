@@ -3,6 +3,7 @@ from math import sqrt
 
 from ADT.ADTNode import ADTNode
 from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from constants import NUM_COPY_SUBLIST
 
 
 class LoopNode(ADTNode):
@@ -29,7 +30,7 @@ class LoopNode(ADTNode):
         self.condition.accept(variablesUsedInCondition)
         visitor.currentArgumentVectorDependency = variablesUsedInCondition.currentArguments  # TODO: CONSIDER LOOPS WITHOUT VARIABLES
         listOfChildVectors += self.condition.accept(visitor)
-        numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** (1 / 4)) + 1
+        numOfTimes = int(visitorComplexity.complexityOfCurrExpression ** NUM_COPY_SUBLIST) + 1
         for x in range(numOfTimes):
             toBeAppended = deepcopy(listOfChildVectors)
             listOfChildVectors = listOfChildVectors + toBeAppended
