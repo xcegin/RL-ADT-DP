@@ -28,22 +28,22 @@ class StaticRewardCalculator(Rewarder):
                 totalR += 1 / 3
 
         # True 0 == b
-        if currentRow[0]['0 Equals b']:
+        if currentRow[1]['0 Equals b']:
             if argumentValues['b'] == 0:
                 totalR += 1 / 3
 
         # False 0 == b
-        if not currentRow[0]['0 Equals b']:
+        if not currentRow[1]['0 Equals b']:
             if argumentValues['a'] != 0:
                 totalR += 1 / 3
 
         # True 1 != a
-        if currentRow[0]['1 NotEquals a']:
+        if currentRow[2]['1 NotEquals a']:
             if argumentValues['a'] != 1:
                 totalR += 1 / 3
 
         # False 1 != a
-        if currentRow[0]['1 NotEquals a']:
+        if currentRow[2]['1 NotEquals a']:
             if argumentValues['a'] == 1:
                 totalR += 1 / 3
 
@@ -73,22 +73,22 @@ class StaticRewardCalculator(Rewarder):
                 totalR += 1 / 3
 
         # True 0 == b
-        if currentRow[0]['0 Equals b']:
+        if currentRow[1]['0 Equals b']:
             if argumentValues['b'] == 0:
                 totalR += 1 / 3
 
         # False 0 == b
-        if not currentRow[0]['0 Equals b']:
+        if not currentRow[1]['0 Equals b']:
             if argumentValues['a'] != 0:
                 totalR += 1 / 3
 
         # True c > 5
-        if not currentRow[0]['c GreaterThan 5']:
+        if not currentRow[2]['c GreaterThan 5']:
             if argumentValues['c'] > 5:
                 totalR += 1 / 3
 
         # False c > 5
-        if not currentRow[0]['c GreaterThan 5']:
+        if not currentRow[2]['c GreaterThan 5']:
             if argumentValues['c'] < 5:
                 totalR += 1 / 3
 

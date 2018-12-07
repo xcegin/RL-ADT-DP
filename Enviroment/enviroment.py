@@ -88,9 +88,10 @@ class Enviroment():
     def step(self, action, numOfFile=None):
         #self.currentVector = self.currentVector + 1
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
-        argumentValue = self.argumentValues[self.argumentChangedVal]
-        argument = self.arguments[self.argumentChangedVal]
-        self.argumentValues[self.argumentChangedVal] = resolveMathOperation(action, argumentValue,
+        keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
+        argumentValue = self.argumentValues[keyOfArg]
+        argument = self.arguments[keyOfArg]
+        self.argumentValues[keyOfArg] = resolveMathOperation(action, argumentValue,
                                                                             argument.variableType.typeName)
         #currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]

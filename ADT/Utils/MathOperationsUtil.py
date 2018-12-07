@@ -7,7 +7,7 @@ NOT_VALID = "NOT_VALID"
 
 
 def resolveMathOperation(numOfAction, value, type):
-    if not value.isDecimal():
+    if not isNumerical(type):
         return NOT_VALID
     if numOfAction == 0:
         return resolveMin(type)
@@ -110,6 +110,35 @@ def resolveMin(type):
         return float('-inf')
     elif type == "t_decimal64":
         return float('-inf')
+
+
+def isNumerical(type):
+    if type == "t_int":
+        return True
+    elif type == "t_char16_t":
+        return True
+    elif type == "t_char":
+        return True
+    elif type == "t_char32_t":
+        return True
+    elif type == "t_bool":
+        return False
+    elif type == "t_wchar_t":
+        return True
+    elif type == "t_int128":
+        return True
+    elif type == "t_float128" or type == "t_double":
+        return True
+    elif type == "t_float":
+        return True
+    elif type == "t_decimal128":
+        return True
+    elif type == "t_decimal32":
+        return True
+    elif type == "t_decimal64":
+        return True
+    else:
+        return False
 
 
 def resolveMax(type):

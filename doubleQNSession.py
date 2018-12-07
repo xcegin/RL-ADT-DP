@@ -17,6 +17,7 @@ startE = 0.5  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 1000  # How many steps of training to reduce startE to endE.
 pre_train_steps = 50000  # Number of steps used before training updates begin.
+num_steps_upd = 5  # How often to perform a training step.
 
 tf.reset_default_graph()
 
@@ -49,11 +50,11 @@ with tf.Session() as sess:
             i = 0
             while i < len(env.listOfTables):
                 env.startTable()
-                running_reward = 0 #TODO: check the position of running_reward
+                running_reward = 0  # TODO: check the position of running_reward
                 ep_history = []
                 j = 0
                 while j < len(env.currentVectors):
-                    s = env.startRow()
+                    s = env.startRow(m)
                     numOfVectors = 1
                     while numOfVectors < len(env.currentVectorRow):
                         a = None
@@ -85,8 +86,8 @@ with tf.Session() as sess:
                                                feed_dict={q_net.inputs: [s], q_net.keep_per: (1 - e) + 0.1})
                             a = a[0]
 
-                        r, d, _ = env.step(a)
-                        s1 = env.currentVector[numOfVectors]
+                        r, d, _ = env.step(a, m)
+                        s1 = env.currentVectorRow[numOfVectors]
                         numOfVectors += 1
 
                         myBuffer.add(np.reshape(np.array([s, a, r, s1, d]), [1, 5]))
@@ -96,8 +97,9 @@ with tf.Session() as sess:
                         if e > endE and total_steps > pre_train_steps:
                             e -= stepDrop
 
-                        if total_steps > pre_train_steps and total_steps % 5 == 0:
+                        if total_steps > pre_train_steps and total_steps % num_steps_upd == 0:
                             # We use Double-DQN training algorithm
+                            # TODO: CHECK BUFFER BATCH SIZES
                             trainBatch = myBuffer.sample(batch_size)
                             Q1 = sess.run(q_net.predict,
                                           feed_dict={q_net.inputs: np.vstack(trainBatch[:, 3]), q_net.keep_per: 1.0})
@@ -134,4 +136,4 @@ with tf.Session() as sess:
                         jMeans.append(j_mean)
         m += 1
 
-print("Percent of succesful episodes: " + str(sum(rList) / num_episodes) + "%")
+print("Percent of successful episodes: " + str(sum(rList) / num_episodes) + "%")
