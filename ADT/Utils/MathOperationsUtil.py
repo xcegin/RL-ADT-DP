@@ -16,67 +16,67 @@ def resolveMathOperation(numOfAction, value, type):
     elif numOfAction == 2:
         return pi
     elif numOfAction == 3:
-        return Decimal(value) + 0.001
+        return float(value) + 0.001
     elif numOfAction == 4:
-        return Decimal(value) + 0.01
+        return float(value) + 0.01
     elif numOfAction == 5:
-        return Decimal(value) + 0.1
+        return float(value) + 0.1
     elif numOfAction == 6:
-        return Decimal(value) + 1
+        return float(value) + 1
     elif numOfAction == 7:
-        return Decimal(value) + 10
+        return float(value) + 10
     elif numOfAction == 8:
-        return Decimal(value) + 100
+        return float(value) + 100
     elif numOfAction == 9:
-        return Decimal(value) - 0.001
+        return float(value) - 0.001
     elif numOfAction == 10:
-        return Decimal(value) - 0.01
+        return float(value) - 0.01
     elif numOfAction == 11:
-        return Decimal(value) - 0.1
+        return float(value) - 0.1
     elif numOfAction == 12:
-        return Decimal(value) - 1
+        return float(value) - 1
     elif numOfAction == 13:
-        return Decimal(value) - 10
+        return float(value) - 10
     elif numOfAction == 14:
-        return Decimal(value) - 100
+        return float(value) - 100
     elif numOfAction == 15:
-        return Decimal(value) * 1.1
+        return float(value) * 1.1
     elif numOfAction == 16:
-        return Decimal(value) * 1.5
+        return float(value) * 1.5
     elif numOfAction == 17:
-        return Decimal(value) * 2
+        return float(value) * 2
     elif numOfAction == 18:
-        return Decimal(value) * 5
+        return float(value) * 5
     elif numOfAction == 19:
-        return Decimal(value) * 10
+        return float(value) * 10
     elif numOfAction == 20:
-        return Decimal(value) * 100
+        return float(value) * 100
     elif numOfAction == 21:
-        return Decimal(value) * 1000
+        return float(value) * 1000
     elif numOfAction == 22:
-        return Decimal(value) / 1.1
+        return float(value) / 1.1
     elif numOfAction == 23:
-        return Decimal(value) / 1.5
+        return float(value) / 1.5
     elif numOfAction == 24:
-        return Decimal(value) / 2
+        return float(value) / 2
     elif numOfAction == 25:
-        return Decimal(value) / 5
+        return float(value) / 5
     elif numOfAction == 26:
-        return Decimal(value) / 10
+        return float(value) / 10
     elif numOfAction == 27:
-        return Decimal(value) / 100
+        return float(value) / 100
     elif numOfAction == 28:
-        return Decimal(value) / 1000
+        return float(value) / 1000
     elif numOfAction == 29:
-        return Decimal(value) ** 2
+        return float(value) ** 2
     elif numOfAction == 30:
-        return Decimal(value) ** (1 / 2)
+        return float(value) ** (1 / 2)
     elif numOfAction == 31:
-        return sin(Decimal(value))
+        return sin(float(value))
     elif numOfAction == 32:
-        return cos(Decimal(value))
+        return cos(float(value))
     elif numOfAction == 33:
-        return tan(Decimal(value))
+        return tan(float(value))
     elif numOfAction == 34:
         return 0
     elif numOfAction == 35:

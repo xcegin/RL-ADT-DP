@@ -10,7 +10,7 @@ env = Enviroment()
 
 exploration = "e-greedy"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
 y = .99  # Discount factor.
-num_episodes = 20000  # Total number of episodes to train network for.
+num_episodes = 100000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
 batch_size = 32  # Size of training batch
 startE = 0.5  # Starting chance of random action
@@ -99,7 +99,7 @@ with tf.Session() as sess:
 
                         if total_steps > pre_train_steps and total_steps % num_steps_upd == 0:
                             # We use Double-DQN training algorithm
-                            # TODO: CHECK BUFFER BATCH SIZES
+                            # TODO: CHECK BUFFER BATCH SIZES - Should be good
                             trainBatch = myBuffer.sample(batch_size)
                             Q1 = sess.run(q_net.predict,
                                           feed_dict={q_net.inputs: np.vstack(trainBatch[:, 3]), q_net.keep_per: 1.0})
