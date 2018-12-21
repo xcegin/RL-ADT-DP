@@ -76,7 +76,7 @@ class Enviroment():
 
     def startRow(self, numOfFile=None):
         self.initializeArgumentValues()
-        self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow]
+        #self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow] - TODO BUG WITH ROW NUMBERS
         self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
         self.currentNumOfRow = self.currentNumOfRow + 1
         #self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
@@ -90,9 +90,14 @@ class Enviroment():
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
         keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argumentValue = self.argumentValues[keyOfArg]
+        if isinstance(argumentValue, complex):
+            return -1, True, {}
         argument = self.arguments[keyOfArg]
-        self.argumentValues[keyOfArg] = resolveMathOperation(action, argumentValue,
+        try:
+            self.argumentValues[keyOfArg] = resolveMathOperation(action, argumentValue,
                                                                             argument.variableType.typeName)
+        except TypeError:
+            return -0.5, True, {}
         #currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                             [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
@@ -198,7 +203,7 @@ class Enviroment():
     def initializeArgumentValues(self):
         for argument in self.arguments:
             self.argumentValues[self.arguments[argument].variable.variableName] = \
-                randomValue(self.arguments[argument].variableType)
+                randomValue(self.arguments[argument].variableType) / 1000000
 
     def mergeDictsInRow(self, row):
         finalDict = {}

@@ -16,6 +16,15 @@ class experience_buffer():
     def sample(self, size):
         return np.reshape(np.array(random.sample(self.buffer, size)), [size, 5])
 
+    def sampleDRQN(self, batch_size, trace_length):
+        sampled_episodes = random.sample(self.buffer, batch_size)
+        sampledTraces = []
+        for episode in sampled_episodes:
+            point = np.random.randint(0, len(episode) + 1 - trace_length)
+            sampledTraces.append(episode[point:point + trace_length])
+        sampledTraces = np.array(sampledTraces)
+        return np.reshape(sampledTraces, [batch_size * trace_length, 5])
+
 
 def processState(states):
     return np.reshape(states, [21168])

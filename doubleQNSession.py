@@ -13,7 +13,7 @@ y = .99  # Discount factor.
 num_episodes = 100000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
 batch_size = 32  # Size of training batch
-startE = 0.5  # Starting chance of random action
+startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 1000  # How many steps of training to reduce startE to endE.
 pre_train_steps = 50000  # Number of steps used before training updates begin.
@@ -42,18 +42,18 @@ with tf.Session() as sess:
     total_steps = 0
     k = 0
     m = 0
-    while m < len(env.listOfFiles):
-        env.prepareNextFile()
-        for k in range(num_episodes):
-            rAll = 0
-            d = False
-            i = 0
-            while i < len(env.listOfTables):
+    for k in range(num_episodes):
+        rAll = 0
+        d = False
+        while m < len(env.listOfFiles):
+            env.prepareNextFile()
+            env.currentNumOfTable = 0
+            while env.currentNumOfTable < len(env.listOfTables):
                 env.startTable()
                 running_reward = 0  # TODO: check the position of running_reward
                 ep_history = []
-                j = 0
-                while j < len(env.currentVectors):
+                env.currentNumOfRow = 0
+                while env.currentNumOfRow < len(env.currentVectors):
                     s = env.startRow(m)
                     numOfVectors = 1
                     while numOfVectors < len(env.currentVectorRow):
@@ -91,7 +91,6 @@ with tf.Session() as sess:
                         numOfVectors += 1
 
                         myBuffer.add(np.reshape(np.array([s, a, r, s1, d]), [1, 5]))
-                        s = s1
                         running_reward += r
 
                         if e > endE and total_steps > pre_train_steps:
@@ -119,9 +118,9 @@ with tf.Session() as sess:
                         total_steps += 1
                         if d:
                             break
-                    jList.append(j)
+                    jList.append(env.currentNumOfRow)
                     rList.append(rAll)
-                    if i % 100 == 0 and i != 0:
+                    if k % 100 == 0 and k != 0:
                         r_mean = np.mean(rList[-100:])
                         j_mean = np.mean(jList[-100:])
                         if exploration == 'e-greedy':
