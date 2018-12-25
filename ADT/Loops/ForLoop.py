@@ -10,13 +10,13 @@ class ForLoop(LoopNode):
 
     CDTName = "c.CASTForStatement"
 
-    def __init__(self, id, nodeInit, condition, nodeAfter, nodeBlock):
+    def __init__(self, id, nodeInit, condition, nodeAfter, nodeBlock, resolver_util):
         super().__init__(id, condition, nodeBlock)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.condition = resolveNodeViaType(condition["$type"], condition)
-        self.nodeInit = resolveNodeViaType(nodeInit["$type"], nodeInit)
-        self.nodeAfter = resolveNodeViaType(nodeAfter["$type"], nodeAfter)
-        self.nodeBlock = resolveNodeViaType(nodeBlock["$type"], nodeBlock)
+        self.condition = resolveNodeViaType(condition["$type"], condition, resolver_util)
+        self.nodeInit = resolveNodeViaType(nodeInit["$type"], nodeInit, resolver_util)
+        self.nodeAfter = resolveNodeViaType(nodeAfter["$type"], nodeAfter, resolver_util)
+        self.nodeBlock = resolveNodeViaType(nodeBlock["$type"], nodeBlock, resolver_util)
 
     def accept(self, visitor):
         return visitor.visit_forloop(self)

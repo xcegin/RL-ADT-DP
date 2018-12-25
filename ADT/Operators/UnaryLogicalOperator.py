@@ -5,8 +5,8 @@ from ADT.Operators.UnaryOperator import UnaryOperator
 class UnaryLogicalOperator(UnaryOperator):
     operations = {0: 'Not'}
 
-    def __init__(self, id, operation, operand):
-        super().__init__(id, operation, operand)
+    def __init__(self, id, operation, operand, resolver_util):
+        super().__init__(id, operation, operand, resolver_util)
 
     def resolveOperationToString(self):
         return self.operations[self.operation]

@@ -11,11 +11,11 @@ class AssignmentStatement(StatementNode):
 
     CDTName = "c.CASTBinaryExpression"
 
-    def __init__(self, id, variable, value):
+    def __init__(self, id, variable, value, resolverUtil):
         super().__init__(id)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.variable = resolveNodeViaType(variable["$type"], variable)
-        self.value = resolveNodeViaType(value["$type"], value)
+        self.variable = resolveNodeViaType(variable["$type"], variable, resolverUtil)
+        self.value = resolveNodeViaType(value["$type"], value, resolverUtil)
 
     def accept(self, visitor):
         return visitor.visit_assigment(self)

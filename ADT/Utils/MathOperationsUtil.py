@@ -90,7 +90,7 @@ def resolveMathOperation(numOfAction, value, type):
 
 def resolveMin(type):
     if type == "t_int":
-        return -2147483648
+        return -2147483647
     elif type == "t_char16_t":
         return -32768
     elif type == "t_char":

@@ -5,12 +5,12 @@ from ADT.Utils.VectorUtil import typeOfVectorData, resolve_argument_involvement
 
 
 class BinaryOperator(ADTNode):
-    def __init__(self, id, operation, leftOperand, rightOperand):
+    def __init__(self, id, operation, leftOperand, rightOperand, resolver_util):
         super().__init__(id)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.operation = operation
-        self.rightOperand = resolveNodeViaType(rightOperand["$type"], rightOperand)
-        self.leftOperand = resolveNodeViaType(leftOperand["$type"], leftOperand)
+        self.rightOperand = resolveNodeViaType(rightOperand["$type"], rightOperand, resolver_util)
+        self.leftOperand = resolveNodeViaType(leftOperand["$type"], leftOperand, resolver_util)
 
     def accept(self, visitor):
         return visitor.visit_binaryoperator(self)

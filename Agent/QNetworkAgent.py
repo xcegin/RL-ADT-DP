@@ -4,7 +4,7 @@ import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
 
-class Q_Network():
+class Q_Network:
     def __init__(self):
         # These lines establish the feed-forward part of the network used to choose actions
         self.inputs = tf.placeholder(shape=[None, 8], dtype=tf.float32)
@@ -26,5 +26,5 @@ class Q_Network():
 
         self.nextQ = tf.placeholder(shape=[None], dtype=tf.float32)
         loss = tf.reduce_sum(tf.square(self.nextQ - self.Q))
-        trainer = tf.train.GradientDescentOptimizer(learning_rate=0.0005)
+        trainer = tf.train.AdamOptimizer(learning_rate=0.0001)
         self.updateModel = trainer.minimize(loss)

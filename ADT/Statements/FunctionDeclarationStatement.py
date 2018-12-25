@@ -8,13 +8,13 @@ class FunctionDeclarationStatement(StatementNode):
     CDTChildFunction = "c.CASTFunctionDeclarator"
     CDTChildParameter = "c.CASTParameterDeclaration"
 
-    def __init__(self, id, returnType, name, arguments, body):
+    def __init__(self, id, returnType, name, arguments, body, resolverUtil):
         super().__init__(id)
         self.name = name
-        self.arguments = resolveArguments(arguments)
+        self.arguments = resolveArguments(arguments, resolverUtil)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.returnType = resolveNodeViaType(returnType["$type"], returnType)
-        self.body = resolveNodeViaType(body["$type"], body["Nodes"])
+        self.returnType = resolveNodeViaType(returnType["$type"], returnType, resolverUtil)
+        self.body = resolveNodeViaType(body["$type"], body["Nodes"], resolverUtil)
 
     def accept(self, visitor):
         return visitor.visit_functiondeclaration(self)

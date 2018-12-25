@@ -6,16 +6,15 @@ from Agent.QNetworkAgent import Q_Network
 from Enviroment.ExperienceReplay import experience_buffer, updateTargetGraph, updateTarget
 from Enviroment.enviroment import Enviroment
 
-env = Enviroment()
 
-exploration = "e-greedy"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
+exploration = "boltzmann"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
 y = .99  # Discount factor.
 num_episodes = 100000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
 batch_size = 32  # Size of training batch
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
-anneling_steps = 1000  # How many steps of training to reduce startE to endE.
+anneling_steps = 200000  # How many steps of training to reduce startE to endE.
 pre_train_steps = 50000  # Number of steps used before training updates begin.
 num_steps_upd = 5  # How often to perform a training step.
 
@@ -43,9 +42,12 @@ with tf.Session() as sess:
     k = 0
     m = 0
     for k in range(num_episodes):
+        env = Enviroment()
         rAll = 0
         d = False
+        m = 0
         while m < len(env.listOfFiles):
+            m += 1
             env.prepareNextFile()
             env.currentNumOfTable = 0
             while env.currentNumOfTable < len(env.listOfTables):
@@ -54,7 +56,7 @@ with tf.Session() as sess:
                 ep_history = []
                 env.currentNumOfRow = 0
                 while env.currentNumOfRow < len(env.currentVectors):
-                    s = env.startRow(m)
+                    s = env.startRow(m - 1)
                     numOfVectors = 1
                     while numOfVectors < len(env.currentVectorRow):
                         a = None
@@ -86,7 +88,7 @@ with tf.Session() as sess:
                                                feed_dict={q_net.inputs: [s], q_net.keep_per: (1 - e) + 0.1})
                             a = a[0]
 
-                        r, d, _ = env.step(a, m)
+                        r, d, _ = env.step(a, m - 1)
                         s1 = env.currentVectorRow[numOfVectors]
                         numOfVectors += 1
 
@@ -118,21 +120,17 @@ with tf.Session() as sess:
                         total_steps += 1
                         if d:
                             break
-                    jList.append(env.currentNumOfRow)
-                    rList.append(rAll)
-                    if k % 100 == 0 and k != 0:
-                        r_mean = np.mean(rList[-100:])
-                        j_mean = np.mean(jList[-100:])
-                        if exploration == 'e-greedy':
-                            print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " e: " + str(e))
-                        if exploration == 'boltzmann':
-                            print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " t: " + str(e))
-                        if exploration == 'bayesian':
-                            print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " p: " + str(e))
-                        if exploration == 'random' or exploration == 'greedy':
-                            print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps))
-                        rMeans.append(r_mean)
-                        jMeans.append(j_mean)
-        m += 1
+        rList.append(rAll)
+        if k % 100 == 0 and k != 0:
+            r_mean = np.mean(rList[-100:])
+            if exploration == 'e-greedy':
+                print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " e: " + str(e))
+            if exploration == 'boltzmann':
+                print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " t: " + str(e))
+            if exploration == 'bayesian':
+                print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " p: " + str(e))
+            if exploration == 'random' or exploration == 'greedy':
+                print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps))
+            rMeans.append(r_mean)
 
 print("Percent of successful episodes: " + str(sum(rList) / num_episodes) + "%")

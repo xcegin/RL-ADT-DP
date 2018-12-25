@@ -4,8 +4,8 @@ from ADT.Operators.UnaryOperator import UnaryOperator
 class UnaryBitwiseOperator(UnaryOperator):
     operations = {0: 'Negation'}
 
-    def __init__(self, id, operation, operand):
-        super().__init__(id, operation, operand)
+    def __init__(self, id, operation, operand, resolver_util):
+        super().__init__(id, operation, operand, resolver_util)
 
     def resolveOperationToString(self):
         return self.operations[self.operation]

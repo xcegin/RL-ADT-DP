@@ -6,11 +6,11 @@ from ADT.Utils.VectorUtil import typeOfVectorData, resolve_argument_involvement
 
 class UnaryOperator(ADTNode):
 
-    def __init__(self, id, operation, operand):
+    def __init__(self, id, operation, operand, resolver_util):
         super().__init__(id)
         self.operation = operation
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.operand = resolveNodeViaType(operand["$type"], operand)
+        self.operand = resolveNodeViaType(operand["$type"], operand, resolver_util)
 
     def accept(self, visitor):
         return visitor.visit_unaryoperator(self)

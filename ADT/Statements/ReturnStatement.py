@@ -5,10 +5,10 @@ class ReturnStatement(StatementNode):
 
     CDTName = "c.CASTReturnStatement"
 
-    def __init__(self, id, value):
+    def __init__(self, id, value, resolverUtil):
         super().__init__(id)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.value = resolveNodeViaType(value["$type"], value)
+        self.value = resolveNodeViaType(value["$type"], value, resolverUtil)
 
     def accept(self, visitor):
         return visitor.visit_statement(self)

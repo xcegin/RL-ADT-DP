@@ -8,13 +8,13 @@ from constants import NUM_COPY_SUBLIST
 class IfNode(ADTNode):
     CDTName = "c.CASTIfStatement"
 
-    def __init__(self, id, condition, nodeThen, nodeElse=None):
+    def __init__(self, id, condition, nodeThen, resolver_util, nodeElse=None):
         super().__init__(id)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
-        self.condition = resolveNodeViaType(condition["$type"], condition)
-        self.nodeThen = resolveNodeViaType(nodeThen["$type"], nodeThen)
+        self.condition = resolveNodeViaType(condition["$type"], condition, resolver_util)
+        self.nodeThen = resolveNodeViaType(nodeThen["$type"], nodeThen, resolver_util)
         if nodeElse is not None:
-            self.nodeElse = resolveNodeViaType(condition["$type"], condition)
+            self.nodeElse = resolveNodeViaType(condition["$type"], condition, resolver_util)
         else:
             self.nodeElse = None
 

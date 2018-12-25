@@ -93,9 +93,10 @@ class DataDependenciesVisitor(ABCVisitor):
     def visit_unaryoperator(self, unaryOperator: UnaryOperator):
         from ADT.Visitors.RetrieveVariablesFromConditionVisitor import RetrieveVariablesFromConditionVisitor
         variablesUsedInCondition = RetrieveVariablesFromConditionVisitor(enviromentWalkerContext())
-        unaryOperator.operand.accept(variablesUsedInCondition)
-        self.context.dataDependencies[self.lastAssignedVariable.variableName] += variablesUsedInCondition.currentArguments
-        self.context.dataDependencies[self.lastAssignedVariable.variableName] = list(
+        if self.isInModifyingVariableState:
+            unaryOperator.operand.accept(variablesUsedInCondition)
+            self.context.dataDependencies[self.lastAssignedVariable.variableName] += variablesUsedInCondition.currentArguments
+            self.context.dataDependencies[self.lastAssignedVariable.variableName] = list(
             set(self.context.dataDependencies[self.lastAssignedVariable.variableName]))
         unaryOperator.operand.accept(self)
 

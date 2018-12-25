@@ -53,7 +53,7 @@ class StaticRewardCalculator(Rewarder):
         totalR = 0
         # True z & 1
         if currentRow[0]['zAnd1']:
-            if argumentValues['z'] == 1:
+            if argumentValues['a'] == 1:
                 totalR += 1
         # False z & 1
         if not currentRow[0]['zAnd1']:
@@ -101,7 +101,7 @@ class StaticRewardCalculator(Rewarder):
             if argumentValues['a'] <= argumentValues['b']:
                 totalR += 1
         # False a < b
-        if not currentRow[0]['0 NotEquals a']:
+        if not currentRow[0]['a LessThanEquals b']:
             if argumentValues['a'] > argumentValues['b']:
                 totalR += 1
         return totalR

@@ -13,6 +13,11 @@ class experience_buffer():
             self.buffer[0:(len(experience) + len(self.buffer)) - self.buffer_size] = []
         self.buffer.extend(experience)
 
+    def addRQN(self,experience):
+        if len(self.buffer) + 1 >= self.buffer_size:
+            self.buffer[0:(1+len(self.buffer))-self.buffer_size] = []
+        self.buffer.append(experience)
+
     def sample(self, size):
         return np.reshape(np.array(random.sample(self.buffer, size)), [size, 5])
 
@@ -27,7 +32,7 @@ class experience_buffer():
 
 
 def processState(states):
-    return np.reshape(states, [21168])
+    return np.reshape(states, [8])
 
 
 def updateTargetGraph(tfVars, tau):

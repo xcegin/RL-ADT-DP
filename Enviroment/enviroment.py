@@ -5,7 +5,7 @@ from gym import spaces
 
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
 from ADT.Utils.MathOperationsUtil import randomValue, resolveMathOperation
-from ADT.Utils.ResolverUtil import resolveNodeViaType, resetUtil
+from ADT.Utils.ResolverUtil import resolveNodeViaType, ResolverUtil
 from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
 from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
 from Enviroment import Utils
@@ -33,7 +33,7 @@ class Enviroment():
             self.currentF += 1
 
     def initialize(self, data):
-        resetUtil()
+        self.resolverUtil = ResolverUtil()
         self.currentVector = 0
         self.currentNumOfTable = 0
         self.currentNumOfRow = 0
@@ -76,17 +76,18 @@ class Enviroment():
 
     def startRow(self, numOfFile=None):
         self.initializeArgumentValues()
-        #self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow] - TODO BUG WITH ROW NUMBERS
+        # self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow] - TODO BUG WITH ROW NUMBERS
         self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
         self.currentNumOfRow = self.currentNumOfRow + 1
-        #self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        # self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
         self.startingHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
-                                                                  [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
+                                                                  [self.currentNumOfRow - 1], self.argumentValues,
+                                                                  numOfFile)
         self.currentHeuristicValue = self.startingHeuristicValue
         return self.currentVectorRow[0]
 
     def step(self, action, numOfFile=None):
-        #self.currentVector = self.currentVector + 1
+        # self.currentVector = self.currentVector + 1
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
         keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argumentValue = self.argumentValues[keyOfArg]
@@ -95,19 +96,21 @@ class Enviroment():
         argument = self.arguments[keyOfArg]
         try:
             self.argumentValues[keyOfArg] = resolveMathOperation(action, argumentValue,
-                                                                            argument.variableType.typeName)
+                                                                 argument.variableType.typeName)
         except TypeError:
-            return -0.5, True, {}
-        #currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
+            return -1, True, {}
+        except OverflowError:
+            return -1, True, {}
+        # currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                             [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
         reward = self.returnReward(currentHeuristicValue)
         self.currentHeuristicValue = currentHeuristicValue
         self.argumentChangedVal = self.argumentChangedVal + 1
-        #nextState = self.currentVectorRow[self.currentVector]
+        # nextState = self.currentVectorRow[self.currentVector]
 
         done = False
-        #TODO: reconsider the done checks
+        # TODO: reconsider the done checks
         if self.currentHeuristicValue == 1:
             done = True
         return reward, done, {}
@@ -135,14 +138,14 @@ class Enviroment():
     def extractFunctionParams(self):
         arguments = self.rootAdtNode["Arguments"]
         for value in arguments["$values"]:
-            variableDecl = resolveNodeViaType(value["$type"], value)
+            variableDecl = resolveNodeViaType(value["$type"], value, self.resolverUtil)
             self.arguments[variableDecl.variable.variableName] = variableDecl
 
     def parseLoadedJsonIntoTree(self):
         self.rootTreeAdtNode = FunctionDeclarationStatement(self.rootAdtNode["$id"],
                                                             self.rootAdtNode["ReturnType"],
                                                             self.rootAdtNode["Name"], self.rootAdtNode["Arguments"],
-                                                            self.rootAdtNode["Body"])
+                                                            self.rootAdtNode["Body"], self.resolverUtil)
 
     def createListOfMcDcTableRows(self):
         for table in self.mcdc["LogicTables"]["$values"]:
@@ -193,7 +196,7 @@ class Enviroment():
                                                                  self.arguments, self.expressions)
                 lists = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
                 lists = [x for x in lists if x != []]
-                numOfTimes = int(round(len(lists)) ** (1/4)) + 1
+                numOfTimes = int(round(len(lists)) ** (1 / 4)) + 1
                 for x in range(numOfTimes):
                     toBeAppended = deepcopy(lists)
                     lists = lists + toBeAppended
@@ -213,5 +216,5 @@ class Enviroment():
 
     def returnReward(self, currentHeuristicValue):
         return currentHeuristicValue - self.currentHeuristicValue
-        #difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)
-        #return difference / abs(self.currentHeuristicValue)
+        # difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)
+        # return difference / abs(self.currentHeuristicValue)

@@ -14,17 +14,17 @@ class VariableDeclarationStatement(StatementNode):
     CDTChildParameter = "c.CASTSimpleDeclaration"
     CDTChildInitializer = "c.CASTEqualsInitializer"
 
-    def __init__(self, id, variableType, initialValue=None):
+    def __init__(self, id, variableType, resolverUtil, initialValue=None):
         super().__init__(id)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
         if variableType is None:
             from ADT.UnknowNode import UnknownNode
             self.variableType = UnknownNode("unknown")
         else:
-            self.variableType = resolveNodeViaType(variableType["$type"], variableType)
+            self.variableType = resolveNodeViaType(variableType["$type"], variableType, resolverUtil)
         self.variable = None
         if isinstance(initialValue,dict) and "$type" in initialValue:
-            self.initialValue = resolveNodeViaType(initialValue["$type"], initialValue)
+            self.initialValue = resolveNodeViaType(initialValue["$type"], initialValue, resolverUtil)
         else:
             self.initialValue = initialValue
 
@@ -40,7 +40,7 @@ class VariableDeclarationStatement(StatementNode):
         from ADT.LiteralNode import LiteralNode
         from ADT.Variables.VariableNode import VariableNode
         lists += self.make_vector(visitor)
-        if self.initialValue is not None or not isinstance(self.initialValue, LiteralNode) or\
+        if self.initialValue is not None and not isinstance(self.initialValue, LiteralNode) and\
                 not isinstance(self.initialValue, VariableNode):
             self.initialValue.accept(visitorComplexity)
             self.initialValue.accept(variablesUsedInCondition)
