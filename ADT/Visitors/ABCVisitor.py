@@ -14,6 +14,7 @@ from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationState
 from ADT.Statements.StatementNode import StatementNode
 from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
 from ADT.UnknowNode import UnknownNode
+from ADT.Variables.TypeDefinition import TypeDefinition
 from ADT.Variables.VariableNode import VariableNode
 
 
@@ -72,6 +73,9 @@ class ABCVisitor(ABC):
 
     @abc.abstractmethod
     def visit_literal(self, literalNode: LiteralNode):
+        pass
+
+    def visit_typeDefinition(self, typeDef: TypeDefinition):
         pass
 
     def visit_unknown(self, unknownNode: UnknownNode):

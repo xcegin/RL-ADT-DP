@@ -11,7 +11,7 @@ from ADT.Statements.StatementNode import StatementNode
 from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
 from ADT.Variables.VariableNode import VariableNode
 from ADT.Visitors.ABCVisitor import ABCVisitor
-from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
 class RetrieveVariablesFromConditionVisitor(ABCVisitor):

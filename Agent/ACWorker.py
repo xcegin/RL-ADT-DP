@@ -2,8 +2,8 @@ import numpy as np
 import tensorflow as tf
 
 from Agent.ACAgent import AC_Network
-from Enviroment.Utils import update_target_graph, discount
-from Enviroment.enviroment import Enviroment
+from Environment.Utils import update_target_graph, discount
+from Environment.enviroment import Enviroment
 
 
 class Worker:
@@ -109,7 +109,8 @@ class Worker:
                                 episode_buffer.append([s, a, r, s1, d, v[0, 0]])
                                 episode_values.append(v[0, 0])
 
-                                episode_reward += r
+                                if not numOfVectors < len(self.env.currentVectorRow):
+                                    episode_reward += r
                                 s = s1
                                 total_steps += 1
                                 episode_step_count += 1
@@ -126,6 +127,7 @@ class Worker:
                                     episode_buffer = []
                                     sess.run(self.update_local_ops)
                                 if episode_step_count >= max_episode_length - 1 or d == True:
+                                    episode_reward += r
                                     break
 
                 self.episode_rewards.append(episode_reward)

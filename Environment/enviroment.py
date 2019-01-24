@@ -8,15 +8,16 @@ from ADT.Utils.MathOperationsUtil import randomValue, resolveMathOperation
 from ADT.Utils.ResolverUtil import resolveNodeViaType, ResolverUtil
 from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
 from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
-from Enviroment import Utils
-from Enviroment.ResolveJsonRef import resolveRef
-from Enviroment.Utils import getTypeOfExpression
-from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from Environment import Utils
+from Environment.ResolveJsonRef import resolveRef
+from Environment.Utils import getTypeOfExpression
+from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Reward.Heuristic.HeuristicCalculator import HeuristicCalculator
 from Reward.StaticRewarder import StaticRewardCalculator
+from Vectorizer.SampleVisitorForEnviroment import SampleVisitorEnv
 
 
-class Enviroment():
+class Enviroment:
 
     def __init__(self):
         import glob
@@ -29,7 +30,15 @@ class Enviroment():
             item = next(self.iterator)
             with open(item) as f:
                 data = json.load(f)
-            self.initialize(data)
+            self.initialize_def(data)
+            self.currentF += 1
+
+    def prepareNextFileConv(self):
+        if self.currentF < len(self.listOfFiles):
+            item = next(self.iterator)
+            with open(item) as f:
+                data = json.load(f)
+            self.initialize_conv(data)
             self.currentF += 1
 
     def initialize(self, data):
@@ -65,9 +74,19 @@ class Enviroment():
         self.parseLoadedJsonIntoTree()
         self.createListOfMcDcTableRows()
         self.createHeuristicEquationsForRows()
+        self.action_space = spaces.Discrete(37)
+
+    def initialize_def(self, data):
+        self.initialize(data)
         self.createVectorsForRows()
 
-        self.action_space = spaces.Discrete(36)
+        self.action_space = spaces.Discrete(37)
+
+    def initialize_conv(self, data):
+        self.initialize(data)
+        self.prepareVectorsForRowsConv()
+
+        self.action_space = spaces.Discrete(37)
 
     def startTable(self):
         self.currentHeuristics = self.listOfTableHeuristics[self.currentNumOfTable]
@@ -79,7 +98,8 @@ class Enviroment():
         # self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow] - TODO BUG WITH ROW NUMBERS
         self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
         self.currentNumOfRow = self.currentNumOfRow + 1
-        # self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        # self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments,
+        # self.currentHeuristicRow)
         self.startingHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                                   [self.currentNumOfRow - 1], self.argumentValues,
                                                                   numOfFile)
@@ -101,7 +121,8 @@ class Enviroment():
             return -1, True, {}
         except OverflowError:
             return -1, True, {}
-        # currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments, self.currentHeuristicRow)
+        # currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues,
+        # self.arguments, self.currentHeuristicRow)
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                             [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
         reward = self.returnReward(currentHeuristicValue)
@@ -188,7 +209,6 @@ class Enviroment():
             tableRows = []
             # Extract values for each column according to one row
             for row in table:
-                lists = []
                 dictForRow = self.mergeDictsInRow(row)
                 dataDependencyVisitor = DataDependenciesVisitor(enviromentWalkerContext(), dictForRow, self.expressions)
                 self.rootTreeAdtNode.accept(dataDependencyVisitor)
@@ -203,6 +223,17 @@ class Enviroment():
                 tableRows.append(lists)
             self.listOfTableVectors.append(tableRows)
 
+    def prepareVectorsForRowsConv(self):
+        for table in self.listOfTables:
+            tableRows = []
+            # Extract values for each column according to one row
+            for row in table:
+                dictForRow = self.mergeDictsInRow(row)
+                self.vectorizationVisitor = SampleVisitorEnv(enviromentWalkerContext(), dictForRow, self.expressions)
+                mainNode = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
+                tableRows.append(mainNode)
+            self.listOfTableVectors.append(tableRows)
+
     def initializeArgumentValues(self):
         for argument in self.arguments:
             self.argumentValues[self.arguments[argument].variable.variableName] = \
@@ -215,6 +246,6 @@ class Enviroment():
         return finalDict
 
     def returnReward(self, currentHeuristicValue):
-        return currentHeuristicValue - self.currentHeuristicValue
+        return currentHeuristicValue
         # difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)
         # return difference / abs(self.currentHeuristicValue)

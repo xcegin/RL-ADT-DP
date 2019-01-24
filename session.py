@@ -3,7 +3,7 @@ import numpy as np
 from numpy.core.tests.test_mem_overlap import xrange
 
 from Agent.ABCAgent import ABCAgent
-from Enviroment.enviroment import Enviroment
+from Environment.enviroment import Enviroment
 
 tf.reset_default_graph() #Clear the Tensorflow graph.
 

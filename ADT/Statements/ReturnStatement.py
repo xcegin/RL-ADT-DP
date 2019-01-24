@@ -12,3 +12,6 @@ class ReturnStatement(StatementNode):
 
     def accept(self, visitor):
         return visitor.visit_statement(self)
+
+    def returnChildren(self):
+        return [self.value]

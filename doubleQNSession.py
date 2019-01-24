@@ -1,23 +1,23 @@
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 # Set learning parameters
 from Agent.QNetworkAgent import Q_Network
-from Enviroment.ExperienceReplay import experience_buffer, updateTargetGraph, updateTarget
-from Enviroment.enviroment import Enviroment
+from Environment.ExperienceReplay import experience_buffer, updateTargetGraph, updateTarget
+from Environment.enviroment import Enviroment
 
 
 exploration = "boltzmann"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
 y = .99  # Discount factor.
-num_episodes = 100000  # Total number of episodes to train network for.
+num_episodes = 5000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
-batch_size = 32  # Size of training batch
+batch_size = 64  # Size of training batch
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 200000  # How many steps of training to reduce startE to endE.
 pre_train_steps = 50000  # Number of steps used before training updates begin.
 num_steps_upd = 5  # How often to perform a training step.
-
 tf.reset_default_graph()
 
 q_net = Q_Network()
@@ -32,6 +32,7 @@ myBuffer = experience_buffer()
 jList = []
 jMeans = []
 rList = []
+episodeList = []
 rMeans = []
 with tf.Session() as sess:
     sess.run(init)
@@ -100,7 +101,6 @@ with tf.Session() as sess:
 
                         if total_steps > pre_train_steps and total_steps % num_steps_upd == 0:
                             # We use Double-DQN training algorithm
-                            # TODO: CHECK BUFFER BATCH SIZES - Should be good
                             trainBatch = myBuffer.sample(batch_size)
                             Q1 = sess.run(q_net.predict,
                                           feed_dict={q_net.inputs: np.vstack(trainBatch[:, 3]), q_net.keep_per: 1.0})
@@ -114,11 +114,12 @@ with tf.Session() as sess:
                                          feed_dict={q_net.inputs: np.vstack(trainBatch[:, 0]), q_net.nextQ: targetQ,
                                                     q_net.keep_per: 1.0, q_net.actions: trainBatch[:, 1]})
                             updateTarget(targetOps, sess)
-
-                        rAll += r
+                        if not numOfVectors < len(env.currentVectorRow):
+                            rAll += r
                         s = s1
                         total_steps += 1
                         if d:
+                            rAll += r
                             break
         rList.append(rAll)
         if k % 100 == 0 and k != 0:
@@ -132,5 +133,11 @@ with tf.Session() as sess:
             if exploration == 'random' or exploration == 'greedy':
                 print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps))
             rMeans.append(r_mean)
+            episodeList.append((k / 100) + 1)
 
+plt.plot(episodeList, rMeans)
+plt.title("Q-learning Boltzmann")
+plt.xlabel('Number of episodes in 100')
+plt.ylabel('Accumulated reward')
+plt.show()
 print("Percent of successful episodes: " + str(sum(rList) / num_episodes) + "%")

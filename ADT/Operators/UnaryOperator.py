@@ -36,3 +36,6 @@ class UnaryOperator(ADTNode):
             vector[7] = resolve_argument_involvement(argument, visitor)
             vectorsOfChildren.insert(0, vector)
         return vectorsOfChildren
+
+    def returnChildren(self):
+        return [self.operand]

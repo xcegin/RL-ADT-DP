@@ -10,6 +10,7 @@ from ADT.Statements.FunctionCall import FunctionCall
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
 from ADT.Statements.StatementNode import StatementNode
 from ADT.Statements.VariableDeclarationStatement import VariableDeclarationStatement
+from ADT.UnknowNode import UnknownNode
 from ADT.Variables.VariableNode import VariableNode
 from ADT.Visitors.ABCVisitor import ABCVisitor
 from ADT.Visitors.ConditionSolverVisitor import ConditionSolverVisitor
@@ -17,31 +18,49 @@ from Environment.Utils import getTypeOfExpression
 from Environment import Utils
 from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 
-if_embedding = 1
-loop_embedding = 4
 
+# TODO: consider variable types with involvement like 0 1 2 for given argument
+#  (if route of argument multiplying is taken)
+class SampleVisitor(ABCVisitor):
 
-class VectorizationVisitor(ABCVisitor):
-
-    def __init__(self, Context, rowExpressionValues, arguments, expressions):
+    def __init__(self, Context, rowExpressionValues, expressions):
         super().__init__(Context)
-        self.expressions = expressions
         self.rowExpressionValues = rowExpressionValues
-        self.embedding = 0
-        self.functionName = ""
-        self.numOfStaticRecursionCalls = 0
-        self.currentArgumentVectorDependency = []
-        self.arguments = arguments
+        self.expressions = expressions
 
     def reset(self):
         self.context = enviromentWalkerContext()
-        self.embedding = 0
-        self.functionName = ""
-        self.numOfStaticRecursionCalls = 0
-        self.currentArgumentVectorDependency = []
+
+    def traverse_tree(self, startNode):
+        queue = [(startNode, None)]
+        samples = []
+        while queue:
+            node = queue.pop(0)
+            if node[0] is None:
+                continue
+            children = node[0].accept(self)
+            sample = {
+                    'node': self.get_name(node[0]),
+                    'parent': None if node[1] is None else self.get_name(node[1]),
+                    'children': [self.get_name(child) for child in children]
+                }  # TODO: Unknown node pri function declaration check
+            samples.append(sample)
+            for child in children:
+                if child is not None:
+                    queue.append((child, node[0]))
+        return samples
+
+    def get_name(self, node):
+        if isinstance(node, BinaryOperator) or isinstance(node, UnaryOperator):
+            return type(node).__name__ + str(node.operation)
+        elif isinstance(node, LoopNode) or isinstance(node, IfNode):
+            return type(node).__name__ + self.resolve_expression(node)
+        else:
+            return type(node).__name__
 
     def visit_loop(self, loopNode: LoopNode):
         expression = self.expressions[loopNode.id]
+        children = []
         if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
             isConditionTrue = self.rowExpressionValues[expression["Token"]]
         else:
@@ -50,15 +69,14 @@ class VectorizationVisitor(ABCVisitor):
                                                      self.expressions)
             isConditionTrue = conditionSolver.retrieveValueOfCondition()
         if isConditionTrue:
-            self.embedding = self.embedding + loop_embedding
-            resultVectors = loopNode.return_vector(self)
-            self.embedding = self.embedding - loop_embedding
-            return resultVectors
+            children = [loopNode.condition, loopNode.nodeBlock]
         else:
-            pass
+            children = [loopNode.condition, loopNode.nodeBlock]
+        return children
 
     def visit_forloop(self, forLoop: ForLoop):
         expression = self.expressions[forLoop.id]
+        children = [forLoop.nodeInit, forLoop.condition, forLoop.nodeAfter]
         if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
             isConditionTrue = self.rowExpressionValues[expression["Token"]]
         else:
@@ -66,39 +84,32 @@ class VectorizationVisitor(ABCVisitor):
                                                      self.rowExpressionValues,
                                                      self.expressions)
             isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        if isConditionTrue:
-            self.embedding = self.embedding + loop_embedding
-            resultVectors = forLoop.return_vector(self)
-            self.embedding = self.embedding - loop_embedding
-            return resultVectors
-        else:
-            pass
+        children.append(forLoop.nodeBlock)
+        return children
 
     def visit_assigment(self, assigment: AssignmentStatement):
-        return assigment.return_vector(self)
+        return assigment.returnChildren()
 
     def visit_binaryoperator(self, binaryOperator: BinaryOperator):
-        return binaryOperator.return_vector(self)
+        return binaryOperator.returnChildren()
 
     def visit_variabledeclaration(self, variableDeclaration: VariableDeclarationStatement):
-        return variableDeclaration.return_vector(self)
+        return variableDeclaration.returnChildren()
 
     def visit_unaryoperator(self, unaryOperator: UnaryOperator):
-        return unaryOperator.return_vector(self)
+        return unaryOperator.returnChildren()
 
     def visit_statement(self, statementNode: StatementNode):
-        return statementNode.return_vector(self)
+        return statementNode.returnChildren()
 
     def visit_variable(self, variableNode: VariableNode):
-        return variableNode.return_vector(self)
+        return variableNode.returnChildren()
 
     def visit_functioncall(self, functioncall: FunctionCall):
-        if self.functionName == functioncall.name:
-            self.numOfStaticRecursionCalls = self.numOfStaticRecursionCalls + 1
-        return functioncall.return_vector(self)
+        return functioncall.returnChildren()
 
     def visit_ifnode(self, ifNode: IfNode):
-        list = []
+        children = [ifNode.condition]
         expression = self.expressions[ifNode.id]
         if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
             isConditionTrue = self.rowExpressionValues[expression["Token"]]
@@ -107,25 +118,33 @@ class VectorizationVisitor(ABCVisitor):
                                                      self.rowExpressionValues,
                                                      self.expressions)
             isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        list = list + ifNode.return_vector(self)
-        self.embedding = self.embedding + if_embedding
-        if isConditionTrue:
-            list = list + ifNode.nodeThen.accept(self)
-        else:
-            if ifNode.nodeElse is not None:
-                list = list + ifNode.nodeElse.accept(self)
-        self.embedding = self.embedding + if_embedding
-        return list
+        children.append(ifNode.nodeThen)
+        if ifNode.nodeElse is not None:
+            children.append(ifNode.nodeElse)
+        return children
 
     def visit_literal(self, literalNode: LiteralNode):
-        return literalNode.return_vector(self)
+        return []
 
     def visit_sequence(self, sequence: SequenceNode):
-        list = []
-        for node in sequence.nodes:
-            list = list + node.accept(self)
-        return list
+        return sequence.returnChildren()
 
     def visit_functiondeclaration(self, functionDecl: FunctionDeclarationStatement):
-        self.functionName = functionDecl.name
-        return functionDecl.body.accept(self)
+        return functionDecl.returnChildren()
+
+    def visit_unknown(self, unknownNode: UnknownNode):
+        return []
+
+    def resolve_expression(self, node):
+        expression = self.expressions[node.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        if isConditionTrue:
+            return str(1)
+        else:
+            return str(0)

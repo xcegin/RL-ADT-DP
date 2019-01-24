@@ -18,3 +18,6 @@ class FunctionDeclarationStatement(StatementNode):
 
     def accept(self, visitor):
         return visitor.visit_functiondeclaration(self)
+
+    def returnChildren(self):
+        return [self.returnType, self.body] + self.arguments

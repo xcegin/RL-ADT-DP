@@ -83,6 +83,8 @@ def resolveMathOperation(numOfAction, value, type):
             return 0
         elif numOfAction == 35:
             return 1
+        elif numOfAction == 36:
+            return value
 
     value = interMathOperation()
     return correctValue(value, type)

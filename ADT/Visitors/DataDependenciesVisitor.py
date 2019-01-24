@@ -12,9 +12,9 @@ from ADT.Statements.VariableDeclarationStatement import VariableDeclarationState
 from ADT.Variables.VariableNode import VariableNode
 from ADT.Visitors.ABCVisitor import ABCVisitor
 from ADT.Visitors.ConditionSolverVisitor import ConditionSolverVisitor
-from Enviroment import Utils
-from Enviroment.Utils import getTypeOfExpression
-from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from Environment import Utils
+from Environment.Utils import getTypeOfExpression
+from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
 class DataDependenciesVisitor(ABCVisitor):

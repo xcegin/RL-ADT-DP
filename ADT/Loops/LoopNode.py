@@ -2,7 +2,7 @@ from copy import deepcopy
 from math import sqrt
 
 from ADT.ADTNode import ADTNode
-from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 from constants import NUM_COPY_SUBLIST
 
 
@@ -35,3 +35,6 @@ class LoopNode(ADTNode):
             toBeAppended = deepcopy(listOfChildVectors)
             listOfChildVectors = listOfChildVectors + toBeAppended
         return listOfChildVectors
+
+    def returnChildren(self):
+        return [self.condition, self.nodeBlock]

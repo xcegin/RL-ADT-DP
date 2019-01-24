@@ -16,7 +16,7 @@ class RQnetwork:
         self.rnn = tf.reshape(self.rnn, shape=[-1, h_size])
         # The output from the recurrent player is then split into separate Value and Advantage streams
         self.streamA, self.streamV = tf.split(self.rnn, 2, 1)
-        self.AW = tf.Variable(tf.random_normal([h_size // 2, 36]))
+        self.AW = tf.Variable(tf.random_normal([h_size // 2, 37]))
         self.VW = tf.Variable(tf.random_normal([h_size // 2, 1]))
         self.Advantage = tf.matmul(self.streamA, self.AW)
         self.Value = tf.matmul(self.streamV, self.VW)
@@ -29,7 +29,7 @@ class RQnetwork:
         # Below we obtain the loss by taking the sum of squares difference between the target and prediction Q values.
         self.targetQ = tf.placeholder(shape=[None], dtype=tf.float32)
         self.actions = tf.placeholder(shape=[None], dtype=tf.int32)
-        self.actions_onehot = tf.one_hot(self.actions, 36, dtype=tf.float32)
+        self.actions_onehot = tf.one_hot(self.actions, 37, dtype=tf.float32)
 
         self.Q = tf.reduce_sum(tf.multiply(self.Qout, self.actions_onehot), axis=1)
 
@@ -43,5 +43,5 @@ class RQnetwork:
         self.mask = tf.reshape(self.mask, [-1])
         self.loss = tf.reduce_mean(self.td_error * self.mask)
 
-        self.trainer = tf.train.AdamOptimizer(learning_rate=0.0001)
+        self.trainer = tf.train.AdamOptimizer(learning_rate=0.001)
         self.updateModel = self.trainer.minimize(self.loss)

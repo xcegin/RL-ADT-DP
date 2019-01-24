@@ -1,5 +1,5 @@
-from Enviroment import Utils
-from Enviroment.Utils import getTypeOfExpression
+from Environment import Utils
+from Environment.Utils import getTypeOfExpression
 
 space = " "
 leftBracket = "("

@@ -14,3 +14,6 @@ class ADTNode(ABC):
 
     def return_vector(self, visitor):
         return []
+
+    def returnChildren(self):
+        return []

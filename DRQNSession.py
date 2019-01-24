@@ -1,12 +1,12 @@
 import numpy as np
 import tensorflow as tf
 
+import matplotlib.pyplot as plt
 # Set learning parameters
 from Agent.RQNetworkAgent import RQnetwork
-from Enviroment.ExperienceReplay import experience_buffer, updateTargetGraph, updateTarget
-from Enviroment.enviroment import Enviroment
+from Environment.ExperienceReplay import experience_buffer, updateTargetGraph, updateTarget
+from Environment.enviroment import Enviroment
 
-exploration = "bayesian"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
 
 # Setting the training parameters
 batch_size = 4  # How many experience traces to use for each training step.
@@ -16,7 +16,7 @@ y = .99  # Discount factor on the target Q-values
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 200000  # How many steps of training to reduce startE to endE.
-num_episodes = 100000  # How many episodes of game environment to train network with.
+num_episodes = 5000  # How many episodes of game environment to train network with.
 pre_train_steps = 50000  # How many steps of random actions before training begins.
 load_model = False  # Whether to load a saved model.
 path = "./drqn"  # The path to save our model to.
@@ -42,6 +42,8 @@ myBuffer = experience_buffer()
 
 # create lists to contain total rewards and steps per episode
 rList = []
+rMeans = []
+episodeList = []
 total_steps = 0
 with tf.Session() as sess:
     sess.run(init)
@@ -70,7 +72,7 @@ with tf.Session() as sess:
                     while numOfVectors < len(env.currentVectorRow):
                         a = None
                         if np.random.rand(1) < e or total_steps < pre_train_steps:
-                            state1 = sess.run(mainQN.rnn_state,
+                            state1 = sess.run(mainQN.rnn_state, # why the fuck is this here if it doesnt do SHIT
                                               feed_dict={mainQN.inputs: [s], mainQN.trainLength: 1,
                                                          mainQN.state_in: state, mainQN.batch_size: 1})
                             a = env.action_space.sample()
@@ -116,22 +118,30 @@ with tf.Session() as sess:
                                                     mainQN.actions: trainBatch[:, 1], mainQN.trainLength: trace_length,
                                                     mainQN.state_in: state_train, mainQN.batch_size: batch_size})
 
-                        rAll += r
+                        if not numOfVectors < len(env.currentVectorRow):
+                            rAll += r
                         s = s1
                         state = state1
+                        total_steps += 1
                         if d:
+                            rAll += r
                             break
             # Episode magic here
         bufferArray = np.array(episodeBuffer)
         episodeBuffer = list(zip(bufferArray))
         myBuffer.addRQN(episodeBuffer)
         rList.append(rAll)
-
         if k % 100 == 0 and k != 0:
             r_mean = np.mean(rList[-100:])
-            saver.save(sess, path + '/model-' + str(k) + '.cptk')
+            saver.save(sess, path + '/model-' + str(k/100) + '.cptk')
             print("Saved Model")
+            rMeans.append(r_mean)
+            episodeList.append((k / 100) + 1)
         if len(rList) % summaryLength == 0 and len(rList) != 0:
             print(total_steps, np.mean(rList[-summaryLength:]), e)
-
+plt.plot(episodeList, rMeans)
+plt.title("DRQN E-Greedy")
+plt.xlabel('Number of episodes in 100')
+plt.ylabel('Accumulated reward')
+plt.show()
 #print("Percent of successful episodes: " + str(sum(rList) / num_episodes) + "%")

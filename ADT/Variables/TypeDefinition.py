@@ -4,7 +4,7 @@ from ADT.ADTNode import ADTNode
 class TypeDefinition(ADTNode):
 
     def accept(self, visitor):
-        pass
+        return visitor.visit_typeDefinition(self)
 
     def __init__(self, id, typeName, pointerDimension, arrayDimension, arrayDimensionSize, modifiers, typeNode):
         super().__init__(id)

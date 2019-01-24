@@ -19,3 +19,6 @@ class SequenceNode(ADTNode):
             for node in nodes["$values"]:
                 from ADT.Utils.ResolverUtil import resolveNodeViaType
                 self.nodes.append(resolveNodeViaType(node["$type"], node, resolverUtil))
+
+    def returnChildren(self):
+        return self.nodes

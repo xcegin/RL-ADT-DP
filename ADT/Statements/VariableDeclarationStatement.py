@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from ADT.Statements.StatementNode import StatementNode
 from ADT.Utils.VectorUtil import typeOfVectorData, resolve_argument_involvement
-from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 from constants import NUM_COPY_SUBLIST
 
 
@@ -68,3 +68,6 @@ class VariableDeclarationStatement(StatementNode):
             vector[7] = resolve_argument_involvement(argument, visitor)
             vectors.insert(0, vector)
         return vectors
+
+    def returnChildren(self):
+        return [self.variable, self.initialValue, self.variableType]

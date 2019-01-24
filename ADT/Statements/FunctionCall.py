@@ -23,3 +23,6 @@ class FunctionCall(StatementNode):
 
     def resolveVectorizationValue(self):
         return 0
+
+    def returnChildren(self):
+        return [self.functionDeclaration] + self.arguments

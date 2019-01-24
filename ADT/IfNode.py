@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from ADT.ADTNode import ADTNode
-from Enviroment.enviromentWalkerRedLabel import enviromentWalkerContext
+from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 from constants import NUM_COPY_SUBLIST
 
 
@@ -35,3 +35,6 @@ class IfNode(ADTNode):
             toBeAppended = deepcopy(lists)
             lists = lists + toBeAppended
         return []
+
+    def returnChildren(self):
+        return [self.condition, self.nodeThen, self.nodeElse]

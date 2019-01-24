@@ -109,7 +109,7 @@ def resolveNodeViaType(type, node, resolver_util):
     elif type == "SimpleVariable":
         variableDeclaration = resolver_util.resolveVarDecl(node)
         return SimpleVariable(node["$id"],
-                              node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"],
+                              node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"], resolver_util,
                               variableDeclaration)
     elif type == "TypeDefinition":
         return TypeDefinition(node["$id"], node["TypeName"], node["PointerDimension"], node["ArrayDimension"],
@@ -138,6 +138,6 @@ def resolveNodeViaType(type, node, resolver_util):
     elif type == "UnaryLogicalOperator":
         return UnaryLogicalOperator(node["$id"], node["Operation"], node["Operand"], resolver_util)
     elif type == "UnaryVariableOperator":
-        return UnaryVariableOperator(node["$id"], node["Operation"], node["Operand"])
+        return UnaryVariableOperator(node["$id"], node["Operation"], node["Operand"], resolver_util)
     else:
         return UnknownNode(node["$id"])
