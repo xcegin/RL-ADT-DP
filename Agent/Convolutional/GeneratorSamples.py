@@ -1,18 +1,52 @@
-class Batcher:
-    def __init__(self, batch):
-        self.nodes, self.children = batch[0][1]
-        self.nodes = self.nodes[0]
-        self.children = self.children[0]
-        self.done = False
+import numpy as np
 
-    def give_next(self, num_of_next):
-        tobereturned_nodes = self.nodes[:num_of_next]
-        self.nodes = self.nodes[num_of_next:]
-        tobereturned_children = self.children[:num_of_next]
-        self.children = self.children[num_of_next:]
-        if not self.nodes:
-            self.done = True
-        return [tobereturned_nodes], [tobereturned_children]
+
+class Batcher:
+    def __init__(self):
+        # self.nodes, self.children = batch[0][1]
+        # self.nodes = self.nodes[0]
+        # self.children = self.children[0]
+        self.maxDim = 0
+        self.maxDimChild = 0
+
+    def checkMaxDim(self, nodes):
+        if self.maxDim < len(nodes[0]):
+            self.maxDim = len(nodes[0])
+
+    def init_child(self):
+        self.maxDimChild = 0
+
+    def pad_child(self, trainBatch):
+        for batch in trainBatch:
+            self.get_maxDimChild(len(batch[0][0]))
+        for batch in trainBatch:
+            batch[0] = self.do_pad(batch[0], self.maxDimChild, self.maxDim)
+        return trainBatch
+
+    def get_maxDimChild(self, maxDim):
+        if self.maxDimChild < maxDim:
+            self.maxDimChild = maxDim
+
+    def pad(self, trainBatch, feature_size):
+        for batch in trainBatch:
+            batch[0] = self.do_pad(batch[0], feature_size, self.maxDim)
+        return trainBatch
+
+    def do_pad(self, A, feature_size, maxDim):
+        arr = np.zeros((maxDim, feature_size))
+        hArr = np.array(A)
+        arr[:len(hArr), :len(hArr[0])] = hArr
+        return arr
+
+    # def give_next(self, num_of_next):
+    # tobereturned_nodes = self.nodes[:num_of_next]
+    # self.nodes = self.nodes[num_of_next:]
+    # tobereturned_children = self.children[:num_of_next]
+    # self.children = self.children[num_of_next:]
+    # if not self.nodes:
+    #    self.done = True
+    # return numpy.array([tobereturned_nodes]), numpy.array([tobereturned_children])
+
 
 def gen_samples(tree, vectors, vector_lookup):
     """Creates a generator that returns a tree in BFS order with each node

@@ -12,12 +12,13 @@ class Q_Network_Convolutional:
         self.children = tf.placeholder(tf.int32, shape=(None, None, None), name='children')
 
         self.conv = conv_layer(1, 100, self.nodes, self.children, feature_size)
+        self.pooling = self.pooling_layer(self.conv)
 
         # These lines establish the feed-forward part of the network used to choose actions
         self.Temp = tf.placeholder(shape=None, dtype=tf.float32)
         self.keep_per = tf.placeholder(shape=None, dtype=tf.float32)
 
-        hidden = slim.fully_connected(self.conv, 256, activation_fn=tf.nn.tanh, biases_initializer=None)
+        hidden = slim.fully_connected(self.pooling, 256, activation_fn=tf.nn.tanh, biases_initializer=None)
         hidden = slim.dropout(hidden, self.keep_per)
         self.Q_out = slim.fully_connected(hidden, 37, activation_fn=None, biases_initializer=None)
 
@@ -34,3 +35,9 @@ class Q_Network_Convolutional:
         loss = tf.reduce_sum(tf.square(self.nextQ - self.Q))
         trainer = tf.train.AdamOptimizer(learning_rate=0.001)
         self.updateModel = trainer.minimize(loss)
+
+    def pooling_layer(self, nodes):
+        """Creates a max dynamic pooling layer from the nodes."""
+        with tf.name_scope("pooling"):
+            pooled = tf.reduce_max(nodes, axis=1)
+            return pooled

@@ -3,7 +3,6 @@ from __future__ import division
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
-
 class Q_Network:
     def __init__(self):
         # These lines establish the feed-forward part of the network used to choose actions

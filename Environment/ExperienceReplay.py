@@ -21,6 +21,9 @@ class experience_buffer():
     def sample(self, size):
         return np.reshape(np.array(random.sample(self.buffer, size)), [size, 5])
 
+    def sample_conv(self, size):
+        return np.reshape(np.array(random.sample(self.buffer, size)), [size, 5])
+
     def sampleDRQN(self, batch_size, trace_length):
         sampled_episodes = random.sample(self.buffer, batch_size)
         sampledTraces = []
