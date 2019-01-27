@@ -13,14 +13,14 @@ from Environment.enviroment import Enviroment
 
 exploration = "boltzmann"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
 y = .99  # Discount factor.
-num_episodes = 500000  # Total number of episodes to train network for.
+num_episodes = 50000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
 batch_size = 64  # Size of training batch
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
-anneling_steps = 10000  # How many steps of training to reduce startE to endE.
-pre_train_steps = 5000 # Number of steps used before training updates begin.
-num_steps_upd = 5  # How often to perform a training step.
+anneling_steps = 1000  # How many steps of training to reduce startE to endE.
+pre_train_steps = 500 # Number of steps used before training updates begin.
+num_steps_upd = 10  # How often to perform a training step.
 tf.reset_default_graph()
 
 
@@ -70,8 +70,8 @@ with tf.Session() as sess:
                         env.initializeArgumentValues()
                         num_batches = len(env.listOfTableVectors) // 1 + (1 if len(row) % 1 != 0 else 0)
                         batches = list(enumerate(batch_samples(gen_samples(row, embeddings, embed_lookup), 1)))
-                        numOfTimes = int(round(len(batches[0][1][0][0])) ** (1 / 3)) + 1
-                        #for x in range(0, numOfTimes*5):
+                        # numOfTimes = int(round(len(batches[0][1][0][0])) ** (1 / 3)) + 1
+                        # for x in range(0, numOfTimes*5):
                         #    batches = list(enumerate(batch_samples(gen_samples(row, embeddings, embed_lookup), 1)))
                         iterator = iter(batches)
                         batch = next(iterator, None)
@@ -162,10 +162,8 @@ with tf.Session() as sess:
                                                         q_net.keep_per: 1.0, q_net.actions: trainBatch[:, 2]})
                                 updateTarget(targetOps, sess)
                             i += 1
-                            if nextBatch is None:
-                                rAll += r
                             total_steps += 1
-                            if d:
+                            if nextBatch is None or d:
                                 rAll += r
                                 break
         rList.append(rAll)
