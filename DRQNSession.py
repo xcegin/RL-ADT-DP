@@ -10,7 +10,7 @@ from Environment.enviroment import Enviroment
 
 # Setting the training parameters
 batch_size = 4  # How many experience traces to use for each training step.
-trace_length = 8  # How long each experience trace will be when training
+trace_length = 16  # How long each experience trace will be when training
 update_freq = 5  # How often to perform a training step.
 y = .99  # Discount factor on the target Q-values
 startE = 1  # Starting chance of random action
@@ -85,7 +85,6 @@ with tf.Session() as sess:
                         r, d, _ = env.step(a, m - 1)
                         s1 = env.currentVectorRow[numOfVectors]
                         numOfVectors += 1
-                        total_steps += 1
                         episodeBuffer.append(np.reshape(np.array([s, a, r, s1, d]), [1, 5]))
 
                         if total_steps > pre_train_steps:

@@ -13,17 +13,15 @@ from Environment.enviroment import Enviroment
 
 exploration = "boltzmann"  # Exploration method. Choose between: greedy, random, e-greedy, boltzmann, bayesian.
 y = .99  # Discount factor.
-num_episodes = 50000  # Total number of episodes to train network for.
+num_episodes = 15000  # Total number of episodes to train network for.
 tau = 0.001  # Amount to update target network at each step.
-batch_size = 64  # Size of training batch
+batch_size = 32  # Size of training batch
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 1000  # How many steps of training to reduce startE to endE.
-pre_train_steps = 500 # Number of steps used before training updates begin.
+pre_train_steps = 500  # Number of steps used before training updates begin.
 num_steps_upd = 10  # How often to perform a training step.
 tf.reset_default_graph()
-
-
 
 # create lists to contain total rewards and steps per episode
 jList = []
@@ -68,7 +66,7 @@ with tf.Session() as sess:
                 for currentRow in env.listOfTableVectors:
                     for row in currentRow:
                         env.initializeArgumentValues()
-                        num_batches = len(env.listOfTableVectors) // 1 + (1 if len(row) % 1 != 0 else 0)
+                        # num_batches = len(env.listOfTableVectors) // 1 + (1 if len(row) % 1 != 0 else 0)
                         batches = list(enumerate(batch_samples(gen_samples(row, embeddings, embed_lookup), 1)))
                         # numOfTimes = int(round(len(batches[0][1][0][0])) ** (1 / 3)) + 1
                         # for x in range(0, numOfTimes*5):
@@ -140,7 +138,7 @@ with tf.Session() as sess:
                             if total_steps > pre_train_steps and total_steps % num_steps_upd == 0:
                                 # We use Double-DQN training algorithm
                                 # TODO: CHECK BUFFER BATCH SIZES - Should be good
-                                trainBatch = myBuffer.sample_conv(batch_size)
+                                trainBatch = myBuffer.sample(batch_size)
                                 batcher.pad(trainBatch[:, 0], num_feats)
                                 batcher.init_child()
                                 batcher.pad_child(trainBatch[:, 1])
