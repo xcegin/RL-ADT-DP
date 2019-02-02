@@ -12,13 +12,13 @@ from Environment.enviroment import Enviroment
 
 # Setting the training parameters
 batch_size = 4  # How many experience traces to use for each training step.
-trace_length = 16  # How long each experience trace will be when training
+trace_length = 4  # How long each experience trace will be when training
 update_freq = 10  # How often to perform a training step.
 y = .99  # Discount factor on the target Q-values
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 1000  # How many steps of training to reduce startE to endE.
-num_episodes = 20000  # How many episodes of game environment to train network with.
+num_episodes = 25000  # How many episodes of game environment to train network with.
 pre_train_steps = 500  # How many steps of random actions before training begins.
 load_model = False  # Whether to load a saved model.
 path = "./drqn"  # The path to save our model to.
@@ -150,7 +150,6 @@ with tf.Session() as sess:
 
                             state = state1
                             total_steps += 1
-                            print(str(k) + " - " + str(total_steps))
                             if nextBatch is None or d:
                                 rAll += r
                                 break

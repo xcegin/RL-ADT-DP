@@ -50,7 +50,7 @@ class RQnetworkConvolutional:
         self.mask = tf.reshape(self.mask, [-1])
         self.loss = tf.reduce_mean(self.td_error * self.mask)
 
-        self.trainer = tf.train.AdamOptimizer(learning_rate=0.001)
+        self.trainer = tf.train.AdamOptimizer(learning_rate=0.01)
         self.updateModel = self.trainer.minimize(self.loss)
 
     def pooling_layer(self, nodes):

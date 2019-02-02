@@ -31,7 +31,6 @@ class Worker:
         observations = rollout[:, 0]
         actions = rollout[:, 1]
         rewards = rollout[:, 2]
-        next_observations = rollout[:, 3]
         values = rollout[:, 5]
 
         # Here we take the rewards and values from the rollout, and use them to
@@ -75,7 +74,7 @@ class Worker:
                 episode_frames = []
                 episode_reward = 0
                 episode_step_count = 0
-                done = False
+                d = False
                 m = 0
                 # self.env.new_episode()
                 rnn_state = self.local_AC.state_init
@@ -115,7 +114,7 @@ class Worker:
                                 total_steps += 1
                                 episode_step_count += 1
 
-                                if len(episode_buffer) == 20 and d != True:
+                                if len(episode_buffer) == 20 and not d:
                                     # Since we don't know what the true final return is, we "bootstrap" from our current
                                     # value estimation.
                                     v1 = sess.run(self.local_AC.value,
@@ -147,7 +146,7 @@ class Worker:
                     mean_reward = np.mean(self.episode_rewards[-5:])
                     mean_length = np.mean(self.episode_lengths[-5:])
                     mean_value = np.mean(self.episode_mean_values[-5:])
-                    #summary = tf.Summary()
+                    # summary = tf.Summary()
                     print(self.name + " Reward: " + str(float(mean_reward)))
                     print(self.name + " Length: " + str(float(mean_length)))
                     print(self.name + " Value: " + str(float(mean_value)))
