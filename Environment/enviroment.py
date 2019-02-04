@@ -138,6 +138,22 @@ class Enviroment:
         # ADD CHECK IF DONE - ITERATE THROUGH VECTORS IN ROW AND HEURISTIC VALUE CHECK
         # ADD RETURN VALUES
 
+    def step_continuos(self, action, numOfFile=None):
+        keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
+
+        self.argumentValues[keyOfArg] = int(action)
+        currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
+                                                            [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
+        reward = self.returnReward(currentHeuristicValue)
+        self.currentHeuristicValue = currentHeuristicValue
+        self.argumentChangedVal = self.argumentChangedVal + 1
+
+        done = False
+        # TODO: reconsider the done checks
+        if self.currentHeuristicValue == 1:
+            done = True
+        return reward, done, {}
+
     def getRootADTNode(self):
         found_root_node = False
         while not found_root_node:
@@ -236,8 +252,7 @@ class Enviroment:
 
     def initializeArgumentValues(self):
         for argument in self.arguments:
-            self.argumentValues[self.arguments[argument].variable.variableName] = \
-                randomValue(self.arguments[argument].variableType) / 1000000
+            self.argumentValues[self.arguments[argument].variable.variableName] = 0
 
     def mergeDictsInRow(self, row):
         finalDict = {}

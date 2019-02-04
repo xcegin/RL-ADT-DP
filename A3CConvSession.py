@@ -52,7 +52,6 @@ with tf.Session() as sess:
         t = threading.Thread(target=worker_work)
         t.start()
         worker_threads.append(t)
-    coord.join(worker_threads)
     gs = 0
     while not coord.should_stop():
         s = time()

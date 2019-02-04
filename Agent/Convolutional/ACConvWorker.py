@@ -22,7 +22,7 @@ class ACConv_Worker:
         self.episode_lengths = []
         self.episode_mean_values = []
         self.batcher = Batcher()
-        self.summary_writer = tf.summary.FileWriter("train_" + str(self.number))
+        self.summary_writer = tf.summary.FileWriter("logs/train_" + str(self.number))
 
         with open('vectors.pkl', 'rb') as fh:
             self.embeddings, self.embed_lookup = pickle.load(fh)
@@ -88,7 +88,6 @@ class ACConv_Worker:
                 self.batcher = Batcher()
                 episode_buffer = []
                 episode_values = []
-                episode_frames = []
                 episode_reward = 0
                 episode_step_count = 0
                 m = 0
@@ -108,46 +107,53 @@ class ACConv_Worker:
                                 batches = list(enumerate(batch_samples(gen_samples(row, self.embeddings, self.embed_lookup), 1)))
                                 iterator = iter(batches)
                                 batch = next(iterator, None)
-                                q = 0
-                                while q < 10:
+                                k = 0
+                                while k < 10:
+                                    q = 0
                                     self.env.initializeArgumentValues()
-                                    if isinstance(batch[0], int):
-                                        num, batch = batch
-                                    nodes, children = batch
-                                    self.batcher.checkMaxDim(nodes)
-                                    a_dist, v, rnn_state = sess.run(
-                                        [self.local_AC.policy, self.local_AC.value, self.local_AC.state_out],
-                                        feed_dict={self.local_AC.nodes: nodes, self.local_AC.children: children,
-                                                   self.local_AC.state_in[0]: rnn_state[0],
-                                                   self.local_AC.state_in[1]: rnn_state[1]})
-                                    a = np.random.choice(a_dist[0], p=a_dist[0])
-                                    a = np.argmax(a_dist == a)
+                                    while q < 10 * len(list(self.env.argumentValues.keys())):
+                                        # self.env.initializeArgumentValues()
+                                        if isinstance(batch[0], int):
+                                            num, batch = batch
+                                        nodes, children = batch
+                                        self.batcher.checkMaxDim(nodes)
+                                        a_dist, v, rnn_state = sess.run(
+                                            [self.local_AC.policy, self.local_AC.value, self.local_AC.state_out],
+                                            feed_dict={self.local_AC.nodes: nodes, self.local_AC.children: children,
+                                                       self.local_AC.state_in[0]: rnn_state[0],
+                                                       self.local_AC.state_in[1]: rnn_state[1]})
+                                        a = np.random.choice(a_dist[0], p=a_dist[0])
+                                        a = np.argmax(a_dist == a)
 
-                                    r, d, _ = self.env.step(a, m - 1)
-                                    #nextBatch = next(iterator, None)
-                                    total_steps += 1
-                                    episode_step_count += 1
+                                        r, d, _ = self.env.step(a, m - 1)
+                                        # nextBatch = next(iterator, None)
+                                        total_steps += 1
+                                        episode_step_count += 1
 
-                                    #batch = nextBatch
-                                    episode_buffer.append([nodes, children, a, r, d, v[0, 0]])
-                                    q += 1
+                                        # batch = nextBatch
+                                        episode_buffer.append([nodes, children, a, r, d, v[0, 0]])
+                                        q += 1
 
-                                    if len(episode_buffer) == 10: # TODO - really not done?
-                                        # Since we don't know what the true final return is, we "bootstrap" from our current
-                                        # value estimation.
-                                        v1 = sess.run(self.local_AC.value,
-                                                      feed_dict={self.local_AC.nodes: nodes, self.local_AC.children: children,
-                                                                 self.local_AC.state_in[0]: rnn_state[0],
-                                                                 self.local_AC.state_in[1]: rnn_state[1]})[0, 0]
-                                        v_l, p_l, e_l, g_n, v_n, adv = self.train(global_AC, episode_buffer, sess,
-                                                                                  gamma,
-                                                                                  v1)
-                                        episode_buffer = []
-                                        sess.run(self.update_local_ops)
-                                    #if episode_step_count >= max_episode_length - 1 or d or nextBatch is None:
-                                    if q == 10:
-                                        episode_reward += r
-                                        break
+                                        if len(episode_buffer) == 10 * len(
+                                                list(self.env.argumentValues.keys())):  # TODO - really not done?
+                                            # Since we don't know what the true final return is, we "bootstrap" from our current
+                                            # value estimation.
+                                            v1 = sess.run(self.local_AC.value,
+                                                          feed_dict={self.local_AC.nodes: nodes,
+                                                                     self.local_AC.children: children,
+                                                                     self.local_AC.state_in[0]: rnn_state[0],
+                                                                     self.local_AC.state_in[1]: rnn_state[1]})[0, 0]
+                                            v_l, p_l, e_l, g_n, v_n, adv = self.train(global_AC, episode_buffer, sess,
+                                                                                      gamma,
+                                                                                      v1)
+                                            episode_buffer = []
+                                            sess.run(self.update_local_ops)
+                                        # if episode_step_count >= max_episode_length - 1 or d or nextBatch is None:
+                                        if q == 10 * len(list(self.env.argumentValues.keys())) or d:
+                                            episode_reward += r
+                                            break
+                                    k += 1
+
 
                 self.episode_rewards.append(episode_reward)
                 self.episode_lengths.append(episode_step_count)
@@ -158,15 +164,15 @@ class ACConv_Worker:
                     v_l, p_l, e_l, g_n, v_n, adv = self.train(global_AC, episode_buffer, sess, gamma, 0.0)
 
                 # Periodically save gifs of episodes, model parameters, and summary statistics.
-                if episode_count % 5 == 0 and episode_count != 0:
-                    if episode_count % 250 == 0 and self.name == 'worker_0':
+                if episode_count % 2 == 0 and episode_count != 0:
+                    if episode_count % 200 == 0 and self.name == 'worker_0':
                         saver.save(sess, self.model_path + '/model-' + str(episode_count) + '.cptk')
                         print("Saved Model")
 
 
-                    mean_reward = np.mean(self.episode_rewards[-5:])
-                    mean_length = np.mean(self.episode_lengths[-5:])
-                    mean_value = np.mean(self.episode_mean_values[-5:])
+                    mean_reward = np.mean(self.episode_rewards[-2:])
+                    mean_length = np.mean(self.episode_lengths[-2:])
+                    mean_value = np.mean(self.episode_mean_values[-2:])
                     summary = tf.Summary()
                     summary.value.add(tag='Perf/Reward', simple_value=float(mean_reward))
                     summary.value.add(tag='Perf/Length', simple_value=float(mean_length))
