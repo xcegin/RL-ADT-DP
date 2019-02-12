@@ -16,7 +16,7 @@ batch_size = 64  # Size of training batch
 startE = 1  # Starting chance of random action
 endE = 0.01  # Final chance of random action
 anneling_steps = 200000  # How many steps of training to reduce startE to endE.
-pre_train_steps = 50000  # Number of steps used before training updates begin.
+pre_train_steps = 2000  # Number of steps used before training updates begin.
 num_steps_upd = 5  # How often to perform a training step.
 tf.reset_default_graph()
 

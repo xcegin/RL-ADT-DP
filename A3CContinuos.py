@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 
 from Agent.Continuous.ACConvCont import ACNet
-from Agent.Continuous.ACConvWorker import Worker
+from Agent.Continuous.ACContWorker import Worker
 
 GLOBAL_NET_SCOPE = 'Global_Net'
 

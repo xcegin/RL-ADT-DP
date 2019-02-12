@@ -4,7 +4,7 @@ from copy import deepcopy
 from gym import spaces
 
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
-from ADT.Utils.MathOperationsUtil import randomValue, resolveMathOperation
+from ADT.Utils.MathOperationsUtil import randomValue, resolveMathOperation, resolveContinuousType
 from ADT.Utils.ResolverUtil import resolveNodeViaType, ResolverUtil
 from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
 from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
@@ -13,6 +13,7 @@ from Environment.ResolveJsonRef import resolveRef
 from Environment.Utils import getTypeOfExpression
 from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Reward.Heuristic.HeuristicCalculator import HeuristicCalculator
+from Reward.Heuristic.HeuristicResolver import HeuristicRewarder
 from Reward.StaticRewarder import StaticRewardCalculator
 from Vectorizer.SampleVisitorForEnviroment import SampleVisitorEnv
 
@@ -140,8 +141,8 @@ class Enviroment:
 
     def step_continuos(self, action, numOfFile=None):
         keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
-
-        self.argumentValues[keyOfArg] = int(action)
+        argument = self.arguments[keyOfArg]
+        self.argumentValues[keyOfArg] = resolveContinuousType(action, argument.variableType.typeName)
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                             [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
         reward = self.returnReward(currentHeuristicValue)

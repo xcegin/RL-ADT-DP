@@ -19,7 +19,7 @@ GAMMA = 0.90  # discount factor
 ENTROPY_BETA = 0.01  # entropy factor
 
 N_A = 1  # number of actions
-A_BOUND = [-255, 255]
+A_BOUND = [-1, 1]
 
 
 class Worker(object):
@@ -55,6 +55,7 @@ class Worker(object):
                 buffer_r = []
                 buffer_v_target = []
                 episode_reward = 0
+                rnn_state = self.AC.state_init
                 episode_step_count = 0
                 m = 0
 
@@ -81,7 +82,7 @@ class Worker(object):
                                         if isinstance(batch[0], int):
                                             num, batch = batch
                                         nodes, children = batch
-                                        a = self.AC.choose_action(nodes, children)
+                                        a, rnn_state = self.AC.choose_action(nodes, children, rnn_state)
                                         self.batcher.checkMaxDim(nodes)
 
                                         r, d, _ = self.env.step_continuos(a, m - 1)
@@ -102,7 +103,9 @@ class Worker(object):
                                                 v_s_ = 0  # terminal
                                             else:
                                                 v_s_ = self.sess.run(self.AC.v, {self.AC.nodes: nodes,
-                                                                                 self.AC.children: children})[0, 0]
+                                                                                 self.AC.children: children,
+                                                                                 self.AC.state_in[0]: rnn_state[0],
+                                                                                 self.AC.state_in[1]: rnn_state[1]})[0, 0]
                                             buffer_v_target = []
 
                                             rollout = np.array(episode_buffer)
@@ -125,6 +128,8 @@ class Worker(object):
                                                 self.AC.children: buffer_c,
                                                 self.AC.a_his: buffer_a,
                                                 self.AC.v_target: buffer_v_target,
+                                                self.AC.state_in[0]: rnn_state[0],
+                                                self.AC.state_in[1]: rnn_state[1]
                                             }
                                             self.AC.update_global(
                                                 feed_dict)  # actual training step, update global ACNet

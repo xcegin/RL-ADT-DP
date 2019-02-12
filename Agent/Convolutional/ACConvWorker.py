@@ -100,10 +100,11 @@ class ACConv_Worker:
                     self.env.currentNumOfTable = 0
                     while self.env.currentNumOfTable < len(self.env.listOfTables):
                         self.env.startTable()
-                        self.env.currentNumOfRow = 0
                         for currentRow in self.env.listOfTableVectors:
+                            self.env.currentNumOfRow = 0
                             for row in currentRow:
-                                #self.env.initializeArgumentValues()
+                                self.env.currentNumOfRow += 1
+                                # self.env.initializeArgumentValues()
                                 batches = list(enumerate(batch_samples(gen_samples(row, self.embeddings, self.embed_lookup), 1)))
                                 iterator = iter(batches)
                                 batch = next(iterator, None)
