@@ -122,7 +122,7 @@ with tf.Session() as sess:
                             rAll += r
                             break
         rList.append(rAll)
-        if k % 100 == 0 and k != 0:
+        if k % 50 == 0 and k != 0:
             r_mean = np.mean(rList[-100:])
             if exploration == 'e-greedy':
                 print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + " e: " + str(e))

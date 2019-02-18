@@ -36,7 +36,7 @@ class AConv_Network:
             rnn_out = tf.reshape(lstm_outputs, [-1, 256])
 
             # Output layers for policy and value estimations
-            self.policy = slim.fully_connected(rnn_out, 37,
+            self.policy = slim.fully_connected(rnn_out, 7,
                                                activation_fn=tf.nn.softmax,
                                                weights_initializer=normalized_columns_initializer(0.01),
                                                biases_initializer=None)
@@ -48,7 +48,7 @@ class AConv_Network:
             # Only the worker network need ops for loss functions and gradient updating.
             if scope != 'global':
                 self.actions = tf.placeholder(shape=[None], dtype=tf.int32)
-                self.actions_onehot = tf.one_hot(self.actions, 37, dtype=tf.float32)
+                self.actions_onehot = tf.one_hot(self.actions, 7, dtype=tf.float32)
                 self.target_v = tf.placeholder(shape=[None], dtype=tf.float32)
                 self.advantages = tf.placeholder(shape=[None], dtype=tf.float32)
 

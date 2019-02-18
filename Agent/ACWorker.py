@@ -19,6 +19,8 @@ class Worker:
         self.episode_lengths = []
         self.episode_mean_values = []
 
+        self.summary_writer = tf.summary.FileWriter("logs/train_" + str(self.number))
+
         # Create the local copy of the network and the tensorflow op to copy global paramters to local network
         self.local_AC = AC_Network(self.name, trainer)
         self.update_local_ops = update_target_graph('global', self.name)
@@ -146,10 +148,20 @@ class Worker:
                     mean_reward = np.mean(self.episode_rewards[-5:])
                     mean_length = np.mean(self.episode_lengths[-5:])
                     mean_value = np.mean(self.episode_mean_values[-5:])
-                    # summary = tf.Summary()
-                    print(self.name + " Reward: " + str(float(mean_reward)))
-                    print(self.name + " Length: " + str(float(mean_length)))
-                    print(self.name + " Value: " + str(float(mean_value)))
+
+                    summary = tf.Summary()
+                    summary.value.add(tag='Perf/Reward', simple_value=float(mean_reward))
+                    summary.value.add(tag='Perf/Length', simple_value=float(mean_length))
+                    summary.value.add(tag='Perf/Value', simple_value=float(mean_value))
+                    summary.value.add(tag='Losses/Value Loss', simple_value=float(v_l))
+                    summary.value.add(tag='Losses/Policy Loss', simple_value=float(p_l))
+                    summary.value.add(tag='Losses/Entropy', simple_value=float(e_l))
+                    summary.value.add(tag='Losses/Advantage', simple_value=float(adv))
+                    summary.value.add(tag='Losses/Grad Norm', simple_value=float(g_n))
+                    summary.value.add(tag='Losses/Var Norm', simple_value=float(v_n))
+                    self.summary_writer.add_summary(summary, episode_count)
+
+                    self.summary_writer.flush()
 
                 # if self.name == 'worker_0':
                 sess.run(self.increment)

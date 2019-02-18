@@ -34,7 +34,7 @@ class StaticRewardCalculator(Rewarder):
 
         # False 0 == b
         if not currentRow[1]['0 Equals b']:
-            if argumentValues['a'] != 0:
+            if argumentValues['b'] != 0:
                 totalR += 1 / 3
 
         # True 1 != a
@@ -43,7 +43,7 @@ class StaticRewardCalculator(Rewarder):
                 totalR += 1 / 3
 
         # False 1 != a
-        if currentRow[2]['1 NotEquals a']:
+        if not currentRow[2]['1 NotEquals a']:
             if argumentValues['a'] == 1:
                 totalR += 1 / 3
 
@@ -83,7 +83,7 @@ class StaticRewardCalculator(Rewarder):
                 totalR += 1 / 3
 
         # True c > 5
-        if not currentRow[2]['c GreaterThan 5']:
+        if currentRow[2]['c GreaterThan 5']:
             if argumentValues['c'] > 5:
                 totalR += 1 / 3
 
@@ -105,3 +105,9 @@ class StaticRewardCalculator(Rewarder):
             if argumentValues['a'] > argumentValues['b']:
                 totalR += 1
         return totalR
+
+    def onlyEntireFunctionIsCovered(self, totalR):
+        if totalR == 1:
+            return 1
+        else:
+            return 0

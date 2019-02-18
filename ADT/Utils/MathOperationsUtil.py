@@ -11,29 +11,19 @@ def resolveMathOperation(numOfAction, value, type):
     def interMathOperation():
         if not isNumerical(type):
             return NOT_VALID
-        if numOfAction == 0:
-            return resolveMin(type)
-        elif numOfAction == 1:
-            return resolveMax(type)
-        elif numOfAction == 2:
-            return pi
-        elif numOfAction == 3:
+        elif numOfAction == 0:
             return float(value) + 1
-        elif numOfAction == 4:
+        elif numOfAction == 1:
             return float(value) - 1
-        elif numOfAction == 5:
+        elif numOfAction == 2:
             return float(value) * 2
-        elif numOfAction == 6:
-            return float(value) / 1.1
-        elif numOfAction == 7:
-            return float(value) / 1.5
-        elif numOfAction == 8:
+        elif numOfAction == 3:
             return float(value) / 2
-        elif numOfAction == 9:
+        elif numOfAction == 4:
             return 0
-        elif numOfAction == 10:
+        elif numOfAction == 5:
             return 1
-        elif numOfAction == 11:
+        elif numOfAction == 6:
             return value
 
     value = interMathOperation()

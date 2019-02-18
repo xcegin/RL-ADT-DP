@@ -56,6 +56,7 @@ class Enviroment:
         self.currentVectorRow = []
 
         self.heuristicCalc = HeuristicCalculator()
+        # self.bsrewarder = HeuristicRewarder()
         self.rewarder = StaticRewardCalculator()
         self.data = resolveRef(data, {})
         self.mcdc = data
@@ -75,19 +76,18 @@ class Enviroment:
         self.parseLoadedJsonIntoTree()
         self.createListOfMcDcTableRows()
         self.createHeuristicEquationsForRows()
-        self.action_space = spaces.Discrete(37)
 
     def initialize_def(self, data):
         self.initialize(data)
         self.createVectorsForRows()
 
-        self.action_space = spaces.Discrete(37)
+        self.action_space = spaces.Discrete(7)
 
     def initialize_conv(self, data):
         self.initialize(data)
         self.prepareVectorsForRowsConv()
 
-        self.action_space = spaces.Discrete(37)
+        self.action_space = spaces.Discrete(7)
 
     def startTable(self):
         self.currentHeuristics = self.listOfTableHeuristics[self.currentNumOfTable]
@@ -95,8 +95,7 @@ class Enviroment:
         self.currentNumOfTable = self.currentNumOfTable + 1
 
     def startRow(self, numOfFile=None):
-        self.initializeArgumentValues()
-        # self.currentHeuristicRow = self.currentHeuristics[self.currentNumOfRow] - TODO BUG WITH ROW NUMBERS
+        self.initializeArgumentValues()  # TODO BUG WITH ROW NUMBERS
         self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
         self.currentNumOfRow = self.currentNumOfRow + 1
         # self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments,
@@ -122,8 +121,8 @@ class Enviroment:
             return -1, True, {}
         except OverflowError:
             return -1, True, {}
-        # currentHeuristicValue = self.rewarder.resolveReward(self.argumentValues,
-        # self.arguments, self.currentHeuristicRow)
+        # otherValue = self.bsrewarder.resolveReward(self.argumentValues,
+        #                    self.arguments, self.listOfTableHeuristics[self.currentNumOfTable - 1][self.currentNumOfRow - 1])  # -1 because of startTable method
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                             [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
         reward = self.returnReward(currentHeuristicValue)
@@ -133,7 +132,7 @@ class Enviroment:
 
         done = False
         # TODO: reconsider the done checks
-        if self.currentHeuristicValue == 1:
+        if self.currentHeuristicValue >= 0.98:
             done = True
         return reward, done, {}
         # ADD CHECK IF DONE - ITERATE THROUGH VECTORS IN ROW AND HEURISTIC VALUE CHECK

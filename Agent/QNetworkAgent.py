@@ -12,14 +12,14 @@ class Q_Network:
 
         hidden = slim.fully_connected(self.inputs, 256, activation_fn=tf.nn.tanh, biases_initializer=None)
         hidden = slim.dropout(hidden, self.keep_per)
-        self.Q_out = slim.fully_connected(hidden, 37, activation_fn=None, biases_initializer=None)
+        self.Q_out = slim.fully_connected(hidden, 7, activation_fn=None, biases_initializer=None)
 
         self.predict = tf.argmax(self.Q_out, 1)
         self.Q_dist = tf.nn.softmax(self.Q_out / self.Temp)
 
         # Below we obtain the loss by taking the sum of squares difference between the target and prediction Q values.
         self.actions = tf.placeholder(shape=[None], dtype=tf.int32)
-        self.actions_onehot = tf.one_hot(self.actions, 37, dtype=tf.float32)
+        self.actions_onehot = tf.one_hot(self.actions, 7, dtype=tf.float32)
 
         self.Q = tf.reduce_sum(tf.multiply(self.Q_out, self.actions_onehot), reduction_indices=1)
 

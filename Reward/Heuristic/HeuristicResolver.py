@@ -10,42 +10,44 @@ class HeuristicRewarder(Rewarder):
         super().__init__()
 
     def resolveReward(self, valuesOfArguments, arguments, heuristic):
+
+        def replaceTokensForArgs(token1, token2):
+            tok1, tok2 = token1, token2
+            if token1 in arguments:
+                tok1 = valuesOfArguments[token1]
+            if token2 in arguments:
+                tok2 = valuesOfArguments[token2]
+            return float(tok1), float(tok2)
+
         componentOfHeuristic = heuristic[0].split("+")
+        numOfPossibleRewards = len(componentOfHeuristic)
         finalValue = 0
         for component in componentOfHeuristic:
-            componentValue = 0
-            if "abs" in component:
-                component = component.replace("(", "")
-                component = component.replace(")", "")
-                component = component.replace("abs", "")
-                args = component.split(" ")
-                substract = False
-                for argument in args:
-                    if argument in valuesOfArguments and not substract:
-                        componentValue += valuesOfArguments[argument]
-                    elif argument in valuesOfArguments and substract:
-                        componentValue -= valuesOfArguments[argument]
-                    elif argument == "-":
-                        substract = True
-                    elif isint(argument):
-                        if substract:
-                            componentValue -= int(argument)
-                        else:
-                            componentValue += int(argument)
-                    elif isfloat(argument):
-                        if substract:
-                            componentValue -= float(argument)
-                        else:
-                            componentValue += float(argument)
-                finalValue += componentValue
-            elif "small" in component:
-                component = component.replace("(", "")
-                component = component.replace(")", "")
-                component = component.replace("small", "")
-                component = component.replace(" ", "")
-                if component in arguments:
-                    componentValue += smallestValue(arguments[component].variableType)
-                finalValue += componentValue
+            tokens = component.split(" ")
+            if tokens[1] == "Equals":
+                tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])
+                if tokens[0] == tokens[2]:
+                    finalValue += 1/numOfPossibleRewards
+            elif tokens[1] == "NotEquals":
+                tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])
+                if tokens[0] != tokens[2]:
+                    finalValue += 1/numOfPossibleRewards
+            elif tokens[1] == "LessThan":
+                tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])
+                if tokens[0] < tokens[2]:
+                    finalValue += 1/numOfPossibleRewards
+            elif tokens[1] == "GreaterThanEquals":
+                tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])
+                if tokens[0] >= tokens[2]:
+                    finalValue += 1/numOfPossibleRewards
+            elif tokens[1] == "GreaterThan":
+                tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])
+                if tokens[0] > tokens[2]:
+                    finalValue += 1/numOfPossibleRewards
+            elif tokens[1] == "LessThanEquals":
+                tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])
+                if tokens[0] <= tokens[2]:
+                    finalValue += 1/numOfPossibleRewards
         return finalValue
 
 

@@ -9,7 +9,7 @@ class HeuristicCalculator:
             if finalShait == "":
                 finalShait += self.resolveOneExpressions(token, simpleExpression[token])
             else:
-                finalShait += " + " + self.resolveOneExpressions(token, simpleExpression[token])
+                finalShait += "+" + self.resolveOneExpressions(token, simpleExpression[token])
         return finalShait
 
     def resolveOneExpressions(self, token, truthValue):
@@ -27,19 +27,19 @@ class HeuristicCalculator:
         splitToken = tmpList
 
         if (splitToken[1] == "Equals" and truthValue) or (splitToken[1] == "NotEquals" and not truthValue):
-            return "abs(" + splitToken[0] + " - " + splitToken[2] + ")"
+            return splitToken[0] + " Equals " + splitToken[2]
         elif (splitToken[1] == "Equals" and not truthValue) or (splitToken[1] == "NotEquals" and truthValue):
-            return "small(" + splitToken[0] + ")"
-        elif (splitToken[1] == "LessThan" and truthValue) or (splitToken[1] == "LessThanEquals" and not truthValue):
-            return "abs(" + splitToken[0] + " - " + splitToken[2] + ")"
-        elif (splitToken[1] == "LessThan" and not truthValue) or (splitToken[1] == "LessThanEquals" and truthValue):
-            return "abs(" + splitToken[0] + " - " + splitToken[2] + ")" + " + " + "small(" + splitToken[0] + ")"
+            return splitToken[0] + " NotEquals " + splitToken[2]
+        elif (splitToken[1] == "LessThan" and truthValue) or (splitToken[1] == "GreaterThanEquals" and not truthValue):
+             return splitToken[0] + " LessThan " + splitToken[2]
+        elif (splitToken[1] == "LessThan" and not truthValue) or (splitToken[1] == "GreaterThanEquals" and truthValue):
+            return splitToken[0] + " GreaterThanEquals " + splitToken[2]
         elif (splitToken[1] == "GreaterThan" and truthValue) or (
-                splitToken[1] == "GreaterThanEquals" and not truthValue):
-            return "abs(" + splitToken[0] + " - " + splitToken[2] + ")"
+                splitToken[1] == "LessThanEquals" and not truthValue):
+            return splitToken[0] + " GreaterThan " + splitToken[2]
         elif (splitToken[1] == "GreaterThan" and not truthValue) or (
-                splitToken[1] == "GreaterThanEquals" and truthValue):
-            return "abs(" + splitToken[0] + " - " + splitToken[2] + ")" + " + " + "small(" + splitToken[0] + ")"
+                splitToken[1] == "LessThanEquals" and truthValue):
+            return splitToken[0] + " LessThanEquals " + splitToken[2]
         # TODO resolve And & Or
         else:
             return "min(" + splitToken[0] + " - " + splitToken[2] + ")"
