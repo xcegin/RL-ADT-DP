@@ -55,7 +55,7 @@ class VectorizationVisitor(ABCVisitor):
             self.embedding = self.embedding - loop_embedding
             return resultVectors
         else:
-            pass
+            return []
 
     def visit_forloop(self, forLoop: ForLoop):
         expression = self.expressions[forLoop.id]
@@ -72,7 +72,7 @@ class VectorizationVisitor(ABCVisitor):
             self.embedding = self.embedding - loop_embedding
             return resultVectors
         else:
-            pass
+            return []
 
     def visit_assigment(self, assigment: AssignmentStatement):
         return assigment.return_vector(self)

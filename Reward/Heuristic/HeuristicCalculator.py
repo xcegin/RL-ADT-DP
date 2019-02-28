@@ -13,6 +13,8 @@ class HeuristicCalculator:
         return finalShait
 
     def resolveOneExpressions(self, token, truthValue):
+        if token == '1' or token == '0':
+            return '1'
         if "And" in token:
             token = token.replace("And", " And ")
         if "Or" in token:

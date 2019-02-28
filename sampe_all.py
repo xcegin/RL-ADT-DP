@@ -15,12 +15,12 @@ while m < len(env.listOfFiles):
         # Extract values for each column according to one row
         for row in table:
             dictForRow = env.mergeDictsInRow(row)
-            sampleVisitor = SampleVisitor(enviromentWalkerContext(), dictForRow, env.expressions)
+            sampleVisitor = SampleVisitor(enviromentWalkerContext(), dictForRow, env.expressions, env.rootTreeAdtNode.name)
             lists = sampleVisitor.traverse_tree(env.rootTreeAdtNode)
             lists = [x for x in lists if x != []]
             Samples += lists
     m += 1
-embed_file = open('vectors.pkl', 'wb')
+embed_file = open('vectorss.pkl', 'wb')
 lists = learn_vectors(Samples, 'Vectorizer/logs')
 pickle.dump(lists, embed_file)
 embed_file.close()

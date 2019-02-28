@@ -28,6 +28,7 @@ class ResolverUtil:
     def __init__(self):
         self.variableDeclarations = {}
         self.variableNameDecl = {}
+        self.mainFuncName = None
 
     def tryResolveVariableDeclarationStatement(self, node):
         if "VariableDeclaration" in node:
@@ -87,6 +88,8 @@ def resolveNodeViaType(type, node, resolver_util):
     elif type == "BreakStatement":
         return BreakStatement(node["$id"])
     elif type == "FunctionCall":
+        if node["Name"] == resolver_util.mainFuncName:
+            return FunctionCall(node["$id"], node["Name"], node["Arguments"], None, resolver_util)
         return FunctionCall(node["$id"], node["Name"], node["Arguments"], node["FunctionDeclaration"], resolver_util)
     elif type == "FunctionDeclarationStatement":
         return FunctionDeclarationStatement(node["$id"], node["ReturnType"], node["Name"],

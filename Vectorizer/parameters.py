@@ -1,9 +1,9 @@
 """Tuning hyperparameters for the ast2vec network."""
 
-NUM_FEATURES = 16
-BATCH_SIZE = 52
+NUM_FEATURES = 10
+BATCH_SIZE = 128
 
-EPOCHS = 300
+EPOCHS = 500
 
 LEARN_RATE = 0.01
 HIDDEN_NODES = 100

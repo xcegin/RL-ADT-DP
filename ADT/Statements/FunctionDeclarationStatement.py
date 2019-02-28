@@ -11,6 +11,8 @@ class FunctionDeclarationStatement(StatementNode):
     def __init__(self, id, returnType, name, arguments, body, resolverUtil):
         super().__init__(id)
         self.name = name
+        if resolverUtil.mainFuncName is None:
+            resolverUtil.mainFuncName = name
         self.arguments = resolveArguments(arguments, resolverUtil)
         from ADT.Utils.ResolverUtil import resolveNodeViaType
         self.returnType = resolveNodeViaType(returnType["$type"], returnType, resolverUtil)

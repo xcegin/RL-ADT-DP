@@ -23,6 +23,10 @@ class HeuristicRewarder(Rewarder):
         numOfPossibleRewards = len(componentOfHeuristic)
         finalValue = 0
         for component in componentOfHeuristic:
+            if component == '1':
+                return 1
+            if component == '0':
+                return 0
             tokens = component.split(" ")
             if tokens[1] == "Equals":
                 tokens[0], tokens[2] = replaceTokensForArgs(tokens[0], tokens[2])

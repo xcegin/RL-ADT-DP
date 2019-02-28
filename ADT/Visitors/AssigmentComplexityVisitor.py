@@ -78,7 +78,8 @@ class AssigmentComplexityVisitor(ABCVisitor):
         return literalNode.value
 
     def visit_variabledeclaration(self, variableDeclaration: VariableDeclarationStatement):
-        variableDeclaration.initialValue.accept(self)
+        if variableDeclaration.initialValue is not None:
+            variableDeclaration.initialValue.accept(self)
 
     def visit_assigment(self, assigment: AssignmentStatement):
         assigment.variable.accept(self)

@@ -57,7 +57,7 @@ class DataDependenciesVisitor(ABCVisitor):
         forLoop.condition.accept(self)
         if isConditionTrue:
             forLoop.nodeBlock.accept(self)
-            forLoop.nodeAfter(self)
+            forLoop.nodeAfter.accept(self)
         else:
             pass
 
