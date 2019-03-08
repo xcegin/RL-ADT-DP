@@ -53,7 +53,7 @@ with tf.Session() as sess:
             env.currentNumOfTable = 0
             while env.currentNumOfTable < len(env.listOfTables):
                 env.startTable()
-                running_reward = 0  # TODO: check the position of running_reward
+                running_reward = 0
                 ep_history = []
                 env.currentNumOfRow = 0
                 while env.currentNumOfRow < len(env.currentVectors):

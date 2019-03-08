@@ -24,6 +24,7 @@ from ADT.Variables.OperatorVariable import OperatorVariable
 from ADT.Variables.SimpleVariable import SimpleVariable
 from ADT.Variables.TypeDefinition import TypeDefinition
 
+
 class ResolverUtil:
     def __init__(self):
         self.variableDeclarations = {}
@@ -73,7 +74,8 @@ def resolveNodeViaType(type, node, resolver_util):
         variableDeclarationStatement = VariableDeclarationStatement(node["$id"], node["VariableType"],
                                                                     node["InitialValue"])
         resolver_util.variableDeclarations[node["$id"]] = variableDeclarationStatement
-        variableDeclarationStatement.variable = resolveNodeViaType(node["Variable"]["$type"], node["Variable"], resolver_util)
+        variableDeclarationStatement.variable = resolveNodeViaType(node["Variable"]["$type"], node["Variable"],
+                                                                   resolver_util)
         return resolver_util.variableDeclarations[node["$id"]]
     # ADT Nodes
     elif type == "IfNode":
@@ -99,7 +101,8 @@ def resolveNodeViaType(type, node, resolver_util):
     # Variable Nodes
     elif type == "ArraySubscriptVariable":
         variableDeclaration = resolver_util.resolveVarDecl(node)
-        return ArraySubscriptVariable(node["$id"], node["VariableName"], node["Array"], node["Subscript"], resolver_util,
+        return ArraySubscriptVariable(node["$id"], node["VariableName"], node["Array"], node["Subscript"],
+                                      resolver_util,
                                       variableDeclaration)
     elif type == "FieldReferenceVariable":
         variableDeclaration = resolver_util.resolveVarDecl(node)
@@ -112,7 +115,8 @@ def resolveNodeViaType(type, node, resolver_util):
     elif type == "SimpleVariable":
         variableDeclaration = resolver_util.resolveVarDecl(node)
         return SimpleVariable(node["$id"],
-                              node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"], resolver_util,
+                              node["VariableName"], node["IsReference"], node["IsDefinition"], node["IsDeclaration"],
+                              resolver_util,
                               variableDeclaration)
     elif type == "TypeDefinition":
         return TypeDefinition(node["$id"], node["TypeName"], node["PointerDimension"], node["ArrayDimension"],
@@ -122,18 +126,23 @@ def resolveNodeViaType(type, node, resolver_util):
     elif type == "DoLoop":
         return DoLoop(node["$id"], node["Condition"], node["NodeBlock"], resolver_util)
     elif type == "ForLoop":
-        return ForLoop(node["$id"], node["NodeInit"], node["Condition"], node["NodeAfter"], node["NodeBlock"], resolver_util)
+        return ForLoop(node["$id"], node["NodeInit"], node["Condition"], node["NodeAfter"], node["NodeBlock"],
+                       resolver_util)
     elif type == "WhileLoop":
         return WhileLoop(node["$id"], node["Condition"], node["NodeBlock"], resolver_util)
     # Operator nodes
     elif type == "BinaryArithmeticOperator":
-        return BinaryArithmeticOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"], resolver_util)
+        return BinaryArithmeticOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"],
+                                        resolver_util)
     elif type == "BinaryBitwiseOperator":
-        return BinaryBitwiseOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"], resolver_util)
+        return BinaryBitwiseOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"],
+                                     resolver_util)
     elif type == "BinaryLogicalOperator":
-        return BinaryLogicalOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"], resolver_util)
+        return BinaryLogicalOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"],
+                                     resolver_util)
     elif type == "ComparisonOperator":
-        return ComparisonOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"], resolver_util)
+        return ComparisonOperator(node["$id"], node["Operation"], node["LeftOperand"], node["RightOperand"],
+                                  resolver_util)
     elif type == "UnaryArithmeticOperator":
         return UnaryArithmeticOperator(node["$id"], node["Operation"], node["Operand"], resolver_util)
     elif type == "UnaryBitwiseOperator":
@@ -144,3 +153,51 @@ def resolveNodeViaType(type, node, resolver_util):
         return UnaryVariableOperator(node["$id"], node["Operation"], node["Operand"], resolver_util)
     else:
         return UnknownNode(node["$id"])
+
+
+def getNumOfReasonableNodes(node):
+    if node['node'] == "VariableDeclarationStatement":
+        return getNumFromChildren(node['children']) + 1
+    # ADT Nodes
+    elif node['node'] == "IfNode":
+        return getNumFromChildren(node['children']) + 2
+    elif node['node'] == "SequenceNode":
+        return getNumFromChildren(node['children'])
+    elif node['node'] == "LiteralNode":
+        return getNumFromChildren(node['children']) + 1
+    # Statement Nodes
+    elif node['node'] == "AssignmentStatement":
+        return getNumFromChildren(node['children']) + 2
+    elif node['node'] == "BreakStatement":
+        return getNumFromChildren(node['children'])
+    elif node['node'] == "FunctionCall":
+        return getNumFromChildren(node['children']) + 2
+    elif node['node'] == "FunctionCallRecursion":
+        return getNumFromChildren(node['children']) + 4
+    elif node['node'] == "FunctionDeclarationStatement":
+        return getNumFromChildren(node['children']) + 1
+    elif node['node'] == "ReturnStatement":
+        return getNumFromChildren(node['children']) + 1
+    # Variable Nodes
+    elif "Variable" in node['node']:
+        return getNumFromChildren(node['children']) + 1
+    elif "TypeDefinition" in node['node']:
+        return getNumFromChildren(node['children']) + 1
+    # Loop Nodes
+    elif "Loop" in node['node']:
+        return getNumFromChildren(node['children']) + 4
+    # Operator nodes
+    elif "Operator" in node['node']:
+        return getNumFromChildren(node['children']) + 3
+    else:
+        return getNumFromChildren(node['children'])
+
+
+def getNumFromChildren(children):
+    num = 0
+    for child in children:
+        tmp = getNumOfReasonableNodes(child)
+        if tmp is None:
+            continue
+        num += tmp
+    return num

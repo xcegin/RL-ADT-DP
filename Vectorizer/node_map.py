@@ -13,3 +13,18 @@ NODE_LIST = [
     'FieldReferenceVariable','SimpleVariable','TypeDefinition','VariableNode']
 
 NODE_MAP = {x: i for (i, x) in enumerate(NODE_LIST)}
+
+NEW_NODE_LIST = [
+    'DoLoop','ForLoop','WhileLoop',
+    'BinaryArithmeticOperator0','BinaryArithmeticOperator1','BinaryArithmeticOperator2',
+    'BinaryArithmeticOperator3','BinaryArithmeticOperator4',
+    'BinaryBitwiseOperator0', 'BinaryBitwiseOperator1', 'BinaryBitwiseOperator2', 'BinaryBitwiseOperator3',
+    'BinaryBitwiseOperator4','BinaryLogicalOperator0','BinaryLogicalOperator1',
+    'ComparisonOperator0','ComparisonOperator1','ComparisonOperator2','ComparisonOperator3','ComparisonOperator4','ComparisonOperator5',
+    'UnaryArithmeticOperator0','UnaryArithmeticOperator1','UnaryArithmeticOperator2','UnaryArithmeticOperator3','UnaryArithmeticOperator4',
+    'UnaryArithmeticOperator5','UnaryBitwiseOperator0','UnaryLogicalOperator0','UnaryVariableOperator0','UnaryVariableOperator1',
+    'UnaryVariableOperator2','AssignmentStatement','BreakStatement','FunctionCall','FunctionCallRecursion','FunctionDeclarationStatement',
+    'ReturnStatement','VariableDeclarationStatement','IfNode','LiteralNode','SequenceNode','UnknownNode','ArraySubscriptVariable',
+    'FieldReferenceVariable','SimpleVariable','TypeDefinition','VariableNode']
+
+NEW_NODE_MAP = {x: i for (i, x) in enumerate(NEW_NODE_LIST)}

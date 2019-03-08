@@ -1,0 +1,1 @@
+int checkPrime(int n);

@@ -7,7 +7,7 @@ from tensorflow.contrib.tensorboard.plugins import projector
 
 import Vectorizer.network as network
 import Vectorizer.sampling as sampling
-from Vectorizer.node_map import NODE_MAP
+from Vectorizer.node_map import NEW_NODE_MAP
 from Vectorizer.parameters import \
     NUM_FEATURES, LEARN_RATE, BATCH_SIZE, EPOCHS, CHECKPOINT_EVERY, HIDDEN_NODES
 
@@ -69,4 +69,4 @@ def learn_vectors(sample, logdir, num_feats=NUM_FEATURES, epochs=EPOCHS):
 
     # save embeddings and the mapping
     # saver.save(sess, os.path.join(checkfile), step)
-    return (embed, NODE_MAP)
+    return (embed, NEW_NODE_MAP)

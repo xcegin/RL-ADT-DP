@@ -53,6 +53,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+obj/
+
 *.json
 *.py___jb_tmp___
 *.c

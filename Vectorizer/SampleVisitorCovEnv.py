@@ -24,13 +24,11 @@ from Environment import Utils
 from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
-# TODO: TO try, what is better -> without the path nodes that wont be executed/with them/with them but witb 0/1
-class SampleVisitorEnv(ABCVisitor):
+class SampleVisitorEnvWithConv(ABCVisitor):
 
-    def __init__(self, Context, rowExpressionValues, expressions):
+    def __init__(self, Context, mainFuncName):
         super().__init__(Context)
-        self.rowExpressionValues = rowExpressionValues
-        self.expressions = expressions
+        self.mainFuncName = mainFuncName
 
     def reset(self):
         self.context = enviromentWalkerContext()
@@ -38,24 +36,23 @@ class SampleVisitorEnv(ABCVisitor):
     def get_name(self, node):
         if isinstance(node, BinaryOperator) or isinstance(node, UnaryOperator):
             return type(node).__name__ + str(node.operation)
-        elif isinstance(node, LoopNode) or isinstance(node, IfNode):
-            return type(node).__name__ + self.resolve_expression(node)
+        elif isinstance(node, FunctionCall) and node.name == self.mainFuncName:
+            return type(node).__name__ + 'Recursion'
         else:
             return type(node).__name__
 
     def visit_loop(self, loopNode: LoopNode):
         children = []
         children.append(self.resolveParent(loopNode, loopNode.condition.accept(self)))
-        expression = self.expressions[loopNode.id]
-        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-            isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        else:
-            conditionSolver = ConditionSolverVisitor(expression,
-                                                     self.rowExpressionValues,
-                                                     self.expressions)
-            isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        if isConditionTrue:
-            children.append(self.resolveParent(loopNode, loopNode.nodeBlock.accept(self)))
+        # expression = self.expressions[loopNode.id]
+        # if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+        #     isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        # else:
+        #     conditionSolver = ConditionSolverVisitor(expression,
+        #                                              self.rowExpressionValues,
+        #                                              self.expressions)
+        #     isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        children.append(self.resolveParent(loopNode, loopNode.nodeBlock.accept(self)))
         return {
             'node': self.get_name(loopNode),
             'parent': None,
@@ -64,19 +61,18 @@ class SampleVisitorEnv(ABCVisitor):
 
     def visit_forloop(self, forLoop: ForLoop):
         children = []
+        children.append(self.resolveParent(forLoop, forLoop.nodeInit.accept(self)))
         children.append(self.resolveParent(forLoop, forLoop.condition.accept(self)))
-        children.append(self.resolveParent(forLoop, forLoop.nodeInit.condition.accept(self)))
         children.append(self.resolveParent(forLoop, forLoop.nodeAfter.accept(self)))
-        expression = self.expressions[forLoop.id]
-        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-            isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        else:
-            conditionSolver = ConditionSolverVisitor(expression,
-                                                     self.rowExpressionValues,
-                                                     self.expressions)
-            isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        if isConditionTrue:
-            children.append(self.resolveParent(forLoop, forLoop.nodeBlock.accept(self)))
+        # expression = self.expressions[forLoop.id]
+        # if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+        #     isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        # else:
+        #     conditionSolver = ConditionSolverVisitor(expression,
+        #                                              self.rowExpressionValues,
+        #                                              self.expressions)
+        #     isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        children.append(self.resolveParent(forLoop, forLoop.nodeBlock.accept(self)))
         return {
             'node': self.get_name(forLoop),
             'parent': None,
@@ -180,18 +176,17 @@ class SampleVisitorEnv(ABCVisitor):
 
     def visit_ifnode(self, ifNode: IfNode):
         children = [self.resolveParent(ifNode, ifNode.condition.accept(self))]
-        expression = self.expressions[ifNode.id]
-        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-            isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        else:
-            conditionSolver = ConditionSolverVisitor(expression,
-                                                     self.rowExpressionValues,
-                                                     self.expressions)
-            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        # expression = self.expressions[ifNode.id]
+        # if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+        #     isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        # else:
+        #     conditionSolver = ConditionSolverVisitor(expression,
+        #                                              self.rowExpressionValues,
+        #                                              self.expressions)
+        #     isConditionTrue = conditionSolver.retrieveValueOfCondition()
         children.append(self.resolveParent(ifNode, ifNode.nodeThen.accept(self)))
-        if not isConditionTrue:
-            if ifNode.nodeElse is not None:
-                children.append(self.resolveParent(ifNode, ifNode.nodeElse.accept(self)))
+        if ifNode.nodeElse is not None:
+            children.append(self.resolveParent(ifNode, ifNode.nodeElse.accept(self)))
         return {
                     'node': self.get_name(ifNode),
                     'parent': None,
@@ -239,20 +234,6 @@ class SampleVisitorEnv(ABCVisitor):
                     'parent': None,
                     'children': []
                 }
-
-    def resolve_expression(self, node):
-        expression = self.expressions[node.id]
-        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-            isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        else:
-            conditionSolver = ConditionSolverVisitor(expression,
-                                                     self.rowExpressionValues,
-                                                     self.expressions)
-            isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        if isConditionTrue:
-            return str(1)
-        else:
-            return str(0)
 
     def resolveParent(self, parent, child):
         child['parent'] = self.get_name(parent)

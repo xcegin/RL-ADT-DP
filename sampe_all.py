@@ -20,7 +20,7 @@ while m < len(env.listOfFiles):
             lists = [x for x in lists if x != []]
             Samples += lists
     m += 1
-embed_file = open('vectorss.pkl', 'wb')
+embed_file = open('vectors_cov.pkl', 'wb')
 lists = learn_vectors(Samples, 'Vectorizer/logs')
 pickle.dump(lists, embed_file)
 embed_file.close()

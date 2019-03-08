@@ -6,7 +6,6 @@ from time import time, sleep
 
 import tensorflow as tf
 
-from Agent.ACWorker import Worker
 from Agent.Convolutional.ACConvAgent import AConv_Network
 from Agent.Convolutional.ACConvWorker import ACConv_Worker
 

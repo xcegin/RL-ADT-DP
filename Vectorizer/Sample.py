@@ -19,8 +19,6 @@ from Environment import Utils
 from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 
 
-# TODO: consider variable types with involvement like 0 1 2 for given argument
-#  (if route of argument multiplying is taken)
 class SampleVisitor(ABCVisitor):
 
     def __init__(self, Context, rowExpressionValues, expressions, mainFuncName):
@@ -56,8 +54,8 @@ class SampleVisitor(ABCVisitor):
     def get_name(self, node):
         if isinstance(node, BinaryOperator) or isinstance(node, UnaryOperator):
             return type(node).__name__ + str(node.operation)
-        elif isinstance(node, LoopNode) or isinstance(node, IfNode):
-            return type(node).__name__ + self.resolve_expression(node)
+        # elif isinstance(node, LoopNode) or isinstance(node, IfNode):
+        #     return type(node).__name__ + self.resolve_expression(node)
         elif isinstance(node, FunctionCall) and node.name == self.mainFuncName:
             return type(node).__name__ + 'Recursion'
         else:

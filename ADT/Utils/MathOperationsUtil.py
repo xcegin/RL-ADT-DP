@@ -90,6 +90,8 @@ def correctValue(value, type):
         return round(float(value),2)
     elif type == "t_decimal64":
         return round(float(value),2)
+    elif type == "t_unspecified":
+        return int(value)
 
 
 def correctContinuous(value, type):
@@ -143,6 +145,8 @@ def isNumerical(type):
     elif type == "t_decimal32":
         return True
     elif type == "t_decimal64":
+        return True
+    elif type == "t_unspecified":  # TODO CUZ ECLIPSE IS SHIT FOR STUPID PEOPLE
         return True
     else:
         return False
