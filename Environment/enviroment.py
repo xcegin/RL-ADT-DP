@@ -44,12 +44,12 @@ class Enviroment:
             self.initialize_conv(data)
             self.currentF += 1
 
-    def prepareNextFileConvWithCov(self):
+    def prepareNextFileConvWithCov(self, numberOfWorker=0):
         if self.currentF < len(self.listOfFiles):
             item = next(self.iterator)
             with open(item) as f:
                 data = json.load(f)
-            self.initialize_conv_cov(data)
+            self.initialize_conv_cov(data, numberOfWorker)
             self.currentF += 1
 
     def initialize(self, data):
@@ -99,7 +99,7 @@ class Enviroment:
 
         self.action_space = spaces.Discrete(7)
 
-    def initialize_conv_cov(self, data, numOfWorker=0):
+    def initialize_conv_cov(self, data, numOfWorker):
         self.initialize(data)
         self.prepareVectorsForTablesConvWithCov()
         self.argumentMatrix = []
