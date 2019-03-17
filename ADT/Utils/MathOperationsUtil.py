@@ -25,6 +25,10 @@ def resolveMathOperation(numOfAction, value, type):
             return 1
         elif numOfAction == 6:
             return value
+        elif numOfAction == 7:
+            return float(value) + 50
+        elif numOfAction == 8:
+            return float(value) - 50
 
     value = interMathOperation()
     return correctValue(value, type)
@@ -95,19 +99,19 @@ def correctValue(value, type):
 
 
 def correctContinuous(value, type):
-    if type == "t_int" or type == 't_int128':
-        return int(value * 32767)
+    if type == "t_int" or type == 't_int128' or type == 't_unspecified':
+        return int(value * 32766)
     elif type == "t_char16_t":
-        return int(value * 255)
+        return int(value * 254)
     elif type == "t_char":
-        return int(value * 255)
+        return int(value * 254)
     elif type == "t_char32_t":
-        return int(value * 255)
+        return int(value * 254)
     # TODO: REINVENT BOOL OPERATIONS - This should not be here, heuristic deals with them, so somehow fix it probs - or return 0/1
     elif type == "t_bool":
         return int(value)
     elif type == "t_wchar_t":
-        return int(value * 255)
+        return int(value * 254)
         # TODO: Return different values for the coverage tool
     elif type == "t_float128" or type == "t_double":
         return round(float(2**1022),2)

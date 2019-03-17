@@ -195,7 +195,7 @@ with tf.Session() as sess:
                 print("Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps))
             print("Mean Coverage: " + str(c_mean) + " Total Steps: " + str(total_steps))
             with open("results.txt", "a") as text_file:
-                text_file.write("Mean Coverage: " + str(c_mean) + " Total Steps: " + str(total_steps) + "\n")
+                text_file.write("Mean Coverage: " + str(c_mean) + " Mean Reward: " + str(r_mean) + " Total Steps: " + str(total_steps) + "\n")
             cMeans.append(c_mean)
             rMeans.append(r_mean)
             episodeList.append((k / 5) + 1)

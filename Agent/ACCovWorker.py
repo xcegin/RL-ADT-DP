@@ -86,7 +86,7 @@ class ACCovWorker:
         with sess.as_default(), sess.graph.as_default():
             while not coord.should_stop():
                 sess.run(self.update_local_ops)
-                self.env = Enviroment()
+                self.env.reset()
                 self.batcher = Batcher()
                 episode_buffer = []
                 episode_values = []
@@ -108,8 +108,8 @@ class ACCovWorker:
                             d = False
                             self.env.initializeArgumentValuesCov()
                             complexity = getNumOfReasonableNodes(currentRow)
-                            # complexity = int(complexity ** (1/3) * (len(env.listOfTables[0]) ** (1/3)))
-                            complexity = int(complexity ** (1 / 4))
+                            complexity = int(complexity ** (1 / 3) * (len(self.env.listOfTables[0]) ** (1 / 3)))
+                            # complexity = int(complexity ** (1 / 4))
                             if complexity == 0:
                                 complexity = 1
                             total = len(self.env.arguments) * len(self.env.listOfTables[0]) * complexity
@@ -118,7 +118,8 @@ class ACCovWorker:
                                     break
                                 # self.env.initializeArgumentValues()
                                 batches = list(
-                                    enumerate(batch_samples(gen_samples(currentRow, self.embeddings, self.embed_lookup), 1)))
+                                    enumerate(
+                                        batch_samples(gen_samples(currentRow, self.embeddings, self.embed_lookup), 1)))
                                 iterator = iter(batches)
                                 batch = next(iterator, None)
                                 while batch is not None:
@@ -146,7 +147,7 @@ class ACCovWorker:
                                     episode_buffer.append([nodes, children, a, r, d, v[0, 0]])
 
                                     if len(episode_buffer) == 10 * (len(
-                                            list(self.env.argumentValues.keys()))+1):  # TODO - really not done?
+                                            list(self.env.argumentValues.keys())) + 1):  # TODO - really not done?
                                         # Since we don't know what the true final return is, we "bootstrap" from our current
                                         # value estimation.
                                         v1 = sess.run(self.local_AC.value,
@@ -160,15 +161,13 @@ class ACCovWorker:
                                         episode_buffer = []
                                         sess.run(self.update_local_ops)
                                     # if episode_step_count >= max_episode_length - 1 or d or nextBatch is None:
-                                    if numOfTimes+1 == total or d:
+                                    if numOfTimes + 1 == total or d:
                                         episode_reward += r
                                         episode_coverage += c
                                         break
                                 numOfTimes += 1
 
-
                 episode_count += 1
-                print("FUCKING HELL " + self.name + " episodes " + str(episode_count))
                 self.episode_rewards.append(episode_reward)
                 self.episode_coverages.append(episode_coverage)
                 self.episode_lengths.append(episode_step_count)
@@ -199,16 +198,19 @@ class ACCovWorker:
                     summary.value.add(tag='Losses/Advantage', simple_value=float(adv))
                     summary.value.add(tag='Losses/Grad Norm', simple_value=float(g_n))
                     summary.value.add(tag='Losses/Var Norm', simple_value=float(v_n))
+                    for key in self.env.dict_of_max_r.keys():
+                        summary.value.add(tag='Functions/Max coverage for function: ' + str(key),
+                                          simple_value=float(self.env.dict_of_max_r[key]))
                     self.summary_writer.add_summary(summary, episode_count)
 
                     self.summary_writer.flush()
 
-                    #mean_reward = np.mean(self.episode_rewards[-5:])
-                    #mean_length = np.mean(self.episode_lengths[-5:])
-                    #mean_value = np.mean(self.episode_mean_values[-5:])
+                    # mean_reward = np.mean(self.episode_rewards[-5:])
+                    # mean_length = np.mean(self.episode_lengths[-5:])
+                    # mean_value = np.mean(self.episode_mean_values[-5:])
                     # summary = tf.Summary()
-                    #print(self.name + " Reward: " + str(float(mean_reward)))
-                    #print(self.name + " Length: " + str(float(mean_length)))
+                    # print(self.name + " Reward: " + str(float(mean_reward)))
+                    # print(self.name + " Length: " + str(float(mean_length)))
                     # print(self.name + " Value: " + str(float(mean_value)))
 
                 # if self.name == 'worker_0':

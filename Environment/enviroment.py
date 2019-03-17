@@ -23,6 +23,10 @@ from Vectorizer.SampleVisitorForEnviroment import SampleVisitorEnv
 class Enviroment:
 
     def __init__(self):
+        self.reset()
+        self.dict_of_max_r = {}
+
+    def reset(self):
         import glob
         self.listOfFiles = glob.glob("jsons/*.json")
         self.iterator = iter(self.listOfFiles)
@@ -91,13 +95,13 @@ class Enviroment:
         self.initialize(data)
         self.createVectorsForRows()
 
-        self.action_space = spaces.Discrete(7)
+        self.action_space = spaces.Discrete(9)
 
     def initialize_conv(self, data):
         self.initialize(data)
         self.prepareVectorsForRowsConv()
 
-        self.action_space = spaces.Discrete(7)
+        self.action_space = spaces.Discrete(9)
 
     def initialize_conv_cov(self, data, numOfWorker):
         self.initialize(data)
@@ -107,9 +111,11 @@ class Enviroment:
         self.initializeArgumentValuesCov()
 
         self.initialCov = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
+        if self.rootTreeAdtNode.name not in self.dict_of_max_r:
+            self.dict_of_max_r[self.rootTreeAdtNode.name] = self.initialCov
         self.argumentColumnValue = 0
 
-        self.action_space = spaces.Discrete(7)
+        self.action_space = spaces.Discrete(9)
 
     def startTable(self):
         self.currentHeuristics = self.listOfTableHeuristics[self.currentNumOfTable]
@@ -167,12 +173,13 @@ class Enviroment:
         keyOfArg = self.argumentChangedVal % len(list(self.arguments.keys()))
         keyForDict = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argumentValue = self.argumentMatrix[argColVal][keyOfArg]
+        self.argumentChangedVal = self.argumentChangedVal + 1
         if isinstance(argumentValue, complex):
             return -1, True, {}
         argument = self.arguments[keyForDict]
         try:
             self.argumentMatrix[argColVal][keyOfArg] = resolveMathOperation(action, argumentValue,
-                                                                 argument.variableType.typeName)
+                                                                            argument.variableType.typeName)
         except TypeError:
             return -1, True, {}
         except OverflowError:
@@ -181,16 +188,42 @@ class Enviroment:
         #                    self.arguments, self.listOfTableHeuristics[self.currentNumOfTable - 1][self.currentNumOfRow - 1])  # -1 because of startTable method
         currentCoverage = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
         if currentCoverage == 0:
-            return -1, False, 0, {}
-        reward = self.returnRewardCov(currentCoverage)
-        self.argumentChangedVal = self.argumentChangedVal + 1
+            return 0, False, 0, {}
+        reward = self.returnRewardCov(self.rootTreeAdtNode.name, currentCoverage)
         # nextState = self.currentVectorRow[self.currentVector]
 
         done = False
-        if reward >= 1:
+        if currentCoverage >= 92:
             done = True
-        return reward, done, (currentCoverage/100), {}
+        return reward, done, (currentCoverage / 100), {}
 
+    def step_cov_continuos(self, action, numOfWorker):
+        if self.argumentChangedVal % len(list(self.arguments.keys())) == 0 and self.argumentChangedVal != 0:
+            self.argumentColumnValue += 1
+        argColVal = self.argumentColumnValue % len(self.listOfTables[0])
+        keyOfArg = self.argumentChangedVal % len(list(self.arguments.keys()))
+        keyForDict = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
+        argumentValue = self.argumentMatrix[argColVal][keyOfArg]
+        self.argumentChangedVal = self.argumentChangedVal + 1
+        if isinstance(argumentValue, complex):
+            return -1, True, {}
+        argument = self.arguments[keyForDict]
+        try:
+            self.argumentMatrix[argColVal][keyOfArg] = resolveContinuousType(action, argument.variableType.typeName)
+        except TypeError:
+            return -1, True, {}
+        except OverflowError:
+            return -1, True, {}
+
+        currentCoverage = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
+        if currentCoverage == 0:  # TODO: IF Before was not 0 coverage, then it should return -1 value
+            return 0, False, 0, {}
+        reward = self.returnRewardCov(self.rootTreeAdtNode.name, currentCoverage)
+
+        done = False
+        if currentCoverage >= 90:
+            done = True
+        return reward, done, (currentCoverage / 100), {}
 
     def step_continuos(self, action, numOfFile=None):
         keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
@@ -332,14 +365,10 @@ class Enviroment:
         # difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)
         # return difference / abs(self.currentHeuristicValue)
 
-    def returnRewardCov(self, coverageValue):
-        if self.initialCov == 100:
-            return 1
-        if coverageValue >= self.initialCov:
-            toBeReturned = (coverageValue - self.initialCov) / (100 - self.initialCov)
-            self.initialCov = coverageValue
-            return toBeReturned
-        else:
-            toBeReturned = (coverageValue - self.initialCov) / (self.initialCov)
-            self.initialCov = coverageValue
-            return toBeReturned
+    def returnRewardCov(self, function_name, coverageValue):
+        if function_name not in self.dict_of_max_r:
+            self.dict_of_max_r[function_name] = coverageValue
+        expected_reward = (coverageValue - self.dict_of_max_r[function_name])/100
+        if self.dict_of_max_r[function_name] < coverageValue:
+            self.dict_of_max_r[function_name] = coverageValue
+        return expected_reward

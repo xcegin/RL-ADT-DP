@@ -31,17 +31,17 @@ class ACNet(object):
 
             l_ac = slim.fully_connected(self.pooling, 256, activation_fn=tf.nn.tanh, biases_initializer=None)
 
-            lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=256, state_is_tuple=True)
-            c_init = np.zeros((1, lstm_cell.state_size.c), np.float32)
-            h_init = np.zeros((1, lstm_cell.state_size.h), np.float32)
+            self.lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=256, state_is_tuple=True)
+            c_init = np.zeros((1, self.lstm_cell.state_size.c), np.float32)
+            h_init = np.zeros((1, self.lstm_cell.state_size.h), np.float32)
             self.state_init = [c_init, h_init]
-            c_in = tf.placeholder(tf.float32, [1, lstm_cell.state_size.c], name='c_in')
-            h_in = tf.placeholder(tf.float32, [1, lstm_cell.state_size.h], name='h_in')
+            c_in = tf.placeholder(tf.float32, [1, self.lstm_cell.state_size.c], name='c_in')
+            h_in = tf.placeholder(tf.float32, [1, self.lstm_cell.state_size.h], name='h_in')
             self.state_in = (c_in, h_in)
             rnn_in = tf.expand_dims(l_ac, [0])
             state_in = tf.nn.rnn_cell.LSTMStateTuple(c_in, h_in)
             lstm_outputs, lstm_state = tf.nn.dynamic_rnn(
-                lstm_cell, rnn_in, initial_state=state_in,
+                self.lstm_cell, rnn_in, initial_state=state_in,
                 time_major=False)
             lstm_c, lstm_h = lstm_state
             self.state_out = (lstm_c[:1, :], lstm_h[:1, :])
@@ -65,15 +65,15 @@ class ACNet(object):
                 self.v_target = tf.placeholder(tf.float32, [None, 1], 'Vtarget')
                 self.a_his = tf.placeholder(tf.float32, [None, N_A], 'A')
 
-                td = tf.subtract(self.v_target, self.v, name='TD_error')
-                self.c_loss = tf.reduce_mean(tf.square(td))
+                self.td = tf.subtract(self.v_target, self.v, name='TD_error')
+                self.c_loss = tf.reduce_mean(tf.square(self.td))
 
                 self.mu, self.sigma = tf.squeeze(self.mu*1), tf.squeeze(self.sigma + 0.1)
 
                 normal_dist = tf.contrib.distributions.Normal(self.mu, self.sigma)
 
                 log_prob = normal_dist.log_prob(self.a_his)
-                exp_v = log_prob * td
+                exp_v = log_prob * self.td
                 entropy = normal_dist.entropy()  # encourage exploration
                 self.exp_v = ENTROPY_BETA * entropy + exp_v
                 self.a_loss = tf.reduce_mean(-self.exp_v)
@@ -90,7 +90,7 @@ class ACNet(object):
                 self.update_c_op = self.critic_optimizer.apply_gradients(zip(self.c_grads, globalAC.c_params))
 
     def update_global(self, feed_dict):  # run by a local
-        self.sess.run([self.update_a_op, self.update_c_op], feed_dict)  # local grads applies to global net
+        return self.sess.run([self.update_a_op, self.update_c_op], feed_dict)  # local grads applies to global net
 
     def pull_global(self):  # run by a local
         self.sess.run([self.pull_a_params_op, self.pull_c_params_op])
