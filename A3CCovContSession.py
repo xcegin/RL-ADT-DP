@@ -38,7 +38,7 @@ if __name__ == "__main__":
         global_ac = ACNet(GLOBAL_NET_SCOPE, sess, num_feats)  # we only need its params
         workers = []
         # Create workers
-        for i in range(6):
+        for i in range(num_workers):
             workers.append(ACCovContWorker(i, global_ac, sess, global_rewards, global_episodes, model_path))
 
     coord = tf.train.Coordinator()

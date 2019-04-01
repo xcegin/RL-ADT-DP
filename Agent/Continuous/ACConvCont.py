@@ -8,8 +8,8 @@ GLOBAL_NET_SCOPE = 'Global_Net'
 UPDATE_GLOBAL_ITER = 10  # sets how often the global net is updated
 GAMMA = 0.90  # discount factor
 ENTROPY_BETA = 0.01  # entropy factor
-LR_A = 0.001  # learning rate for actor
-LR_C = 0.01  # learning rate for critic
+LR_A = 0.0001  # learning rate for actor
+LR_C = 0.001  # learning rate for critic
 
 N_A = 1  # number of actions
 A_BOUND = [-1, 1]
@@ -18,18 +18,20 @@ A_BOUND = [-1, 1]
 class ACNet(object):
     def __init__(self, scope, sess, feature_size, globalAC=None):
         self.sess = sess
-        self.actor_optimizer = tf.train.RMSPropOptimizer(learning_rate=LR_A, name='RMSPropA', decay=0.99,
-                                                         epsilon=0.01)  # optimizer for the actor
-        self.critic_optimizer = tf.train.RMSPropOptimizer(learning_rate=LR_C, name='RMSPropC', decay=0.99,
-                                                          epsilon=0.01)  # optimizer for the critic
+        self.actor_optimizer = tf.train.RMSPropOptimizer(learning_rate=LR_A, name='RMSPropA')  # optimizer for the actor
+        self.critic_optimizer = tf.train.RMSPropOptimizer(learning_rate=LR_C, name='RMSPropC')  # optimizer for the critic
         with tf.variable_scope(scope):
             self.nodes = tf.placeholder(tf.float32, shape=(None, None, feature_size), name='tree')
             self.children = tf.placeholder(tf.int32, shape=(None, None, None), name='children')
+            self.matrixWithCov = tf.placeholder(shape=[None, 3], dtype=tf.float32)
 
-            self.conv = conv_layer(1, 100, self.nodes, self.children, feature_size)
+            self.conv = conv_layer(1, 128, self.nodes, self.children, feature_size)
             self.pooling = self.pooling_layer(self.conv)
 
-            l_ac = slim.fully_connected(self.pooling, 256, activation_fn=tf.nn.tanh, biases_initializer=None)
+            self.poolingWithMatrixCov = tf.concat([self.pooling, self.matrixWithCov], 1)
+
+            w_init = tf.random_normal_initializer(0., .1)
+            l_ac = slim.fully_connected(self.poolingWithMatrixCov, 256, activation_fn=tf.nn.relu6, biases_initializer=None)
 
             self.lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=256, state_is_tuple=True)
             c_init = np.zeros((1, self.lstm_cell.state_size.c), np.float32)
@@ -48,11 +50,13 @@ class ACNet(object):
             rnn_out = tf.reshape(lstm_outputs, [-1, 256])
 
             w_init = tf.random_normal_initializer(0., .1)
+            tanh_init = tf.random_normal_initializer(0., 0.001)
 
             with tf.variable_scope('actor'):
-                self.mu = tf.layers.dense(rnn_out, N_A, tf.nn.tanh, kernel_initializer=w_init, bias_initializer=tf.constant_initializer(0.1),
+                #Tanh activation function should be initialized with lower weight due to tanh function
+                self.mu = tf.layers.dense(rnn_out, N_A, tf.nn.tanh, kernel_initializer=tanh_init,
                                           name='mu')  # estimated action value
-                self.sigma = tf.layers.dense(rnn_out, N_A, tf.nn.softplus, kernel_initializer=w_init, bias_initializer=tf.constant_initializer(0.1),
+                self.sigma = tf.layers.dense(rnn_out, N_A, tf.nn.softplus, kernel_initializer=w_init,
                                              name='sigma')  # estimated variance
 
             with tf.variable_scope('critic'):
@@ -76,7 +80,8 @@ class ACNet(object):
                 exp_v = log_prob * self.td
                 entropy = normal_dist.entropy()  # encourage exploration
                 self.exp_v = ENTROPY_BETA * entropy + exp_v
-                self.a_loss = tf.reduce_mean(-self.exp_v)
+                self.a_loss = tf.reduce_mean((-self.exp_v) + (self.a_his * 0.01) ** 2)  #this should penalize big changes
+                #self.a_loss = tf.reduce_mean(-self.exp_v)
 
                 self.A = tf.clip_by_value(tf.squeeze(normal_dist.sample(1), axis=0), A_BOUND[0],
                                           A_BOUND[1])  # sample a action from distribution
@@ -95,9 +100,9 @@ class ACNet(object):
     def pull_global(self):  # run by a local
         self.sess.run([self.pull_a_params_op, self.pull_c_params_op])
 
-    def choose_action(self, nodes, children, rnn_state):  # run by a local
+    def choose_action(self, nodes, children, rnn_state, vectorMatrixWithCov):  # run by a local
         return self.sess.run([self.A, self.state_out],
-                             {self.nodes: nodes, self.children: children, self.state_in[0]: rnn_state[0],
+                             {self.nodes: nodes, self.children: children, self.matrixWithCov: vectorMatrixWithCov, self.state_in[0]: rnn_state[0],
                               self.state_in[1]: rnn_state[1]})
 
     def pooling_layer(self, nodes):

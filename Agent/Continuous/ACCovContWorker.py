@@ -44,6 +44,16 @@ class ACCovContWorker(object):
 
         self.batcher = Batcher()
         self.env = Enviroment()
+        self.avgFunctions = {}
+
+    def getCovVector(self, c):
+        if self.env.argumentChangedVal % len(list(self.env.arguments.keys())) == 0 and self.env.argumentChangedVal != 0:
+            argColVal = (self.env.argumentColumnValue+1) % len(self.env.listOfTables[0])
+            keyOfArg = (self.env.argumentChangedVal+1) % len(list(self.env.arguments.keys()))
+        else:
+            argColVal = (self.env.argumentColumnValue) % len(self.env.listOfTables[0])
+            keyOfArg = (self.env.argumentChangedVal) % len(list(self.env.arguments.keys()))
+        return [argColVal, keyOfArg, c]
 
     def work(self, sess, coord, saver):
         episode_count = sess.run(self.global_episodes)
@@ -75,8 +85,9 @@ class ACCovContWorker(object):
                             d = False
                             self.env.initializeArgumentValuesCov()
                             complexity = getNumOfReasonableNodes(currentRow)
-                            complexity = int(complexity ** (1/3) * (len(self.env.listOfTables[0]) ** (1/3)))
-                            #complexity = int(complexity ** (1 / 4))
+                            #complexity = int(complexity ** (1/3) * (len(self.env.listOfTables[0]) ** (1/3)))
+                            complexity = int(complexity ** (1 / 1))
+                            c = 0
                             if complexity == 0:
                                 complexity = 1
                             total = len(self.env.arguments) * len(self.env.listOfTables[0]) * complexity
@@ -94,20 +105,24 @@ class ACCovContWorker(object):
                                         num, batch = batch
                                     nodes, children = batch
                                     self.batcher.checkMaxDim(nodes)
-                                    a, rnn_state = self.AC.choose_action(nodes, children, rnn_state)
+                                    vectorMatrixWithCov = [self.getCovVector(c)]
+                                    a, rnn_state = self.AC.choose_action(nodes, children, rnn_state, vectorMatrixWithCov)
 
-                                    r, d, c, _ = self.env.step_cov_continuos(a, self.number)
-                                    buffer_r.append(r)
+                                    self.env.step_cov_continuos_with_reward(a, self.number)
+                                    episode_buffer.append([nodes, children, a, vectorMatrixWithCov])
+                                    if len(episode_buffer) % (len(self.env.arguments)*len(self.env.listOfTables[0])) == 0 and len(episode_buffer) != 0:
+                                        r,d,c,_ = self.env.step_cov_continuos_entire_matrix(self.number)
+                                        temp = 0
+                                        while temp < len(self.env.arguments)*len(self.env.listOfTables[0]):
+                                            buffer_r.append(r)
+                                            temp += 1
                                     # nextBatch = next(iterator, None)
                                     total_step += 1
                                     episode_step_count += 1
 
                                     batch = next(iterator, None)
 
-                                    # batch = nextBatch
-                                    episode_buffer.append([nodes, children, a, r, d])
-
-                                    if len(episode_buffer) == 5:
+                                    if d or numOfTimes + 1 == total:
                                         # Since we don't know what the true final return is, we "bootstrap" from our current
                                         # value estimation.
                                         if d:
@@ -115,6 +130,7 @@ class ACCovContWorker(object):
                                         else:
                                             v_s_ = self.sess.run(self.AC.v, {self.AC.nodes: nodes,
                                                                              self.AC.children: children,
+                                                                             self.AC.matrixWithCov: vectorMatrixWithCov,
                                                                              self.AC.state_in[0]: rnn_state[0],
                                                                              self.AC.state_in[1]: rnn_state[1]})[0, 0]
                                         buffer_v_target = []
@@ -129,27 +145,32 @@ class ACCovContWorker(object):
                                             v_s_ = r + GAMMA * v_s_
                                             buffer_v_target.append(v_s_)
                                         buffer_v_target.reverse()
-                                        buffer_s, buffer_a, buffer_c, buffer_v_target = np.vstack(
+                                        buffer_s, buffer_a, buffer_c, buffer_v_target, buffer_matrix_cov = np.vstack(
                                             rollout[:, 0]), np.vstack(
                                             rollout[:, 2]), np.vstack(rollout[:, 1]), np.vstack(
-                                            buffer_v_target)
+                                            buffer_v_target), np.vstack(rollout[:, 3])
                                         feed_dict = {
                                             self.AC.nodes: buffer_s,
                                             self.AC.children: buffer_c,
                                             self.AC.a_his: buffer_a,
                                             self.AC.v_target: buffer_v_target,
                                             self.AC.state_in[0]: rnn_state[0],
-                                            self.AC.state_in[1]: rnn_state[1]
+                                            self.AC.state_in[1]: rnn_state[1],
+                                            self.AC.matrixWithCov: buffer_matrix_cov
                                         }
                                         self.AC.update_global(
                                             feed_dict)  # actual training step, update global ACNet
-                                        buffer_s, buffer_a, buffer_r, buffer_c = [], [], [], []
+                                        buffer_s, buffer_a, buffer_r, buffer_c, buffer_matrix_cov = [], [], [], [], []
                                         episode_buffer = []
                                         self.AC.pull_global()  # get global parameters to local ACNet
                                     # if episode_step_count >= max_episode_length - 1 or d or nextBatch is None:
                                     if numOfTimes + 1 == total or d:
                                         episode_reward += r
                                         episode_coverage += c
+                                        if self.env.rootTreeAdtNode.name not in self.avgFunctions:
+                                            self.avgFunctions[self.env.rootTreeAdtNode.name] = [c]
+                                        else:
+                                            self.avgFunctions[self.env.rootTreeAdtNode.name].append(c)
                                         break
                                 numOfTimes += 1
                                 print(
@@ -174,7 +195,9 @@ class ACCovContWorker(object):
                     summary.value.add(tag='Perf/Length', simple_value=float(mean_length))
                     summary.value.add(tag='Perf/Coverage', simple_value=float(mean_coverage))
                     for key in self.env.dict_of_max_r.keys():
-                        summary.value.add(tag='Functions/Max coverage for function: ' + str(key), simple_value=float(self.env.dict_of_max_r[key]))
+                        summary.value.add(tag='Max Functions/Max coverage for function: ' + str(key), simple_value=float(self.env.dict_of_max_r[key]))
+                    for key in self.avgFunctions.keys():
+                        summary.value.add(tag='Avg Functions/Avg coverage for function: ' + str(key), simple_value=float(np.mean(self.avgFunctions[key][-2:])))
                     self.summary_writer.add_summary(summary, episode_count)
 
                     self.summary_writer.flush()

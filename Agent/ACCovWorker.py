@@ -166,7 +166,10 @@ class ACCovWorker:
                                         episode_coverage += c
                                         break
                                 numOfTimes += 1
+                                print(
+                                    "Worker: " + str(self.number) + ", with number of times: " + str(numOfTimes) + ", for file: " + str(self.env.rootTreeAdtNode.name))
 
+                print("Worker: " + str(self.number) + ", with number of episodes: " + str(episode_count))
                 episode_count += 1
                 self.episode_rewards.append(episode_reward)
                 self.episode_coverages.append(episode_coverage)

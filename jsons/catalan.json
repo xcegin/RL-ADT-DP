@@ -1,0 +1,1694 @@
+{
+  "$id": "1",
+  "$type": "UnitTestGenerator.Common.PipesAndFilters.JobData, UnitTestGenerator.Common",
+  "properties": {
+    "$id": "2",
+    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+    "properties": {
+      "$id": "3",
+      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+      "AstReferences": {
+        "$id": "4",
+        "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common]], System"
+      },
+      "LogicTables": {
+        "$type": "UnitTestGenerator.Common.Collections.Cloneable.CloneableList`1[[UnitTestGenerator.Common.LogicTable.LogicTableGeneratorResult, UnitTestGenerator.Common]], UnitTestGenerator.Common",
+        "$values": [
+          {
+            "$id": "5",
+            "$type": "UnitTestGenerator.Common.LogicTable.LogicTableGeneratorResult, UnitTestGenerator.Common",
+            "VariablesUsed": {
+              "$id": "6",
+              "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String, mscorlib]], mscorlib",
+              "x": "x",
+              "fac": "fac~2",
+              "fac~0": "fac",
+              "i": "i~3",
+              "i~1": "i",
+              "fac~2": "fac",
+              "i~3": "i"
+            },
+            "LogicExpression": {
+              "$id": "7",
+              "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.CompositeLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
+              "Children": {
+                "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.LogicTable.ILogicExpression, UnitTestGenerator.Common]], mscorlib",
+                "$values": [
+                  {
+                    "$id": "8",
+                    "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.SimpleLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
+                    "AdtNode": {
+                      "$id": "9",
+                      "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.ForLoop, UnitTestGenerator.Generator.Ast2Adt",
+                      "NodeInit": {
+                        "$id": "10",
+                        "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.AssignmentStatement, UnitTestGenerator.Generator.Ast2Adt",
+                        "Variable": {
+                          "$id": "11",
+                          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                          "IsReference": true,
+                          "IsDefinition": false,
+                          "IsDeclaration": false,
+                          "VariableName": "i",
+                          "VariableDeclaration": {
+                            "$id": "12",
+                            "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.VariableDeclarationStatement, UnitTestGenerator.Generator.Ast2Adt",
+                            "VariableType": {
+                              "$id": "13",
+                              "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.TypeDefinition, UnitTestGenerator.Generator.Ast2Adt",
+                              "TypeName": "t_int",
+                              "PointerDimension": 0,
+                              "ArrayDimension": 0,
+                              "ArrayDimensionSize": null,
+                              "Modifiers": {
+                                "$type": "System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib",
+                                "$values": []
+                              },
+                              "TypeNode": null
+                            },
+                            "Variable": {
+                              "$id": "14",
+                              "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                              "IsReference": false,
+                              "IsDefinition": true,
+                              "IsDeclaration": true,
+                              "VariableName": "i",
+                              "VariableDeclaration": {
+                                "$ref": "12"
+                              },
+                              "AstNode": {
+                                "$id": "15",
+                                "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                "children": {
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                  "$values": [
+                                    {
+                                      "$id": "16",
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                      "children": {
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                        "$values": []
+                                      },
+                                      "properties": {
+                                        "$id": "17",
+                                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                        "properties": {
+                                          "$id": "18",
+                                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                          "Declaration": true,
+                                          "Definition": true,
+                                          "LookupKey": "i",
+                                          "Reference": false,
+                                          "SimpleID": "i"
+                                        }
+                                      },
+                                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                    },
+                                    {
+                                      "$id": "19",
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                      "children": {
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                        "$values": [
+                                          {
+                                            "$id": "20",
+                                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                            "children": {
+                                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                              "$values": []
+                                            },
+                                            "properties": {
+                                              "$id": "21",
+                                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                              "properties": {
+                                                "$id": "22",
+                                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                                "isGLValue": false,
+                                                "isRValue": true,
+                                                "Kind": "lk_integer_constant",
+                                                "ordinal": 2,
+                                                "Value": "1"
+                                              }
+                                            },
+                                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTLiteralExpression"
+                                          }
+                                        ]
+                                      },
+                                      "properties": {
+                                        "$id": "23",
+                                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                        "properties": {
+                                          "$id": "24",
+                                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                                        }
+                                      },
+                                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTEqualsInitializer"
+                                    }
+                                  ]
+                                },
+                                "properties": {
+                                  "$id": "25",
+                                  "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                  "properties": {
+                                    "$id": "26",
+                                    "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                                  }
+                                },
+                                "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTDeclarator"
+                              }
+                            },
+                            "InitialValue": {
+                              "$id": "27",
+                              "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.LiteralNode, UnitTestGenerator.Generator.Ast2Adt",
+                              "Value": "1",
+                              "Kind": "lk_integer_constant",
+                              "AstNode": {
+                                "$ref": "20"
+                              }
+                            },
+                            "AstNode": {
+                              "$ref": "15"
+                            }
+                          },
+                          "AstNode": {
+                            "$id": "28",
+                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                            "children": {
+                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                              "$values": [
+                                {
+                                  "$id": "29",
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                  "children": {
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                    "$values": []
+                                  },
+                                  "properties": {
+                                    "$id": "30",
+                                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                    "properties": {
+                                      "$id": "31",
+                                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                      "Declaration": false,
+                                      "Definition": false,
+                                      "LookupKey": "i",
+                                      "Reference": true,
+                                      "SimpleID": "i"
+                                    }
+                                  },
+                                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                }
+                              ]
+                            },
+                            "properties": {
+                              "$id": "32",
+                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                              "properties": {
+                                "$id": "33",
+                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                "isGLValue": true,
+                                "isRValue": false,
+                                "ordinal": 0
+                              }
+                            },
+                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                          }
+                        },
+                        "Value": {
+                          "$id": "34",
+                          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.LiteralNode, UnitTestGenerator.Generator.Ast2Adt",
+                          "Value": "1",
+                          "Kind": "lk_integer_constant",
+                          "AstNode": {
+                            "$id": "35",
+                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                            "children": {
+                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                              "$values": []
+                            },
+                            "properties": {
+                              "$id": "36",
+                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                              "properties": {
+                                "$id": "37",
+                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                "isGLValue": false,
+                                "isRValue": true,
+                                "Kind": "lk_integer_constant",
+                                "ordinal": 2,
+                                "Value": "1"
+                              }
+                            },
+                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTLiteralExpression"
+                          }
+                        },
+                        "AstNode": {
+                          "$id": "38",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": [
+                              {
+                                "$ref": "28"
+                              },
+                              {
+                                "$ref": "35"
+                              }
+                            ]
+                          },
+                          "properties": {
+                            "$id": "39",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "40",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                              "isGLValue": true,
+                              "isRValue": false,
+                              "Operation": "op_assign",
+                              "ordinal": 0
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTBinaryExpression"
+                        }
+                      },
+                      "NodeAfter": {
+                        "$id": "41",
+                        "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.UnaryArithmeticOperator, UnitTestGenerator.Generator.Ast2Adt",
+                        "Operand": {
+                          "$id": "42",
+                          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                          "IsReference": true,
+                          "IsDefinition": false,
+                          "IsDeclaration": false,
+                          "VariableName": "i",
+                          "VariableDeclaration": {
+                            "$ref": "12"
+                          },
+                          "AstNode": {
+                            "$id": "43",
+                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                            "children": {
+                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                              "$values": [
+                                {
+                                  "$id": "44",
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                  "children": {
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                    "$values": []
+                                  },
+                                  "properties": {
+                                    "$id": "45",
+                                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                    "properties": {
+                                      "$id": "46",
+                                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                      "Declaration": false,
+                                      "Definition": false,
+                                      "LookupKey": "i",
+                                      "Reference": true,
+                                      "SimpleID": "i"
+                                    }
+                                  },
+                                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                }
+                              ]
+                            },
+                            "properties": {
+                              "$id": "47",
+                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                              "properties": {
+                                "$id": "48",
+                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                "isGLValue": true,
+                                "isRValue": false,
+                                "ordinal": 0
+                              }
+                            },
+                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                          }
+                        },
+                        "Operation": 2,
+                        "AstNode": {
+                          "$id": "49",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": [
+                              {
+                                "$ref": "43"
+                              }
+                            ]
+                          },
+                          "properties": {
+                            "$id": "50",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "51",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                              "isGLValue": false,
+                              "isRValue": true,
+                              "Operation": "op_postFixIncr",
+                              "ordinal": 2
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTUnaryExpression"
+                        }
+                      },
+                      "Condition": {
+                        "$id": "52",
+                        "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.ComparisonOperator, UnitTestGenerator.Generator.Ast2Adt",
+                        "LeftOperand": {
+                          "$id": "53",
+                          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                          "IsReference": true,
+                          "IsDefinition": false,
+                          "IsDeclaration": false,
+                          "VariableName": "i",
+                          "VariableDeclaration": {
+                            "$ref": "12"
+                          },
+                          "AstNode": {
+                            "$id": "54",
+                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                            "children": {
+                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                              "$values": [
+                                {
+                                  "$id": "55",
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                  "children": {
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                    "$values": []
+                                  },
+                                  "properties": {
+                                    "$id": "56",
+                                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                    "properties": {
+                                      "$id": "57",
+                                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                      "Declaration": false,
+                                      "Definition": false,
+                                      "LookupKey": "i",
+                                      "Reference": true,
+                                      "SimpleID": "i"
+                                    }
+                                  },
+                                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                }
+                              ]
+                            },
+                            "properties": {
+                              "$id": "58",
+                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                              "properties": {
+                                "$id": "59",
+                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                "isGLValue": true,
+                                "isRValue": false,
+                                "ordinal": 0
+                              }
+                            },
+                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                          }
+                        },
+                        "RightOperand": {
+                          "$id": "60",
+                          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                          "IsReference": true,
+                          "IsDefinition": false,
+                          "IsDeclaration": false,
+                          "VariableName": "x",
+                          "VariableDeclaration": {
+                            "$id": "61",
+                            "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.VariableDeclarationStatement, UnitTestGenerator.Generator.Ast2Adt",
+                            "VariableType": {
+                              "$id": "62",
+                              "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.TypeDefinition, UnitTestGenerator.Generator.Ast2Adt",
+                              "TypeName": "t_int",
+                              "PointerDimension": 0,
+                              "ArrayDimension": 0,
+                              "ArrayDimensionSize": null,
+                              "Modifiers": {
+                                "$type": "System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib",
+                                "$values": []
+                              },
+                              "TypeNode": null
+                            },
+                            "Variable": {
+                              "$id": "63",
+                              "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                              "IsReference": false,
+                              "IsDefinition": true,
+                              "IsDeclaration": true,
+                              "VariableName": "x",
+                              "VariableDeclaration": {
+                                "$ref": "61"
+                              },
+                              "AstNode": {
+                                "$id": "64",
+                                "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                "children": {
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                  "$values": [
+                                    {
+                                      "$id": "65",
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                      "children": {
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                        "$values": []
+                                      },
+                                      "properties": {
+                                        "$id": "66",
+                                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                        "properties": {
+                                          "$id": "67",
+                                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                          "Declaration": true,
+                                          "Definition": true,
+                                          "LookupKey": "x",
+                                          "Reference": false,
+                                          "SimpleID": "x"
+                                        }
+                                      },
+                                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                    }
+                                  ]
+                                },
+                                "properties": {
+                                  "$id": "68",
+                                  "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                  "properties": {
+                                    "$id": "69",
+                                    "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                                  }
+                                },
+                                "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTDeclarator"
+                              }
+                            },
+                            "InitialValue": null,
+                            "AstNode": {
+                              "$ref": "64"
+                            }
+                          },
+                          "AstNode": {
+                            "$id": "70",
+                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                            "children": {
+                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                              "$values": [
+                                {
+                                  "$id": "71",
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                  "children": {
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                    "$values": []
+                                  },
+                                  "properties": {
+                                    "$id": "72",
+                                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                    "properties": {
+                                      "$id": "73",
+                                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                      "Declaration": false,
+                                      "Definition": false,
+                                      "LookupKey": "x",
+                                      "Reference": true,
+                                      "SimpleID": "x"
+                                    }
+                                  },
+                                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                }
+                              ]
+                            },
+                            "properties": {
+                              "$id": "74",
+                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                              "properties": {
+                                "$id": "75",
+                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                "isGLValue": true,
+                                "isRValue": false,
+                                "ordinal": 0
+                              }
+                            },
+                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                          }
+                        },
+                        "Operation": 0,
+                        "AstNode": {
+                          "$id": "76",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": [
+                              {
+                                "$ref": "54"
+                              },
+                              {
+                                "$ref": "70"
+                              }
+                            ]
+                          },
+                          "properties": {
+                            "$id": "77",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "78",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                              "isGLValue": false,
+                              "isRValue": true,
+                              "Operation": "op_lessThan",
+                              "ordinal": 2
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTBinaryExpression"
+                        }
+                      },
+                      "NodeBlock": {
+                        "$id": "79",
+                        "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SequenceNode, UnitTestGenerator.Generator.Ast2Adt",
+                        "Nodes": {
+                          "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.ADT.IAdtNode, UnitTestGenerator.Common]], mscorlib",
+                          "$values": [
+                            {
+                              "$id": "80",
+                              "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.AssignmentStatement, UnitTestGenerator.Generator.Ast2Adt",
+                              "Variable": {
+                                "$id": "81",
+                                "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                                "IsReference": true,
+                                "IsDefinition": false,
+                                "IsDeclaration": false,
+                                "VariableName": "fac",
+                                "VariableDeclaration": {
+                                  "$id": "82",
+                                  "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.VariableDeclarationStatement, UnitTestGenerator.Generator.Ast2Adt",
+                                  "VariableType": {
+                                    "$id": "83",
+                                    "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.TypeDefinition, UnitTestGenerator.Generator.Ast2Adt",
+                                    "TypeName": "t_int",
+                                    "PointerDimension": 0,
+                                    "ArrayDimension": 0,
+                                    "ArrayDimensionSize": null,
+                                    "Modifiers": {
+                                      "$type": "System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib",
+                                      "$values": [
+                                        "long"
+                                      ]
+                                    },
+                                    "TypeNode": null
+                                  },
+                                  "Variable": {
+                                    "$id": "84",
+                                    "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                                    "IsReference": false,
+                                    "IsDefinition": true,
+                                    "IsDeclaration": true,
+                                    "VariableName": "fac",
+                                    "VariableDeclaration": {
+                                      "$ref": "82"
+                                    },
+                                    "AstNode": {
+                                      "$id": "85",
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                      "children": {
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                        "$values": [
+                                          {
+                                            "$id": "86",
+                                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                            "children": {
+                                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                              "$values": []
+                                            },
+                                            "properties": {
+                                              "$id": "87",
+                                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                              "properties": {
+                                                "$id": "88",
+                                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                                "Declaration": true,
+                                                "Definition": true,
+                                                "LookupKey": "fac",
+                                                "Reference": false,
+                                                "SimpleID": "fac"
+                                              }
+                                            },
+                                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                          }
+                                        ]
+                                      },
+                                      "properties": {
+                                        "$id": "89",
+                                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                        "properties": {
+                                          "$id": "90",
+                                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                                        }
+                                      },
+                                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTDeclarator"
+                                    }
+                                  },
+                                  "InitialValue": null,
+                                  "AstNode": {
+                                    "$ref": "85"
+                                  }
+                                },
+                                "AstNode": {
+                                  "$id": "91",
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                  "children": {
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                    "$values": [
+                                      {
+                                        "$id": "92",
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                        "children": {
+                                          "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                          "$values": []
+                                        },
+                                        "properties": {
+                                          "$id": "93",
+                                          "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                          "properties": {
+                                            "$id": "94",
+                                            "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                            "Declaration": false,
+                                            "Definition": false,
+                                            "LookupKey": "fac",
+                                            "Reference": true,
+                                            "SimpleID": "fac"
+                                          }
+                                        },
+                                        "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                      }
+                                    ]
+                                  },
+                                  "properties": {
+                                    "$id": "95",
+                                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                    "properties": {
+                                      "$id": "96",
+                                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                      "isGLValue": true,
+                                      "isRValue": false,
+                                      "ordinal": 0
+                                    }
+                                  },
+                                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                                }
+                              },
+                              "Value": {
+                                "$id": "97",
+                                "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.BinaryArithmeticOperator, UnitTestGenerator.Generator.Ast2Adt",
+                                "LeftOperand": {
+                                  "$id": "98",
+                                  "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                                  "IsReference": true,
+                                  "IsDefinition": false,
+                                  "IsDeclaration": false,
+                                  "VariableName": "fac",
+                                  "VariableDeclaration": {
+                                    "$ref": "82"
+                                  },
+                                  "AstNode": {
+                                    "$id": "99",
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                    "children": {
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                      "$values": [
+                                        {
+                                          "$id": "100",
+                                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                          "children": {
+                                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                            "$values": []
+                                          },
+                                          "properties": {
+                                            "$id": "101",
+                                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                            "properties": {
+                                              "$id": "102",
+                                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                              "Declaration": false,
+                                              "Definition": false,
+                                              "LookupKey": "fac",
+                                              "Reference": true,
+                                              "SimpleID": "fac"
+                                            }
+                                          },
+                                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                        }
+                                      ]
+                                    },
+                                    "properties": {
+                                      "$id": "103",
+                                      "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                      "properties": {
+                                        "$id": "104",
+                                        "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                        "isGLValue": true,
+                                        "isRValue": false,
+                                        "ordinal": 0
+                                      }
+                                    },
+                                    "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                                  }
+                                },
+                                "RightOperand": {
+                                  "$id": "105",
+                                  "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.BinaryArithmeticOperator, UnitTestGenerator.Generator.Ast2Adt",
+                                  "LeftOperand": {
+                                    "$id": "106",
+                                    "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                                    "IsReference": true,
+                                    "IsDefinition": false,
+                                    "IsDeclaration": false,
+                                    "VariableName": "x",
+                                    "VariableDeclaration": {
+                                      "$ref": "61"
+                                    },
+                                    "AstNode": {
+                                      "$id": "107",
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                      "children": {
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                        "$values": [
+                                          {
+                                            "$id": "108",
+                                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                            "children": {
+                                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                              "$values": []
+                                            },
+                                            "properties": {
+                                              "$id": "109",
+                                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                              "properties": {
+                                                "$id": "110",
+                                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                                "Declaration": false,
+                                                "Definition": false,
+                                                "LookupKey": "x",
+                                                "Reference": true,
+                                                "SimpleID": "x"
+                                              }
+                                            },
+                                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                          }
+                                        ]
+                                      },
+                                      "properties": {
+                                        "$id": "111",
+                                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                        "properties": {
+                                          "$id": "112",
+                                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                          "isGLValue": true,
+                                          "isRValue": false,
+                                          "ordinal": 0
+                                        }
+                                      },
+                                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                                    }
+                                  },
+                                  "RightOperand": {
+                                    "$id": "113",
+                                    "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                                    "IsReference": true,
+                                    "IsDefinition": false,
+                                    "IsDeclaration": false,
+                                    "VariableName": "i",
+                                    "VariableDeclaration": {
+                                      "$ref": "12"
+                                    },
+                                    "AstNode": {
+                                      "$id": "114",
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                      "children": {
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                        "$values": [
+                                          {
+                                            "$id": "115",
+                                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                            "children": {
+                                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                              "$values": []
+                                            },
+                                            "properties": {
+                                              "$id": "116",
+                                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                              "properties": {
+                                                "$id": "117",
+                                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                                "Declaration": false,
+                                                "Definition": false,
+                                                "LookupKey": "i",
+                                                "Reference": true,
+                                                "SimpleID": "i"
+                                              }
+                                            },
+                                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                                          }
+                                        ]
+                                      },
+                                      "properties": {
+                                        "$id": "118",
+                                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                        "properties": {
+                                          "$id": "119",
+                                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                          "isGLValue": true,
+                                          "isRValue": false,
+                                          "ordinal": 0
+                                        }
+                                      },
+                                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                                    }
+                                  },
+                                  "Operation": 1,
+                                  "AstNode": {
+                                    "$id": "120",
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                    "children": {
+                                      "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                      "$values": [
+                                        {
+                                          "$ref": "107"
+                                        },
+                                        {
+                                          "$ref": "114"
+                                        }
+                                      ]
+                                    },
+                                    "properties": {
+                                      "$id": "121",
+                                      "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                      "properties": {
+                                        "$id": "122",
+                                        "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                        "isGLValue": false,
+                                        "isRValue": true,
+                                        "Operation": "op_minus",
+                                        "ordinal": 2
+                                      }
+                                    },
+                                    "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTBinaryExpression"
+                                  }
+                                },
+                                "Operation": 2,
+                                "AstNode": {
+                                  "$id": "123",
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                  "children": {
+                                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                    "$values": [
+                                      {
+                                        "$ref": "99"
+                                      },
+                                      {
+                                        "$id": "124",
+                                        "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                        "children": {
+                                          "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                          "$values": [
+                                            {
+                                              "$ref": "120"
+                                            }
+                                          ]
+                                        },
+                                        "properties": {
+                                          "$id": "125",
+                                          "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                          "properties": {
+                                            "$id": "126",
+                                            "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                            "isGLValue": false,
+                                            "isRValue": true,
+                                            "Operation": "op_bracketedPrimary",
+                                            "ordinal": 2
+                                          }
+                                        },
+                                        "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTUnaryExpression"
+                                      }
+                                    ]
+                                  },
+                                  "properties": {
+                                    "$id": "127",
+                                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                    "properties": {
+                                      "$id": "128",
+                                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                      "isGLValue": false,
+                                      "isRValue": true,
+                                      "Operation": "op_multiply",
+                                      "ordinal": 2
+                                    }
+                                  },
+                                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTBinaryExpression"
+                                }
+                              },
+                              "AstNode": {
+                                "$id": "129",
+                                "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                "children": {
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                  "$values": [
+                                    {
+                                      "$ref": "91"
+                                    },
+                                    {
+                                      "$ref": "123"
+                                    }
+                                  ]
+                                },
+                                "properties": {
+                                  "$id": "130",
+                                  "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                  "properties": {
+                                    "$id": "131",
+                                    "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                    "isGLValue": true,
+                                    "isRValue": false,
+                                    "Operation": "op_assign",
+                                    "ordinal": 0
+                                  }
+                                },
+                                "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTBinaryExpression"
+                              }
+                            }
+                          ]
+                        },
+                        "AstNode": {
+                          "$id": "132",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": [
+                              {
+                                "$id": "133",
+                                "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                                "children": {
+                                  "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                  "$values": [
+                                    {
+                                      "$ref": "129"
+                                    }
+                                  ]
+                                },
+                                "properties": {
+                                  "$id": "134",
+                                  "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                  "properties": {
+                                    "$id": "135",
+                                    "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                                  }
+                                },
+                                "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTExpressionStatement"
+                              }
+                            ]
+                          },
+                          "properties": {
+                            "$id": "136",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "137",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTCompoundStatement"
+                        }
+                      },
+                      "AstNode": {
+                        "$id": "138",
+                        "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                        "children": {
+                          "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                          "$values": [
+                            {
+                              "$id": "139",
+                              "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                              "children": {
+                                "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                "$values": [
+                                  {
+                                    "$ref": "38"
+                                  }
+                                ]
+                              },
+                              "properties": {
+                                "$id": "140",
+                                "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                "properties": {
+                                  "$id": "141",
+                                  "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                                }
+                              },
+                              "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTExpressionStatement"
+                            },
+                            {
+                              "$ref": "76"
+                            },
+                            {
+                              "$ref": "49"
+                            },
+                            {
+                              "$ref": "132"
+                            }
+                          ]
+                        },
+                        "properties": {
+                          "$id": "142",
+                          "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                          "properties": {
+                            "$id": "143",
+                            "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                          }
+                        },
+                        "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTForStatement"
+                      }
+                    },
+                    "Token": "i~1 LessThan x"
+                  }
+                ]
+              },
+              "LogicalOperation": 0,
+              "AdtNode": null,
+              "Token": "i~1 LessThan x"
+            },
+            "TruthTable": {
+              "$type": "UnitTestGenerator.Common.Collections.Cloneable.CloneableList`1[[UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common]], UnitTestGenerator.Common",
+              "$values": [
+                {
+                  "$id": "144",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false
+                    ]
+                  },
+                  "ResultOfTheRow": false
+                },
+                {
+                  "$id": "145",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "RootAdtNode": {
+        "$id": "146",
+        "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.FunctionDeclarationStatement, UnitTestGenerator.Generator.Ast2Adt",
+        "ReturnType": {
+          "$id": "147",
+          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.TypeDefinition, UnitTestGenerator.Generator.Ast2Adt",
+          "TypeName": "t_int",
+          "PointerDimension": 0,
+          "ArrayDimension": 0,
+          "ArrayDimensionSize": null,
+          "Modifiers": {
+            "$type": "System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "long"
+            ]
+          },
+          "TypeNode": null
+        },
+        "Arguments": {
+          "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.ADT.IAdtVariableDeclarationStatementNode, UnitTestGenerator.Common]], mscorlib",
+          "$values": [
+            {
+              "$ref": "61"
+            }
+          ]
+        },
+        "Name": "catalan",
+        "Body": {
+          "$id": "148",
+          "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SequenceNode, UnitTestGenerator.Generator.Ast2Adt",
+          "Nodes": {
+            "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.ADT.IAdtNode, UnitTestGenerator.Common]], mscorlib",
+            "$values": [
+              {
+                "$ref": "82"
+              },
+              {
+                "$id": "149",
+                "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.AssignmentStatement, UnitTestGenerator.Generator.Ast2Adt",
+                "Variable": {
+                  "$id": "150",
+                  "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                  "IsReference": true,
+                  "IsDefinition": false,
+                  "IsDeclaration": false,
+                  "VariableName": "fac",
+                  "VariableDeclaration": {
+                    "$ref": "82"
+                  },
+                  "AstNode": {
+                    "$id": "151",
+                    "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                    "children": {
+                      "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                      "$values": [
+                        {
+                          "$id": "152",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": []
+                          },
+                          "properties": {
+                            "$id": "153",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "154",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                              "Declaration": false,
+                              "Definition": false,
+                              "LookupKey": "fac",
+                              "Reference": true,
+                              "SimpleID": "fac"
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                        }
+                      ]
+                    },
+                    "properties": {
+                      "$id": "155",
+                      "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                      "properties": {
+                        "$id": "156",
+                        "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                        "isGLValue": true,
+                        "isRValue": false,
+                        "ordinal": 0
+                      }
+                    },
+                    "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                  }
+                },
+                "Value": {
+                  "$id": "157",
+                  "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                  "IsReference": true,
+                  "IsDefinition": false,
+                  "IsDeclaration": false,
+                  "VariableName": "x",
+                  "VariableDeclaration": {
+                    "$ref": "61"
+                  },
+                  "AstNode": {
+                    "$id": "158",
+                    "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                    "children": {
+                      "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                      "$values": [
+                        {
+                          "$id": "159",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": []
+                          },
+                          "properties": {
+                            "$id": "160",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "161",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                              "Declaration": false,
+                              "Definition": false,
+                              "LookupKey": "x",
+                              "Reference": true,
+                              "SimpleID": "x"
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                        }
+                      ]
+                    },
+                    "properties": {
+                      "$id": "162",
+                      "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                      "properties": {
+                        "$id": "163",
+                        "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                        "isGLValue": true,
+                        "isRValue": false,
+                        "ordinal": 0
+                      }
+                    },
+                    "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                  }
+                },
+                "AstNode": {
+                  "$id": "164",
+                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                  "children": {
+                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                    "$values": [
+                      {
+                        "$ref": "151"
+                      },
+                      {
+                        "$ref": "158"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "$id": "165",
+                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                    "properties": {
+                      "$id": "166",
+                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                      "isGLValue": true,
+                      "isRValue": false,
+                      "Operation": "op_assign",
+                      "ordinal": 0
+                    }
+                  },
+                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTBinaryExpression"
+                }
+              },
+              {
+                "$ref": "12"
+              },
+              {
+                "$ref": "9"
+              },
+              {
+                "$id": "167",
+                "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.ReturnStatement, UnitTestGenerator.Generator.Ast2Adt",
+                "Value": {
+                  "$id": "168",
+                  "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
+                  "IsReference": true,
+                  "IsDefinition": false,
+                  "IsDeclaration": false,
+                  "VariableName": "fac",
+                  "VariableDeclaration": {
+                    "$ref": "82"
+                  },
+                  "AstNode": {
+                    "$id": "169",
+                    "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                    "children": {
+                      "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                      "$values": [
+                        {
+                          "$id": "170",
+                          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                          "children": {
+                            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                            "$values": []
+                          },
+                          "properties": {
+                            "$id": "171",
+                            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                            "properties": {
+                              "$id": "172",
+                              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                              "Declaration": false,
+                              "Definition": false,
+                              "LookupKey": "fac",
+                              "Reference": true,
+                              "SimpleID": "fac"
+                            }
+                          },
+                          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                        }
+                      ]
+                    },
+                    "properties": {
+                      "$id": "173",
+                      "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                      "properties": {
+                        "$id": "174",
+                        "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                        "isGLValue": true,
+                        "isRValue": false,
+                        "ordinal": 0
+                      }
+                    },
+                    "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTIdExpression"
+                  }
+                },
+                "AstNode": {
+                  "$id": "175",
+                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                  "children": {
+                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                    "$values": [
+                      {
+                        "$ref": "169"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "$id": "176",
+                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                    "properties": {
+                      "$id": "177",
+                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                    }
+                  },
+                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTReturnStatement"
+                }
+              }
+            ]
+          },
+          "AstNode": {
+            "$id": "178",
+            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+            "children": {
+              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+              "$values": [
+                {
+                  "$id": "179",
+                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                  "children": {
+                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                    "$values": [
+                      {
+                        "$id": "180",
+                        "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                        "children": {
+                          "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                          "$values": [
+                            {
+                              "$id": "181",
+                              "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                              "children": {
+                                "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                "$values": []
+                              },
+                              "properties": {
+                                "$id": "182",
+                                "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                "properties": {
+                                  "$id": "183",
+                                  "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                  "Const": false,
+                                  "Long": true,
+                                  "LongLong": false,
+                                  "Restrict": false,
+                                  "Short": false,
+                                  "Signed": false,
+                                  "StorageClass": "sc_unspecified",
+                                  "Type": "t_int",
+                                  "Unsigned": false,
+                                  "Volatile": false
+                                }
+                              },
+                              "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclSpecifier"
+                            },
+                            {
+                              "$ref": "85"
+                            }
+                          ]
+                        },
+                        "properties": {
+                          "$id": "184",
+                          "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                          "properties": {
+                            "$id": "185",
+                            "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                          }
+                        },
+                        "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclaration"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "$id": "186",
+                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                    "properties": {
+                      "$id": "187",
+                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                    }
+                  },
+                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTDeclarationStatement"
+                },
+                {
+                  "$id": "188",
+                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                  "children": {
+                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                    "$values": [
+                      {
+                        "$ref": "164"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "$id": "189",
+                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                    "properties": {
+                      "$id": "190",
+                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                    }
+                  },
+                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTExpressionStatement"
+                },
+                {
+                  "$id": "191",
+                  "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                  "children": {
+                    "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                    "$values": [
+                      {
+                        "$id": "192",
+                        "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                        "children": {
+                          "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                          "$values": [
+                            {
+                              "$id": "193",
+                              "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                              "children": {
+                                "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                                "$values": []
+                              },
+                              "properties": {
+                                "$id": "194",
+                                "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                                "properties": {
+                                  "$id": "195",
+                                  "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                  "Const": false,
+                                  "Long": false,
+                                  "LongLong": false,
+                                  "Restrict": false,
+                                  "Short": false,
+                                  "Signed": false,
+                                  "StorageClass": "sc_unspecified",
+                                  "Type": "t_int",
+                                  "Unsigned": false,
+                                  "Volatile": false
+                                }
+                              },
+                              "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclSpecifier"
+                            },
+                            {
+                              "$ref": "15"
+                            }
+                          ]
+                        },
+                        "properties": {
+                          "$id": "196",
+                          "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                          "properties": {
+                            "$id": "197",
+                            "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                          }
+                        },
+                        "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclaration"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "$id": "198",
+                    "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                    "properties": {
+                      "$id": "199",
+                      "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                    }
+                  },
+                  "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTDeclarationStatement"
+                },
+                {
+                  "$ref": "138"
+                },
+                {
+                  "$ref": "175"
+                }
+              ]
+            },
+            "properties": {
+              "$id": "200",
+              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+              "properties": {
+                "$id": "201",
+                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+              }
+            },
+            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTCompoundStatement"
+          }
+        },
+        "AstNode": {
+          "$id": "202",
+          "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+          "children": {
+            "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+            "$values": [
+              {
+                "$id": "203",
+                "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                "children": {
+                  "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                  "$values": []
+                },
+                "properties": {
+                  "$id": "204",
+                  "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                  "properties": {
+                    "$id": "205",
+                    "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                    "Const": false,
+                    "Long": true,
+                    "LongLong": false,
+                    "Restrict": false,
+                    "Short": false,
+                    "Signed": false,
+                    "StorageClass": "sc_unspecified",
+                    "Type": "t_int",
+                    "Unsigned": false,
+                    "Volatile": false
+                  }
+                },
+                "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclSpecifier"
+              },
+              {
+                "$id": "206",
+                "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                "children": {
+                  "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                  "$values": [
+                    {
+                      "$id": "207",
+                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                      "children": {
+                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                        "$values": []
+                      },
+                      "properties": {
+                        "$id": "208",
+                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                        "properties": {
+                          "$id": "209",
+                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                          "Declaration": true,
+                          "Definition": true,
+                          "LookupKey": "catalan",
+                          "Reference": false,
+                          "SimpleID": "catalan"
+                        }
+                      },
+                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
+                    },
+                    {
+                      "$id": "210",
+                      "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                      "children": {
+                        "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                        "$values": [
+                          {
+                            "$id": "211",
+                            "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
+                            "children": {
+                              "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
+                              "$values": []
+                            },
+                            "properties": {
+                              "$id": "212",
+                              "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                              "properties": {
+                                "$id": "213",
+                                "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
+                                "Const": false,
+                                "Long": false,
+                                "LongLong": false,
+                                "Restrict": false,
+                                "Short": false,
+                                "Signed": false,
+                                "StorageClass": "sc_unspecified",
+                                "Type": "t_int",
+                                "Unsigned": false,
+                                "Volatile": false
+                              }
+                            },
+                            "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclSpecifier"
+                          },
+                          {
+                            "$ref": "64"
+                          }
+                        ]
+                      },
+                      "properties": {
+                        "$id": "214",
+                        "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                        "properties": {
+                          "$id": "215",
+                          "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                        }
+                      },
+                      "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTParameterDeclaration"
+                    }
+                  ]
+                },
+                "properties": {
+                  "$id": "216",
+                  "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+                  "properties": {
+                    "$id": "217",
+                    "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+                  }
+                },
+                "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTFunctionDeclarator"
+              },
+              {
+                "$ref": "178"
+              }
+            ]
+          },
+          "properties": {
+            "$id": "218",
+            "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
+            "properties": {
+              "$id": "219",
+              "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
+            }
+          },
+          "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTFunctionDefinition"
+        }
+      },
+      "RootAstNode": {
+        "$ref": "202"
+      }
+    }
+  },
+  "<JobId>k__BackingField": "1c0ffee1-abcd-abcd-abcd-000000000000"
+}

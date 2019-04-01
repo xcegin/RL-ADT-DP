@@ -225,6 +225,30 @@ class Enviroment:
             done = True
         return reward, done, (currentCoverage / 100), {}
 
+    def step_cov_continuos_with_reward(self, action, numOfWorker):
+        if self.argumentChangedVal % len(list(self.arguments.keys())) == 0 and self.argumentChangedVal != 0:
+            self.argumentColumnValue += 1
+        argColVal = self.argumentColumnValue % len(self.listOfTables[0])
+        keyOfArg = self.argumentChangedVal % len(list(self.arguments.keys()))
+        keyForDict = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
+        argumentValue = self.argumentMatrix[argColVal][keyOfArg]
+        self.argumentChangedVal = self.argumentChangedVal + 1
+        if isinstance(argumentValue, complex):
+            return -1, True, {}
+        argument = self.arguments[keyForDict]
+        self.argumentMatrix[argColVal][keyOfArg] = resolveContinuousType(action, argument.variableType.typeName)
+
+    def step_cov_continuos_entire_matrix(self, numOfWorker):
+        currentCoverage = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
+        if currentCoverage == 0:  # TODO: IF Before was not 0 coverage, then it should return -1 value
+            return 0, False, 0, {}
+        reward = self.returnRewardCov(self.rootTreeAdtNode.name, currentCoverage)
+
+        done = False
+        if currentCoverage >= 90:
+            done = True
+        return reward, done, (currentCoverage / 100), {}
+
     def step_continuos(self, action, numOfFile=None):
         keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argument = self.arguments[keyOfArg]
@@ -371,4 +395,5 @@ class Enviroment:
         expected_reward = (coverageValue - self.dict_of_max_r[function_name])/100
         if self.dict_of_max_r[function_name] < coverageValue:
             self.dict_of_max_r[function_name] = coverageValue
-        return expected_reward
+        #expected_reward = (-9.70e-06 * (coverageValue ** (6))) + (0.00269 * (coverageValue ** (5))) - (0.2743 * (coverageValue ** (4))) + (12.781 * (coverageValue ** (3))) - (266.2 * (coverageValue ** (2))) + (2164.2 * coverageValue) - 1754.7
+        return expected_reward #/ 103665.3
