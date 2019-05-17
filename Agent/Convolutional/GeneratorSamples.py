@@ -1,5 +1,6 @@
 import numpy as np
 
+"""Based on https://github.com/crestonbunch/tbcnn"""
 
 class Batcher:
     def __init__(self):
@@ -69,6 +70,31 @@ def gen_samples(tree, vectors, vector_lookup):
         nodes.append(vectors[vector_lookup[node['node']]])
 
     yield (nodes, children)
+
+
+def traverse_tree_in_dfs_inorder(tree, vectors, vector_lookup, num, nodes, children, parent_ind):
+    """Creates a generator that returns a tree in DFS order with each node
+    replaced by its vector embedding, and a child lookup table."""
+
+    if num == 0:
+        nodes = []
+        children = []
+
+    node_ind = len(nodes)
+    nodes.append(vectors[vector_lookup[tree['node']]])
+    children.append([])
+    if parent_ind > -1:
+        children[parent_ind].append(node_ind)
+
+    tmp_for_num = num + 1
+
+    for child in tree['children']:
+        nodes, children, parent_ind, tmp_for_num = traverse_tree_in_dfs_inorder(child, vectors, vector_lookup, tmp_for_num, nodes, children, node_ind)
+
+    if num == 0:
+        return nodes, children
+    else:
+        return nodes, children, parent_ind, tmp_for_num
 
 
 def batch_samples(gen, batch_size):

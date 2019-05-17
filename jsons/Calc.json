@@ -21,13 +21,10 @@
               "$id": "6",
               "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String, mscorlib]], mscorlib",
               "x": "x",
-              "y": "y~1",
+              "y": "y",
               "z": "z",
-              "result": "result~3",
-              "result~0": "result",
-              "y~1": "y",
-              "result~2": "result",
-              "result~3": "result"
+              "result": "result~0",
+              "result~0": "result"
             },
             "LogicExpression": {
               "$id": "7",
@@ -3225,15 +3222,183 @@
                       "$ref": "173"
                     },
                     "Token": "z Equals 0"
+                  }
+                ]
+              },
+              "LogicalOperation": 0,
+              "AdtNode": null,
+              "Token": "((x LessThan 0 Or y LessThan 0) Or z LessThan 0) And ((x GreaterThanEquals 0 Or y GreaterThanEquals 0) Or z GreaterThanEquals 0) And z Equals 0"
+            },
+            "TruthTable": {
+              "$type": "UnitTestGenerator.Common.Collections.Cloneable.CloneableList`1[[UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common]], UnitTestGenerator.Common",
+              "$values": [
+                {
+                  "$id": "422",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      false,
+                      false,
+                      false,
+                      false,
+                      true,
+                      true
+                    ]
                   },
+                  "ResultOfTheRow": false
+                },
+                {
+                  "$id": "423",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      false,
+                      true,
+                      false,
+                      false,
+                      false,
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": false
+                },
+                {
+                  "$id": "424",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      false,
+                      true,
+                      false,
+                      false,
+                      true,
+                      false
+                    ]
+                  },
+                  "ResultOfTheRow": false
+                },
+                {
+                  "$id": "425",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      false,
+                      true,
+                      false,
+                      false,
+                      true,
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": true
+                },
+                {
+                  "$id": "426",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      false,
+                      true,
+                      false,
+                      true,
+                      false,
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": true
+                },
+                {
+                  "$id": "427",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      false,
+                      true,
+                      true,
+                      false,
+                      false,
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": true
+                },
+                {
+                  "$id": "428",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      false,
+                      true,
+                      false,
+                      false,
+                      false,
+                      true,
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": true
+                },
+                {
+                  "$id": "429",
+                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
+                  "RowValues": {
+                    "$type": "System.Boolean[], mscorlib",
+                    "$values": [
+                      true,
+                      false,
+                      false,
+                      false,
+                      false,
+                      true,
+                      true
+                    ]
+                  },
+                  "ResultOfTheRow": true
+                }
+              ]
+            }
+          },
+          {
+            "$id": "430",
+            "$type": "UnitTestGenerator.Common.LogicTable.LogicTableGeneratorResult, UnitTestGenerator.Common",
+            "VariablesUsed": {
+              "$id": "431",
+              "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String, mscorlib]], mscorlib",
+              "x": "x",
+              "y": "y~1",
+              "z": "z",
+              "result": "result~2",
+              "result~0": "result",
+              "y~1": "y",
+              "result~2": "result"
+            },
+            "LogicExpression": {
+              "$id": "432",
+              "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.CompositeLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
+              "Children": {
+                "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.LogicTable.ILogicExpression, UnitTestGenerator.Common]], mscorlib",
+                "$values": [
                   {
-                    "$id": "422",
+                    "$id": "433",
                     "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.CompositeLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
                     "Children": {
                       "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.LogicTable.ILogicExpression, UnitTestGenerator.Common]], mscorlib",
                       "$values": [
                         {
-                          "$id": "423",
+                          "$id": "434",
                           "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.SimpleLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
                           "AdtNode": {
                             "$ref": "248"
@@ -3241,7 +3406,7 @@
                           "Token": "z GreaterThan x"
                         },
                         {
-                          "$id": "424",
+                          "$id": "435",
                           "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.SimpleLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
                           "AdtNode": {
                             "$ref": "266"
@@ -3257,7 +3422,7 @@
                     "Token": "z GreaterThan x And z GreaterThan y"
                   },
                   {
-                    "$id": "425",
+                    "$id": "436",
                     "$type": "UnitTestGenerator.Generator.LogicTableGenerator.LogicTable.SimpleLogicExpression, UnitTestGenerator.Generator.LogicTableGenerator",
                     "AdtNode": {
                       "$ref": "317"
@@ -3268,84 +3433,17 @@
               },
               "LogicalOperation": 0,
               "AdtNode": null,
-              "Token": "((x LessThan 0 Or y LessThan 0) Or z LessThan 0) And ((x GreaterThanEquals 0 Or y GreaterThanEquals 0) Or z GreaterThanEquals 0) And z Equals 0 And (z GreaterThan x And z GreaterThan y) And z GreaterThan x"
+              "Token": "(z GreaterThan x And z GreaterThan y) And z GreaterThan x"
             },
             "TruthTable": {
               "$type": "UnitTestGenerator.Common.Collections.Cloneable.CloneableList`1[[UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common]], UnitTestGenerator.Common",
               "$values": [
                 {
-                  "$id": "426",
+                  "$id": "437",
                   "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
                   "RowValues": {
                     "$type": "System.Boolean[], mscorlib",
                     "$values": [
-                      false,
-                      false,
-                      false,
-                      false,
-                      false,
-                      true,
-                      true,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": false
-                },
-                {
-                  "$id": "427",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      false,
-                      false,
-                      true,
-                      false,
-                      false,
-                      false,
-                      true,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": false
-                },
-                {
-                  "$id": "428",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      false,
-                      false,
-                      true,
-                      false,
-                      false,
-                      true,
-                      false,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": false
-                },
-                {
-                  "$id": "429",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      false,
-                      false,
-                      true,
-                      false,
-                      false,
-                      true,
-                      true,
                       false,
                       true,
                       false
@@ -3354,18 +3452,11 @@
                   "ResultOfTheRow": false
                 },
                 {
-                  "$id": "430",
+                  "$id": "438",
                   "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
                   "RowValues": {
                     "$type": "System.Boolean[], mscorlib",
                     "$values": [
-                      false,
-                      false,
-                      true,
-                      false,
-                      false,
-                      true,
-                      true,
                       true,
                       false,
                       false
@@ -3374,98 +3465,11 @@
                   "ResultOfTheRow": false
                 },
                 {
-                  "$id": "431",
+                  "$id": "439",
                   "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
                   "RowValues": {
                     "$type": "System.Boolean[], mscorlib",
                     "$values": [
-                      false,
-                      false,
-                      true,
-                      false,
-                      false,
-                      true,
-                      true,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": true
-                },
-                {
-                  "$id": "432",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      false,
-                      false,
-                      true,
-                      false,
-                      true,
-                      false,
-                      true,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": true
-                },
-                {
-                  "$id": "433",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      false,
-                      false,
-                      true,
-                      true,
-                      false,
-                      false,
-                      true,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": true
-                },
-                {
-                  "$id": "434",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      false,
-                      true,
-                      false,
-                      false,
-                      false,
-                      true,
-                      true,
-                      true,
-                      true,
-                      false
-                    ]
-                  },
-                  "ResultOfTheRow": true
-                },
-                {
-                  "$id": "435",
-                  "$type": "UnitTestGenerator.Common.LogicTable.LogicTableRow, UnitTestGenerator.Common",
-                  "RowValues": {
-                    "$type": "System.Boolean[], mscorlib",
-                    "$values": [
-                      true,
-                      false,
-                      false,
-                      false,
-                      false,
-                      true,
-                      true,
                       true,
                       true,
                       false
@@ -3479,10 +3483,10 @@
         ]
       },
       "RootAdtNode": {
-        "$id": "436",
+        "$id": "440",
         "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.FunctionDeclarationStatement, UnitTestGenerator.Generator.Ast2Adt",
         "ReturnType": {
-          "$id": "437",
+          "$id": "441",
           "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.TypeDefinition, UnitTestGenerator.Generator.Ast2Adt",
           "TypeName": "t_int",
           "PointerDimension": 0,
@@ -3510,7 +3514,7 @@
         },
         "Name": "Calc",
         "Body": {
-          "$id": "438",
+          "$id": "442",
           "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SequenceNode, UnitTestGenerator.Generator.Ast2Adt",
           "Nodes": {
             "$type": "System.Collections.Generic.List`1[[UnitTestGenerator.Common.ADT.IAdtNode, UnitTestGenerator.Common]], mscorlib",
@@ -3525,10 +3529,10 @@
                 "$ref": "167"
               },
               {
-                "$id": "439",
+                "$id": "443",
                 "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.ReturnStatement, UnitTestGenerator.Generator.Ast2Adt",
                 "Value": {
-                  "$id": "440",
+                  "$id": "444",
                   "$type": "UnitTestGenerator.Generator.Ast2Adt.ADT.SimpleVariable, UnitTestGenerator.Generator.Ast2Adt",
                   "IsReference": true,
                   "IsDefinition": false,
@@ -3538,23 +3542,23 @@
                     "$ref": "192"
                   },
                   "AstNode": {
-                    "$id": "441",
+                    "$id": "445",
                     "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                     "children": {
                       "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                       "$values": [
                         {
-                          "$id": "442",
+                          "$id": "446",
                           "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                           "children": {
                             "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                             "$values": []
                           },
                           "properties": {
-                            "$id": "443",
+                            "$id": "447",
                             "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                             "properties": {
-                              "$id": "444",
+                              "$id": "448",
                               "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                               "Declaration": false,
                               "Definition": false,
@@ -3568,10 +3572,10 @@
                       ]
                     },
                     "properties": {
-                      "$id": "445",
+                      "$id": "449",
                       "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                       "properties": {
-                        "$id": "446",
+                        "$id": "450",
                         "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                         "isGLValue": true,
                         "isRValue": false,
@@ -3582,21 +3586,21 @@
                   }
                 },
                 "AstNode": {
-                  "$id": "447",
+                  "$id": "451",
                   "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                   "children": {
                     "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                     "$values": [
                       {
-                        "$ref": "441"
+                        "$ref": "445"
                       }
                     ]
                   },
                   "properties": {
-                    "$id": "448",
+                    "$id": "452",
                     "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                     "properties": {
-                      "$id": "449",
+                      "$id": "453",
                       "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                     }
                   },
@@ -3606,35 +3610,35 @@
             ]
           },
           "AstNode": {
-            "$id": "450",
+            "$id": "454",
             "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
             "children": {
               "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
               "$values": [
                 {
-                  "$id": "451",
+                  "$id": "455",
                   "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                   "children": {
                     "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                     "$values": [
                       {
-                        "$id": "452",
+                        "$id": "456",
                         "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                         "children": {
                           "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                           "$values": [
                             {
-                              "$id": "453",
+                              "$id": "457",
                               "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                               "children": {
                                 "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                                 "$values": []
                               },
                               "properties": {
-                                "$id": "454",
+                                "$id": "458",
                                 "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                                 "properties": {
-                                  "$id": "455",
+                                  "$id": "459",
                                   "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                                   "Const": false,
                                   "Long": false,
@@ -3656,10 +3660,10 @@
                           ]
                         },
                         "properties": {
-                          "$id": "456",
+                          "$id": "460",
                           "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                           "properties": {
-                            "$id": "457",
+                            "$id": "461",
                             "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                           }
                         },
@@ -3668,10 +3672,10 @@
                     ]
                   },
                   "properties": {
-                    "$id": "458",
+                    "$id": "462",
                     "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                     "properties": {
-                      "$id": "459",
+                      "$id": "463",
                       "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                     }
                   },
@@ -3684,15 +3688,15 @@
                   "$ref": "418"
                 },
                 {
-                  "$ref": "447"
+                  "$ref": "451"
                 }
               ]
             },
             "properties": {
-              "$id": "460",
+              "$id": "464",
               "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
               "properties": {
-                "$id": "461",
+                "$id": "465",
                 "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
               }
             },
@@ -3700,23 +3704,23 @@
           }
         },
         "AstNode": {
-          "$id": "462",
+          "$id": "466",
           "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
           "children": {
             "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
             "$values": [
               {
-                "$id": "463",
+                "$id": "467",
                 "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                 "children": {
                   "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                   "$values": []
                 },
                 "properties": {
-                  "$id": "464",
+                  "$id": "468",
                   "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                   "properties": {
-                    "$id": "465",
+                    "$id": "469",
                     "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                     "Const": false,
                     "Long": false,
@@ -3733,23 +3737,23 @@
                 "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclSpecifier"
               },
               {
-                "$id": "466",
+                "$id": "470",
                 "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                 "children": {
                   "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                   "$values": [
                     {
-                      "$id": "467",
+                      "$id": "471",
                       "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                       "children": {
                         "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                         "$values": []
                       },
                       "properties": {
-                        "$id": "468",
+                        "$id": "472",
                         "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                         "properties": {
-                          "$id": "469",
+                          "$id": "473",
                           "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                           "Declaration": true,
                           "Definition": true,
@@ -3761,23 +3765,23 @@
                       "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTName"
                     },
                     {
-                      "$id": "470",
+                      "$id": "474",
                       "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                       "children": {
                         "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                         "$values": [
                           {
-                            "$id": "471",
+                            "$id": "475",
                             "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                             "children": {
                               "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                               "$values": []
                             },
                             "properties": {
-                              "$id": "472",
+                              "$id": "476",
                               "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                               "properties": {
-                                "$id": "473",
+                                "$id": "477",
                                 "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                                 "Const": false,
                                 "Long": false,
@@ -3799,33 +3803,33 @@
                         ]
                       },
                       "properties": {
-                        "$id": "474",
+                        "$id": "478",
                         "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                         "properties": {
-                          "$id": "475",
+                          "$id": "479",
                           "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                         }
                       },
                       "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTParameterDeclaration"
                     },
                     {
-                      "$id": "476",
+                      "$id": "480",
                       "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                       "children": {
                         "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                         "$values": [
                           {
-                            "$id": "477",
+                            "$id": "481",
                             "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                             "children": {
                               "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                               "$values": []
                             },
                             "properties": {
-                              "$id": "478",
+                              "$id": "482",
                               "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                               "properties": {
-                                "$id": "479",
+                                "$id": "483",
                                 "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                                 "Const": false,
                                 "Long": false,
@@ -3847,33 +3851,33 @@
                         ]
                       },
                       "properties": {
-                        "$id": "480",
+                        "$id": "484",
                         "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                         "properties": {
-                          "$id": "481",
+                          "$id": "485",
                           "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                         }
                       },
                       "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTParameterDeclaration"
                     },
                     {
-                      "$id": "482",
+                      "$id": "486",
                       "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                       "children": {
                         "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                         "$values": [
                           {
-                            "$id": "483",
+                            "$id": "487",
                             "$type": "UnitTestGenerator.Common.AST.AstNode, UnitTestGenerator.Common",
                             "children": {
                               "$type": "UnitTestGenerator.Common.AST.AstNode[], UnitTestGenerator.Common",
                               "$values": []
                             },
                             "properties": {
-                              "$id": "484",
+                              "$id": "488",
                               "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                               "properties": {
-                                "$id": "485",
+                                "$id": "489",
                                 "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System",
                                 "Const": false,
                                 "Long": false,
@@ -3895,10 +3899,10 @@
                         ]
                       },
                       "properties": {
-                        "$id": "486",
+                        "$id": "490",
                         "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                         "properties": {
-                          "$id": "487",
+                          "$id": "491",
                           "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                         }
                       },
@@ -3907,25 +3911,25 @@
                   ]
                 },
                 "properties": {
-                  "$id": "488",
+                  "$id": "492",
                   "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
                   "properties": {
-                    "$id": "489",
+                    "$id": "493",
                     "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
                   }
                 },
                 "type": "org.eclipse.cdt.internal.core.dom.parser.c.CASTFunctionDeclarator"
               },
               {
-                "$ref": "450"
+                "$ref": "454"
               }
             ]
           },
           "properties": {
-            "$id": "490",
+            "$id": "494",
             "$type": "UnitTestGenerator.Common.Collections.Cloneable.PropertyCollection, UnitTestGenerator.Common",
             "properties": {
-              "$id": "491",
+              "$id": "495",
               "$type": "System.Collections.Generic.SortedDictionary`2[[System.String, mscorlib],[System.Object, mscorlib]], System"
             }
           },
@@ -3933,7 +3937,7 @@
         }
       },
       "RootAstNode": {
-        "$ref": "462"
+        "$ref": "466"
       }
     }
   },

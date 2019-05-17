@@ -26,9 +26,9 @@ def resolveMathOperation(numOfAction, value, type):
         elif numOfAction == 6:
             return value
         elif numOfAction == 7:
-            return float(value) + 30
+            return float(value) + 20
         elif numOfAction == 8:
-            return float(value) - 30
+            return float(value) - 20
 
     value = interMathOperation()
     return correctValue(value, type)
@@ -37,6 +37,8 @@ def resolveMathOperation(numOfAction, value, type):
 def resolveContinuousType(action, type):
     return correctContinuous(action, type)
 
+def resolveContinuousTypeWithOperation(action, type, value):
+    return correctContinuousWithOperation(action, type, value)
 
 def resolveMin(type):
     if type == "t_int":
@@ -127,6 +129,33 @@ def correctContinuous(value, type):
         return round(float(2**1022),2)
     elif type == "t_decimal64":
         return round(float(2**1022),2)
+
+def correctContinuousWithOperation(action, type, value):
+    #if int(value) == -1:  # This leads to destabilization of the algorithm logically
+    #    return 0
+    #if int(value) == 1:  # This leads to destabilization of the algorithm logically
+    #    return 1
+    toBeValue = 0
+    if action[0] <= -0.6:
+        try:
+            toBeValue = int(value) / int(action[1] * 100)
+        except:
+            toBeValue = int(value)
+    elif -0.6 < action[0] <= -0.2:
+        toBeValue = int(value) - int(action[1] * 100)
+    elif -0.2 < action[0] <= 0.2:
+        toBeValue = int(value)
+    elif 0.2 < action[0] <= 0.6:
+        toBeValue = int(value) + int(action[1] * 100)
+    elif action[0] > 0.6:
+        toBeValue = int(value) * int(action[1] * 100)
+    if toBeValue < -32768:
+        return -32785
+    elif toBeValue > 32767:
+        return 32766
+    else:
+        return int(toBeValue)
+
 
 
 def isNumerical(type):

@@ -2,6 +2,8 @@ import math
 
 import tensorflow as tf
 
+"""Code from https://github.com/crestonbunch/tbcnn"""
+
 
 def conv_layer(num_conv, output_size, nodes, children, feature_size):
     """Creates a convolution layer with num_conv convolutions merged together at

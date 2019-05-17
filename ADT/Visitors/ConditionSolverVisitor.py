@@ -20,6 +20,8 @@ class ConditionSolverVisitor:
         expressions = []
         self.retrieveExpressions(self.expression["Children"]["$values"], expressions)
         for expression in expressions:
+            if not expression in self.rowExpressionValues:
+                return None
             self.expressionToken = self.expressionToken.replace(expression,
                                                                         str(self.rowExpressionValues[expression]))
         self.expressionToken = self.expressionToken.replace("And", "and")

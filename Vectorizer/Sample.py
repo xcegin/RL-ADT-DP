@@ -26,6 +26,8 @@ class SampleVisitor(ABCVisitor):
         self.rowExpressionValues = rowExpressionValues
         self.expressions = expressions
         self.mainFuncName = mainFuncName
+        self.global_expr = {}
+        self.expr_id = {}
 
     def reset(self):
         self.context = enviromentWalkerContext()
@@ -54,39 +56,58 @@ class SampleVisitor(ABCVisitor):
     def get_name(self, node):
         if isinstance(node, BinaryOperator) or isinstance(node, UnaryOperator):
             return type(node).__name__ + str(node.operation)
-        # elif isinstance(node, LoopNode) or isinstance(node, IfNode):
-        #     return type(node).__name__ + self.resolve_expression(node)
+        elif isinstance(node, LoopNode) or isinstance(node, IfNode):
+            if node.id in self.expr_id:
+                return self.expr_id[node.id]
+            else:
+                self.expr_id[node.id] = type(node).__name__ + self.resolve_expression(node)
+                return self.expr_id[node.id]
         elif isinstance(node, FunctionCall) and node.name == self.mainFuncName:
             return type(node).__name__ + 'Recursion'
         else:
             return type(node).__name__
 
     def visit_loop(self, loopNode: LoopNode):
-        #expression = self.expressions[loopNode.id]
-        # if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-        #     isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        # else:
-        #     conditionSolver = ConditionSolverVisitor(expression,
-        #                                              self.rowExpressionValues,
-        #                                              self.expressions)
-        #     isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        # if isConditionTrue:
-        #     children = [loopNode.condition, loopNode.nodeBlock]
-        # else:
-        children = [loopNode.condition, loopNode.nodeBlock]
+        expression = self.expressions[loopNode.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            expression = self.resolve_name_expr(expression, False)
+            if not expression["Token"] in self.rowExpressionValues:
+                isConditionTrue = None
+            else:
+                isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            expression = self.resolve_name_expr(expression, False)
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        if isConditionTrue:
+            children = [loopNode.condition, loopNode.nodeBlock]
+        elif isConditionTrue is None:
+            children = [loopNode.condition, loopNode.nodeBlock]
+        else:
+            children = [loopNode.condition]
         return children
 
     def visit_forloop(self, forLoop: ForLoop):
-        #expression = self.expressions[forLoop.id]
-        children = [forLoop.nodeInit, forLoop.condition, forLoop.nodeAfter]
-        # if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-        #     isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        # else:
-        #     conditionSolver = ConditionSolverVisitor(expression,
-        #                                              self.rowExpressionValues,
-        #                                              self.expressions)
-        #    isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        children.append(forLoop.nodeBlock)
+        expression = self.expressions[forLoop.id]
+        children = [forLoop.nodeInit, forLoop.condition]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            expression = self.resolve_name_expr(expression, False)
+            if not expression["Token"] in self.rowExpressionValues:
+                isConditionTrue = None
+            else:
+                isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            expression = self.resolve_name_expr(expression, False)
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        if isConditionTrue or isConditionTrue is None:
+            children.append(forLoop.nodeAfter)
+            children.append(forLoop.nodeBlock)
+        #children.append(forLoop.nodeBlock)
         return children
 
     def visit_assigment(self, assigment: AssignmentStatement):
@@ -111,17 +132,28 @@ class SampleVisitor(ABCVisitor):
         return functioncall.returnChildren()
 
     def visit_ifnode(self, ifNode: IfNode):
-        children = [ifNode.condition, ifNode.nodeThen]
-        # expression = self.expressions[ifNode.id]
-        # if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-        #     isConditionTrue = self.rowExpressionValues[expression["Token"]]
-        # else:
-        #     conditionSolver = ConditionSolverVisitor(expression,
-        #                                              self.rowExpressionValues,
-        #                                              self.expressions)
-        #     isConditionTrue = conditionSolver.retrieveValueOfCondition()
-        if ifNode.nodeElse is not None:
+        children = [ifNode.condition]
+        expression = self.expressions[ifNode.id]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            expression = self.resolve_name_expr(expression, False)
+            if not expression["Token"] in self.rowExpressionValues:
+                isConditionTrue = None
+            else:
+                isConditionTrue = self.rowExpressionValues[expression["Token"]]
+        else:
+            expression = self.resolve_name_expr(expression, False)
+            conditionSolver = ConditionSolverVisitor(expression,
+                                                     self.rowExpressionValues,
+                                                     self.expressions)
+            isConditionTrue = conditionSolver.retrieveValueOfCondition()
+        if isConditionTrue == True:
+            children.append(ifNode.nodeThen)
+        elif isConditionTrue is None:
+            children.append(ifNode.nodeThen)
             children.append(ifNode.nodeElse)
+        else:
+            if ifNode.nodeElse is not None:
+                children.append(ifNode.nodeElse)
         return children
 
     def visit_literal(self, literalNode: LiteralNode):
@@ -141,13 +173,55 @@ class SampleVisitor(ABCVisitor):
             return 'None'
         expression = self.expressions[node.id]
         if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
-            isConditionTrue = self.rowExpressionValues[expression["Token"]]
+            expression = self.resolve_name_expr(expression, True)
+            if not expression["Token"] in self.rowExpressionValues:
+                isConditionTrue = None
+            else:
+                isConditionTrue = self.rowExpressionValues[expression["Token"]]
         else:
+            expression = self.resolve_name_expr(expression, True)
             conditionSolver = ConditionSolverVisitor(expression,
                                                      self.rowExpressionValues,
                                                      self.expressions)
             isConditionTrue = conditionSolver.retrieveValueOfCondition()
         if isConditionTrue:
             return str(1)
+        elif isConditionTrue is None:
+            return str(None)
         else:
             return str(0)
+
+    def resolve_name_expr(self, expression, flag):
+        tokenirino = expression["Token"]
+        if getTypeOfExpression(expression["$type"]) != Utils.COMPOSITE_EXPRESSION:
+            expression["Token"] = self.retrieve_new_token(tokenirino, flag)
+            return expression
+        else:
+            tmpDict = {}
+            tmpToken = tokenirino.replace("And", "~")
+            tmpToken = tmpToken.replace("Or", "~")
+            tokens = tmpToken.split("~")
+            for token in tokens:
+                if token[-1:] == ' ':
+                    token = token[:-1]
+                if token[0] == ' ':
+                    token = token[1:]
+                new_token = self.retrieve_new_token(token, flag)
+                tmpDict[token] = new_token
+            for key in tmpDict.keys():
+                tokenirino = tokenirino.replace(key, tmpDict[key])
+            expression["Token"] = tokenirino
+            return expression
+
+    def retrieve_new_token(self, token, flag):
+        if token in self.global_expr:
+            if flag:
+                return token + str(self.global_expr[token])
+            toBeToken = token + str(self.global_expr[token])
+            self.global_expr += 1
+            return toBeToken
+        else:
+            if flag:
+                return token
+            self.global_expr[token] = 0
+            return token

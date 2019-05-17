@@ -1,3 +1,4 @@
+# Util class used during data preprocessing phase
 def resolveRef(entry, dictWithEntries):
     if isinstance(entry, dict):
         if "$id" in entry:

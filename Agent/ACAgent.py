@@ -2,18 +2,20 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
+"""Based on https://github.com/awjuliani/DeepRL-Agents/blob/master/A3C-Doom.ipynb"""
+
 from Environment.Utils import normalized_columns_initializer
 
 
 class AC_Network():
-    def __init__(self, scope, trainer):
+    def __init__(self, scope, trainer, feature_size):
         with tf.variable_scope(scope):
             # Input and visual encoding layers
-            self.inputs = tf.placeholder(shape=[None, 8], dtype=tf.float32)
-            hidden = slim.fully_connected(self.inputs, 256, activation_fn=tf.nn.tanh, biases_initializer=None)
+            self.inputs = tf.placeholder(shape=[None, feature_size], dtype=tf.float32)
+            hidden = slim.fully_connected(self.inputs, 256, activation_fn=tf.nn.relu6, biases_initializer=None)
 
             # Recurrent network for temporal dependencies
-            lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(256, state_is_tuple=True)
+            lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=256, state_is_tuple=True)
             c_init = np.zeros((1, lstm_cell.state_size.c), np.float32)
             h_init = np.zeros((1, lstm_cell.state_size.h), np.float32)
             self.state_init = [c_init, h_init]
@@ -30,7 +32,7 @@ class AC_Network():
             rnn_out = tf.reshape(lstm_outputs, [-1, 256])
 
             # Output layers for policy and value estimations
-            self.policy = slim.fully_connected(rnn_out, 7,
+            self.policy = slim.fully_connected(rnn_out, 9,
                                                activation_fn=tf.nn.softmax,
                                                weights_initializer=normalized_columns_initializer(0.01),
                                                biases_initializer=None)
@@ -42,7 +44,7 @@ class AC_Network():
             # Only the worker network need ops for loss functions and gradient updating.
             if scope != 'global':
                 self.actions = tf.placeholder(shape=[None], dtype=tf.int32)
-                self.actions_onehot = tf.one_hot(self.actions, 7, dtype=tf.float32)
+                self.actions_onehot = tf.one_hot(self.actions, 9, dtype=tf.float32)
                 self.target_v = tf.placeholder(shape=[None], dtype=tf.float32)
                 self.advantages = tf.placeholder(shape=[None], dtype=tf.float32)
 

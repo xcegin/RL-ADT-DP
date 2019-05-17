@@ -3,8 +3,6 @@ import os
 import pickle
 import threading
 
-import matplotlib.pyplot as plt
-import numpy as np
 import tensorflow as tf
 
 from Agent.Continuous.ACConvCont import ACNet
@@ -30,7 +28,7 @@ if __name__ == "__main__":
 
     saver = tf.train.Saver(max_to_keep=5)
 
-    with open('vectors_cov.pkl', 'rb') as fh:
+    with open('vectors_nextDate.pkl', 'rb') as fh:
         embeddings, embed_lookup = pickle.load(fh)
         num_feats = len(embeddings[0])
 
@@ -51,8 +49,3 @@ if __name__ == "__main__":
         t.start()
         worker_threads.append(t)
     coord.join(worker_threads)  # wait for termination of workers
-
-    plt.plot(np.arange(len(global_rewards)), global_rewards)  # plot rewards
-    plt.xlabel('step')
-    plt.ylabel('total moving reward')
-    plt.show()

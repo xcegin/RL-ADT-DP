@@ -1,6 +1,6 @@
 from abc import ABC
 
-
+# Abstract rewarder class
 class Rewarder(ABC):
     def __init__(self):
         pass

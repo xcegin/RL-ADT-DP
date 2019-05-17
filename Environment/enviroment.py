@@ -4,7 +4,7 @@ from copy import deepcopy
 from gym import spaces
 
 from ADT.Statements.FunctionDeclarationStatement import FunctionDeclarationStatement
-from ADT.Utils.MathOperationsUtil import randomValue, resolveMathOperation, resolveContinuousType
+from ADT.Utils.MathOperationsUtil import resolveMathOperation, resolveContinuousTypeWithOperation
 from ADT.Utils.ResolverUtil import resolveNodeViaType, ResolverUtil
 from ADT.Visitors.DataDependenciesVisitor import DataDependenciesVisitor
 from ADT.Visitors.VectorizationVisitor import VectorizationVisitor
@@ -13,8 +13,6 @@ from Environment.ResolveJsonRef import resolveRef
 from Environment.Utils import getTypeOfExpression
 from Environment.enviromentWalkerRedLabel import enviromentWalkerContext
 from Reward.Coverage.CoverageRewarder import CoverageRewarder
-from Reward.Heuristic.HeuristicCalculator import HeuristicCalculator
-from Reward.Heuristic.HeuristicResolver import HeuristicRewarder
 from Reward.StaticRewarder import StaticRewardCalculator
 from Vectorizer.SampleVisitorCovEnv import SampleVisitorEnvWithConv
 from Vectorizer.SampleVisitorForEnviroment import SampleVisitorEnv
@@ -56,6 +54,20 @@ class Enviroment:
             self.initialize_conv_cov(data, numberOfWorker)
             self.currentF += 1
 
+    def initialize_conv_cov(self, data, numOfWorker):
+        self.initialize(data)
+        self.prepareVectorsForTablesConvWithCov()
+        self.argumentMatrix = []
+        self.rewarder = CoverageRewarder()
+        self.initializeArgumentValuesCov()
+
+        self.initialCov = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
+        if self.rootTreeAdtNode.name not in self.dict_of_max_r:
+            self.dict_of_max_r[self.rootTreeAdtNode.name] = self.initialCov
+        self.argumentColumnValue = 0
+
+        self.action_space = spaces.Discrete(9)
+
     def initialize(self, data):
         self.resolverUtil = ResolverUtil()
         self.currentVector = 0
@@ -69,8 +81,6 @@ class Enviroment:
         self.currentHeuristicRow = []
         self.currentVectorRow = []
 
-        self.heuristicCalc = HeuristicCalculator()
-        # self.bsrewarder = HeuristicRewarder()
         self.rewarder = StaticRewardCalculator()
         self.data = resolveRef(data, {})
         self.mcdc = data
@@ -89,7 +99,6 @@ class Enviroment:
         self.getLogicExpressionsFromMcDc()
         self.parseLoadedJsonIntoTree()
         self.createListOfMcDcTableRows()
-        self.createHeuristicEquationsForRows()
 
     def initialize_def(self, data):
         self.initialize(data)
@@ -100,25 +109,19 @@ class Enviroment:
     def initialize_conv(self, data):
         self.initialize(data)
         self.prepareVectorsForRowsConv()
-
-        self.action_space = spaces.Discrete(9)
-
-    def initialize_conv_cov(self, data, numOfWorker):
-        self.initialize(data)
-        self.prepareVectorsForTablesConvWithCov()
-        self.argumentMatrix = []
-        self.rewarder = CoverageRewarder()
-        self.initializeArgumentValuesCov()
-
-        self.initialCov = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
-        if self.rootTreeAdtNode.name not in self.dict_of_max_r:
-            self.dict_of_max_r[self.rootTreeAdtNode.name] = self.initialCov
+        self.initializeArgumentValues()
         self.argumentColumnValue = 0
 
         self.action_space = spaces.Discrete(9)
 
+    def prepareVectorsForTablesConvWithCov(self):
+        for table in self.listOfTables:
+            self.vectorizationVisitor = SampleVisitorEnvWithConv(enviromentWalkerContext(), self.rootTreeAdtNode.name)
+            mainNode = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
+            self.listOfTableVectors.append(mainNode)
+
     def startTable(self):
-        self.currentHeuristics = self.listOfTableHeuristics[self.currentNumOfTable]
+        #self.currentHeuristics = self.f[self.currentNumOfTable]
         self.currentVectors = self.listOfTableVectors[self.currentNumOfTable]
         self.currentNumOfTable = self.currentNumOfTable + 1
 
@@ -126,8 +129,6 @@ class Enviroment:
         self.initializeArgumentValues()
         self.currentVectorRow = self.currentVectors[self.currentNumOfRow]
         self.currentNumOfRow = self.currentNumOfRow + 1
-        # self.startingHeuristicValue = self.rewarder.resolveReward(self.argumentValues, self.arguments,
-        # self.currentHeuristicRow)
         self.startingHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                                   [self.currentNumOfRow - 1], self.argumentValues,
                                                                   numOfFile)
@@ -135,7 +136,6 @@ class Enviroment:
         return self.currentVectorRow[0]
 
     def step(self, action, numOfFile=None):
-        # self.currentVector = self.currentVector + 1
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
         keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argumentValue = self.argumentValues[keyOfArg]
@@ -149,27 +149,22 @@ class Enviroment:
             return -1, True, {}
         except OverflowError:
             return -1, True, {}
-        # otherValue = self.bsrewarder.resolveReward(self.argumentValues,
-        #                    self.arguments, self.listOfTableHeuristics[self.currentNumOfTable - 1][self.currentNumOfRow - 1])  # -1 because of startTable method
         currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
                                                             [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
-        reward = self.returnReward(currentHeuristicValue)
+        reward = self.returnRewardCov(currentHeuristicValue)
         self.currentHeuristicValue = currentHeuristicValue
         self.argumentChangedVal = self.argumentChangedVal + 1
-        # nextState = self.currentVectorRow[self.currentVector]
 
         done = False
-        if self.currentHeuristicValue >= 1:
+        if self.currentHeuristicValue >= 0.9:
             done = True
-        return reward, done, {}
-        # ADD CHECK IF DONE - ITERATE THROUGH VECTORS IN ROW AND HEURISTIC VALUE CHECK
-        # ADD RETURN VALUES
+        return reward, done, currentHeuristicValue
 
     def step_cov(self, action, numOfWorker, numOfFile=None):
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
         if self.argumentChangedVal % len(list(self.arguments.keys())) == 0 and self.argumentChangedVal != 0:
             self.argumentColumnValue += 1
-        argColVal = self.argumentColumnValue % len(self.listOfTables[0])
+        argColVal = self.argumentColumnValue % self.totalRows
         keyOfArg = self.argumentChangedVal % len(list(self.arguments.keys()))
         keyForDict = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argumentValue = self.argumentMatrix[argColVal][keyOfArg]
@@ -184,51 +179,44 @@ class Enviroment:
             return -1, True, {}
         except OverflowError:
             return -1, True, {}
-        # otherValue = self.bsrewarder.resolveReward(self.argumentValues,
-        #                    self.arguments, self.listOfTableHeuristics[self.currentNumOfTable - 1][self.currentNumOfRow - 1])  # -1 because of startTable method
         currentCoverage = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
         if currentCoverage == 0:
             return 0, False, 0, {}
-        reward = self.returnRewardCov(self.rootTreeAdtNode.name, currentCoverage)
+        reward = self.returnRewardCov(currentCoverage, self.rootTreeAdtNode.name)
         # nextState = self.currentVectorRow[self.currentVector]
 
         done = False
-        if currentCoverage >= 92:
+        if currentCoverage >= 100:
             done = True
         return reward, done, (currentCoverage / 100), {}
 
+
     def step_cov_continuos(self, action, numOfWorker):
-        if self.argumentChangedVal % len(list(self.arguments.keys())) == 0 and self.argumentChangedVal != 0:
-            self.argumentColumnValue += 1
-        argColVal = self.argumentColumnValue % len(self.listOfTables[0])
-        keyOfArg = self.argumentChangedVal % len(list(self.arguments.keys()))
-        keyForDict = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
-        argumentValue = self.argumentMatrix[argColVal][keyOfArg]
-        self.argumentChangedVal = self.argumentChangedVal + 1
+        keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
+        argumentValue = self.argumentValues[keyOfArg]
         if isinstance(argumentValue, complex):
             return -1, True, {}
-        argument = self.arguments[keyForDict]
+        argument = self.arguments[keyOfArg]
         try:
-            self.argumentMatrix[argColVal][keyOfArg] = resolveContinuousType(action, argument.variableType.typeName)
+            self.argumentValues[keyOfArg] = resolveContinuousTypeWithOperation(action, argument.variableType.typeName, argumentValue)
         except TypeError:
             return -1, True, {}
         except OverflowError:
             return -1, True, {}
-
-        currentCoverage = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
-        if currentCoverage == 0:  # TODO: IF Before was not 0 coverage, then it should return -1 value
-            return 0, False, 0, {}
-        reward = self.returnRewardCov(self.rootTreeAdtNode.name, currentCoverage)
-
+        currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
+                                                            [self.currentNumOfRow - 1], self.argumentValues, numOfWorker)
+        reward = self.returnRewardCov(currentHeuristicValue)
+        self.currentHeuristicValue = currentHeuristicValue
+        self.argumentChangedVal = self.argumentChangedVal + 1
         done = False
-        if currentCoverage >= 90:
+        if self.currentHeuristicValue >= 0.9:
             done = True
-        return reward, done, (currentCoverage / 100), {}
+        return reward, done, currentHeuristicValue
 
-    def step_cov_continuos_with_reward(self, action, numOfWorker):
+    def step_cov_continuos_without_reward(self, action, numOfWorker):
         if self.argumentChangedVal % len(list(self.arguments.keys())) == 0 and self.argumentChangedVal != 0:
             self.argumentColumnValue += 1
-        argColVal = self.argumentColumnValue % len(self.listOfTables[0])
+        argColVal = self.argumentColumnValue % self.totalRows
         keyOfArg = self.argumentChangedVal % len(list(self.arguments.keys()))
         keyForDict = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
         argumentValue = self.argumentMatrix[argColVal][keyOfArg]
@@ -236,33 +224,19 @@ class Enviroment:
         if isinstance(argumentValue, complex):
             return -1, True, {}
         argument = self.arguments[keyForDict]
-        self.argumentMatrix[argColVal][keyOfArg] = resolveContinuousType(action, argument.variableType.typeName)
+        self.argumentMatrix[argColVal][keyOfArg] = resolveContinuousTypeWithOperation(action, argument.variableType.typeName, argumentValue)
 
     def step_cov_continuos_entire_matrix(self, numOfWorker):
         currentCoverage = self.rewarder.resolveReward(self.rootTreeAdtNode.name, str(numOfWorker), self.argumentMatrix)
-        if currentCoverage == 0:  # TODO: IF Before was not 0 coverage, then it should return -1 value
+        if currentCoverage == 0:
             return 0, False, 0, {}
-        reward = self.returnRewardCov(self.rootTreeAdtNode.name, currentCoverage)
+        reward = self.returnRewardCov(currentCoverage, self.rootTreeAdtNode.name)
 
         done = False
         if currentCoverage >= 90:
             done = True
         return reward, done, (currentCoverage / 100), {}
 
-    def step_continuos(self, action, numOfFile=None):
-        keyOfArg = list(self.arguments.keys())[self.argumentChangedVal % len(list(self.arguments.keys()))]
-        argument = self.arguments[keyOfArg]
-        self.argumentValues[keyOfArg] = resolveContinuousType(action, argument.variableType.typeName)
-        currentHeuristicValue = self.rewarder.resolveReward(self.listOfTables[self.currentNumOfTable - 1]
-                                                            [self.currentNumOfRow - 1], self.argumentValues, numOfFile)
-        reward = self.returnReward(currentHeuristicValue)
-        self.currentHeuristicValue = currentHeuristicValue
-        self.argumentChangedVal = self.argumentChangedVal + 1
-
-        done = False
-        if self.currentHeuristicValue == 1:
-            done = True
-        return reward, done, {}
 
     def getRootADTNode(self):
         found_root_node = False
@@ -321,15 +295,6 @@ class Enviroment:
                 expressions.append(expression["Token"])
         return expressions
 
-    def createHeuristicEquationsForRows(self):
-        for table in self.listOfTables:
-            tableRows = []
-            # Extract values for each column according to one row
-            for row in table:
-                rowList = [self.heuristicCalc.calculateHeuristicFerOneFeckinRowM8(row)]
-                tableRows.append(rowList)
-            self.listOfTableHeuristics.append(tableRows)
-
     def createVectorsForRows(self):
         for table in self.listOfTables:
             tableRows = []
@@ -360,40 +325,51 @@ class Enviroment:
                 tableRows.append(mainNode)
             self.listOfTableVectors.append(tableRows)
 
-    def prepareVectorsForTablesConvWithCov(self):
-        for table in self.listOfTables:
-            self.vectorizationVisitor = SampleVisitorEnvWithConv(enviromentWalkerContext(), self.rootTreeAdtNode.name)
-            mainNode = self.rootTreeAdtNode.accept(self.vectorizationVisitor)
-            self.listOfTableVectors.append(mainNode)
-
     def initializeArgumentValues(self):
         for argument in self.arguments:
             self.argumentValues[self.arguments[argument].variable.variableName] = 0
 
     def initializeArgumentValuesCov(self):
         self.argumentMatrix = []
-        for row in self.listOfTables[0]:
+        totalRows = 0
+        for table in self.listOfTables:
+            totalRows += len(table)
+        self.totalRows = totalRows
+        for row in range(totalRows):
             currentRow = []
             for argument in self.arguments:
                 currentRow.append(0)
             self.argumentMatrix.append(currentRow)
 
     def mergeDictsInRow(self, row):
+        dictOfCond = {}
+        keys = []
         finalDict = {}
-        for dictionary in row:
-            finalDict = {**finalDict, **dictionary}
+        for entry in row:
+            for key in entry.keys():
+                if not key in keys:
+                    keys.append(key)
+                    finalDict[key] = entry[key]
+                else:
+                    if key in dictOfCond:
+                        dictOfCond[key] += 1
+                    else:
+                        dictOfCond[key] = 0
+                    newkey = key + str(dictOfCond[key])
+                    finalDict[newkey] = entry[key]
         return finalDict
 
-    def returnReward(self, currentHeuristicValue):
-        return currentHeuristicValue
-        # difference = abs(self.currentHeuristicValue) - abs(currentHeuristicValue)
-        # return difference / abs(self.currentHeuristicValue)
+    def returnRewardCov(self, coverageValue, function_name=None):
+        if function_name is not None and function_name not in self.dict_of_max_r:
+            self.dict_of_max_r[function_name] = coverageValue
+        if function_name is not None and self.dict_of_max_r[function_name] < coverageValue:
+            self.dict_of_max_r[function_name] = coverageValue
+        return self.returnRewardPoly(coverageValue, function_name) # for the negative reward, switch to rewardPoly
 
-    def returnRewardCov(self, function_name, coverageValue):
-        if function_name not in self.dict_of_max_r:
-            self.dict_of_max_r[function_name] = coverageValue
-        expected_reward = (coverageValue - self.dict_of_max_r[function_name])/100
-        if self.dict_of_max_r[function_name] < coverageValue:
-            self.dict_of_max_r[function_name] = coverageValue
-        #expected_reward = (-9.70e-06 * (coverageValue ** (6))) + (0.00269 * (coverageValue ** (5))) - (0.2743 * (coverageValue ** (4))) + (12.781 * (coverageValue ** (3))) - (266.2 * (coverageValue ** (2))) + (2164.2 * coverageValue) - 1754.7
-        return expected_reward #/ 103665.3
+    def returnGreedyNegativeReward(self, function_name, coverageValue):
+        expected_reward = (coverageValue - self.dict_of_max_r[function_name]) / 100
+        return expected_reward
+
+    def returnRewardPoly(self, coverageValue, function_name=None):
+        expected_reward = (-9.70e-06 * (coverageValue ** (6))) + (0.00269 * (coverageValue ** (5))) - (0.2743 * (coverageValue ** (4))) + (12.781 * (coverageValue ** (3))) - (266.2 * (coverageValue ** (2))) + (2164.2 * coverageValue) - 1754.7
+        return expected_reward / 103665.3

@@ -1,10 +1,12 @@
 """This creates a network for training a vector embedding of an AST using
 a strategy similar to word2vec, but applied to the context of AST's."""
+"""Code used from https://github.com/crestonbunch/tbcnn"""
 
 import math
+
 import tensorflow as tf
 
-from Vectorizer.node_map import NEW_NODE_MAP
+from Vectorizer.node_map import NODE_MAP
 from Vectorizer.parameters import \
     BATCH_SIZE, NUM_FEATURES, HIDDEN_NODES
 
@@ -16,11 +18,11 @@ class embedding_network:
 
         # embeddings to learn
         self.embeddings = tf.Variable(
-            tf.random_uniform([len(NEW_NODE_MAP), num_feats]), name='embeddings'
+            tf.random_uniform([len(NODE_MAP), num_feats]), name='embeddings'
         )
 
         embed = tf.nn.embedding_lookup(self.embeddings, self.inputs)
-        onehot_labels = tf.one_hot(self.labels, len(NEW_NODE_MAP), dtype=tf.float32)
+        onehot_labels = tf.one_hot(self.labels, len(NODE_MAP), dtype=tf.float32)
 
         weights = tf.Variable(
             tf.truncated_normal(
@@ -38,13 +40,13 @@ class embedding_network:
 
         weights = tf.Variable(
             tf.truncated_normal(
-                [hidden_size, len(NEW_NODE_MAP)],
+                [hidden_size, len(NODE_MAP)],
                 stddev=1.0 / math.sqrt(hidden_size)
             ),
             name='weights'
         )
         biases = tf.Variable(
-            tf.zeros((len(NEW_NODE_MAP),), name='biases')
+            tf.zeros((len(NODE_MAP),), name='biases')
         )
 
         logits = tf.matmul(hidden, weights) + biases

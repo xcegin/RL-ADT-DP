@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import slim
 
-from Agent.Convolutional.ConvolutionaLayer import conv_layer
+"""Based on https://github.com/stefanbo92/A3C-Continuous"""
 
 GLOBAL_NET_SCOPE = 'Global_Net'
 UPDATE_GLOBAL_ITER = 10  # sets how often the global net is updated
@@ -11,27 +11,19 @@ ENTROPY_BETA = 0.01  # entropy factor
 LR_A = 0.0001  # learning rate for actor
 LR_C = 0.001  # learning rate for critic
 
-N_A = 1  # number of actions
+N_A = 2  # number of actions
 A_BOUND = [-1, 1]
 
 
 class ACNet(object):
     def __init__(self, scope, sess, feature_size, globalAC=None):
         self.sess = sess
-        self.actor_optimizer = tf.train.RMSPropOptimizer(learning_rate=LR_A, name='RMSPropA')  # optimizer for the actor
-        self.critic_optimizer = tf.train.RMSPropOptimizer(learning_rate=LR_C, name='RMSPropC')  # optimizer for the critic
+        self.actor_optimizer = tf.train.AdamOptimizer(learning_rate=LR_A, name='RMSPropA')  # optimizer for the actor
+        self.critic_optimizer = tf.train.AdamOptimizer(learning_rate=LR_C, name='RMSPropC')  # optimizer for the critic
         with tf.variable_scope(scope):
-            self.nodes = tf.placeholder(tf.float32, shape=(None, None, feature_size), name='tree')
-            self.children = tf.placeholder(tf.int32, shape=(None, None, None), name='children')
-            self.matrixWithCov = tf.placeholder(shape=[None, 3], dtype=tf.float32)
+            self.inputs = tf.placeholder(shape=[None, feature_size], dtype=tf.float32)
 
-            self.conv = conv_layer(1, 128, self.nodes, self.children, feature_size)
-            self.pooling = self.pooling_layer(self.conv)
-
-            self.poolingWithMatrixCov = tf.concat([self.pooling, self.matrixWithCov], 1)
-
-            w_init = tf.random_normal_initializer(0., .1)
-            l_ac = slim.fully_connected(self.poolingWithMatrixCov, 256, activation_fn=tf.nn.relu6, biases_initializer=None)
+            l_ac = slim.fully_connected(self.inputs, 256, activation_fn=tf.nn.relu6, biases_initializer=None)
 
             self.lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units=256, state_is_tuple=True)
             c_init = np.zeros((1, self.lstm_cell.state_size.c), np.float32)
@@ -95,14 +87,14 @@ class ACNet(object):
                 self.update_c_op = self.critic_optimizer.apply_gradients(zip(self.c_grads, globalAC.c_params))
 
     def update_global(self, feed_dict):  # run by a local
-        return self.sess.run([self.update_a_op, self.update_c_op], feed_dict)  # local grads applies to global net
+        return self.sess.run([self.update_a_op, self.update_c_op, self.state_out, self.a_loss, self.c_loss], feed_dict)  # local grads applies to global net
 
     def pull_global(self):  # run by a local
         self.sess.run([self.pull_a_params_op, self.pull_c_params_op])
 
-    def choose_action(self, nodes, children, rnn_state, vectorMatrixWithCov):  # run by a local
+    def choose_action(self, inputs, rnn_state):  # run by a local
         return self.sess.run([self.A, self.state_out],
-                             {self.nodes: nodes, self.children: children, self.matrixWithCov: vectorMatrixWithCov, self.state_in[0]: rnn_state[0],
+                             {self.inputs: inputs, self.state_in[0]: rnn_state[0],
                               self.state_in[1]: rnn_state[1]})
 
     def pooling_layer(self, nodes):

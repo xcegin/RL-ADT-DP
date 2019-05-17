@@ -1,8 +1,7 @@
 import multiprocessing
 import os
+import pickle
 import threading
-import matplotlib.pyplot as plt
-from time import time, sleep
 
 import tensorflow as tf
 
@@ -19,10 +18,14 @@ tf.reset_default_graph()
 if not os.path.exists(model_path):
     os.makedirs(model_path)
 
+with open('vectors_calc.pkl', 'rb') as fh:
+    embeddings, embed_lookup = pickle.load(fh)
+    num_feats = len(embeddings[0])
+
 global_rewards = []
 global_episodes = tf.Variable(0, dtype=tf.int32, name='global_episodes', trainable=False)
-trainer = tf.train.RMSPropOptimizer(learning_rate=7e-4, decay=0.99, epsilon=0.1)
-master_network = AC_Network('global', None)  # Generate global network
+trainer = tf.train.AdamOptimizer(learning_rate=0.001)
+master_network = AC_Network('global', None, num_feats)  # Generate global network
 num_workers = multiprocessing.cpu_count()  # Set workers ot number of available CPU threads
 workers = []
 # Create worker classes
@@ -39,8 +42,6 @@ with tf.Session() as sess:
     else:
         sess.run(tf.global_variables_initializer())
 
-    # This is where the asynchronous magic happens.
-    # Start the "work" process for each worker in a separate threat.
     worker_threads = []
     for worker in workers:
         worker_work = lambda: worker.work(max_episode_length, gamma, master_network, sess, coord, saver)
